@@ -1,5 +1,6 @@
 
 import "@benev/slate/x/node.js"
+import {readJson} from "./demo/ssg/read-json.js"
 import {template, html, easypage, headScripts, git_commit_hash, read_file, unsanitized, renderSocialCard} from "@benev/turtle"
 
 const domain = "lettuce.e280.org"
@@ -17,6 +18,7 @@ export default template(async basic => {
 			<link rel="icon" href="${favicon}"/>
 			<style>${unsanitized(await read_file("x/demo/style.css"))}</style>
 			<meta data-commit-hash="${hash}"/>
+			<meta data-version="${(await readJson("package.json")).version}"/>
 
 			${renderSocialCard({
 				themeColor: "#93c053",
