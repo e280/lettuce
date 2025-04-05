@@ -1,5 +1,5 @@
 
-![](./assets/lettuce.avif)
+<div align="center"><img alt="" width=256 src="./assets/lettuce.avif"/></div>
 
 # 🥬 lettuce
 
