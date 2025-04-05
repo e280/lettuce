@@ -1,5 +1,8 @@
 
-# 🧩 *@e280/* **lattice**
+# 🌐 Lattice — panelly ui for editor apps
 
-Web components. Layout UX with vertical/horizontal panel splitting. Drag-and-drop tabs.
+- Web components
+- Panel layouts
+- Pane splitting and resizing, vertical, horizontal
+- Each panel contains tabs, draggable-and-droppable
 
