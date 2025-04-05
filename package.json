@@ -32,6 +32,9 @@
 		"typescript": "^5.8.3"
 	},
 	"keywords": [
+		"splitty",
+		"panelly",
+		"leafy",
 		"panel",
 		"layout",
 		"ui"
