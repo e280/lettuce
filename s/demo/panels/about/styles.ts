@@ -6,16 +6,20 @@ export const styles = css`
 
 ${standard_panel_styles}
 
-.logo {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	height: 100%;
+.plate {
+	font-size: 1.5em;
 
-	> svg {
-		width: 20em;
+	padding: 2em;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1em;
+
+	& img {
 		max-width: 100%;
-		max-height: 100%;
+		width: 10em;
 	}
 }
 

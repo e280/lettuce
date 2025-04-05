@@ -14,9 +14,11 @@ export const AboutPanel = panel({
 		use.name("about")
 		use.styles(styles)
 		return html`
-			<div class=logo>
-				🥬
-			</div>
+			<div class=plate>
+				<img alt="" src="/assets/lettuce.avif"/>
+				<p><strong>lettuce</strong> is a leafy panelling ui system for cool apps.</p>
+				<p>go to the github, nerd: <a href="http://github.com/e280/lettuce">github.com/e280/lettuce</a></p>
+			<div>
 		`
 	}),
 })

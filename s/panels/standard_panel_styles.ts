@@ -8,6 +8,7 @@ export const standard_panel_styles = css`
 	display: block;
 	position: absolute;
 	inset: 0;
+	overflow: auto;
 }
 
 `

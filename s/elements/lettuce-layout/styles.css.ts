@@ -1,7 +1,7 @@
 
 import {css} from "@benev/slate"
 
-export const size_of_resize_handle_in_rem = 0.2
+export const size_of_resize_handle_in_rem = 0.4
 
 export const styles = css`
 
@@ -19,6 +19,8 @@ export const styles = css`
 	--charlie: var(--charlie);
 	--bg-a: var(--bg-a);
 	--bg-b: var(--bg-b);
+	--focal: var(--focal);
+	--pointer-lock: var(--pointer-lock);
 	--taskbar-size: var(--taskbar-size);
 }
 
@@ -91,11 +93,11 @@ export const styles = css`
 	border: 1px solid transparent;
 
 	&[data-is-focal] {
-		border-color: color-mix(in srgb, var(--alpha) 15%, transparent);
+		border-color: var(--focal);
 	}
 
 	&[data-is-pointer-locked] {
-		border-color: color-mix(in srgb, var(--alpha) 80%, transparent);
+		border-color: var(--pointer-lock);
 	}
 
 	&[data-drag]::after {

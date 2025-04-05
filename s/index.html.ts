@@ -12,7 +12,7 @@ export default template(async basic => {
 	return easypage({
 		path,
 		dark: true,
-		title: "@e280/lettuce",
+		title: "lettuce",
 		head: html`
 			<link rel="icon" href="${favicon}"/>
 			<style>${unsanitized(await read_file("x/demo/style.css"))}</style>
@@ -20,7 +20,7 @@ export default template(async basic => {
 
 			${renderSocialCard({
 				themeColor: "#93c053",
-				siteName: "@e280/lettuce",
+				siteName: "e280.org",
 				title: "lettuce",
 				description: "splitty panelly leafy layouts",
 				image: `https://${domain}${favicon}`,

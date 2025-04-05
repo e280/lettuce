@@ -6,18 +6,20 @@ export const styles = css`
 
 ${standard_panel_styles}
 
-:host {
+section {
+	font-size: 1.5em;
+
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-content: center;
-}
+	gap: 1em;
+	padding: 1em 2em;
+	max-width: 32em;
+	margin: auto;
 
-h1 {
-	font-size: 2em;
-	text-transform: uppercase;
-	opacity: 0.2;
-	text-align: center;
+	h1 {
+		text-transform: uppercase;
+		opacity: 0.2;
+	}
 }
 
 `

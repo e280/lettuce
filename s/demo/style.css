@@ -5,10 +5,33 @@
 	box-sizing: border-box;
 }
 
+:root {
+	color-scheme: dark;
+	--link: cyan;
+}
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 1em; }
 ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+a {
+	color: var(--link);
+	text-decoration: none;
+
+	&:visited {
+		color: color-mix(in srgb, purple, var(--link) 70%);
+	}
+
+	&:hover {
+		color: color-mix(in srgb, white, var(--link) 90%);
+		text-decoration: underline;
+	}
+
+	&:active {
+		color: color-mix(in srgb, white, var(--link) 50%);
+	}
+}
 
 html, body {
 	font-size: 16px;
@@ -28,6 +51,8 @@ lettuce-layout {
 	--bg-a: #181818;
 	--bg-b: #000;
 	--bg-c: #333;
-	--taskbar-size: 1em;
+	--focal: transparent;
+	--pointer-lock: yellow;
+	--taskbar-size: 1.5em;
 }
 
