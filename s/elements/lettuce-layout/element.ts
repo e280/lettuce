@@ -1,6 +1,7 @@
 
 import {html} from "@benev/slate"
 
+import {styles} from "./styles.css.js"
 import {Resizer} from "./resize/resizer.js"
 import {TabDragger} from "./parts/tab_dragger.js"
 import {lettuceNexus} from "../../context/context.js"
@@ -8,6 +9,8 @@ import {leaf_management} from "./parts/leaf_management.js"
 import {make_layout_renderer} from "./rendering/utils/make_layout_renderer.js"
 
 export const LettuceLayout = lettuceNexus.shadowComponent(use => {
+	use.styles(styles)
+
 	const {layout, panels, drops} = use.context
 	const dropzone = drops.editor
 

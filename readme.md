@@ -1,4 +1,6 @@
 
+![](./assets/lettuce.avif)
+
 # 🥬 lettuce
 
 ### splitty-panelly tabby draggy-droppy leafy layout ui
@@ -9,6 +11,6 @@
 - pane splitting, resizing, vertical, horizontal, you get it
 - it's like for editor apps and stuff like https://omniclip.app/
 - you can drag-and-drop tabs between panels
-  - done efficiently with *slots,* tab doesn't reinitialize or rerender to move
-  - that's actually legit neato if you have heavy-weight stuff in tabs
+	- done efficiently with *slots,* tab doesn't reinitialize or rerender to move
+	- that's actually legit neato if you have heavy-weight stuff in tabs
 

@@ -1,6 +1,6 @@
 
 import {Id} from "../tools/fresh_id.js"
-import {SVGTemplateResult, LightView} from "@benev/slate"
+import {SVGTemplateResult, ShadowView} from "@benev/slate"
 
 export interface PanelProps {
 	leafId: Id
@@ -9,7 +9,7 @@ export interface PanelProps {
 export interface PanelSpec {
 	label: string
 	icon: SVGTemplateResult
-	view: LightView<[PanelProps]>
+	view: ShadowView<[PanelProps]>
 }
 
 export interface PanelSpecs {

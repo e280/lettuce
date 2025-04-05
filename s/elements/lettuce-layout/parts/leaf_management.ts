@@ -34,7 +34,7 @@ export const leaf_management = ({
 					throw new Error(`unknown panel "${leaf.panel}"`)
 
 				const {view} = panels[key]
-				const content = html`${view({leafId: leaf.id})}`
+				const content = html`${view([{leafId: leaf.id}])}`
 
 				render(content, div)
 				element.appendChild(div)
