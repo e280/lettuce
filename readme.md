@@ -1,5 +1,5 @@
 
-# 🧩 Lattice
+# 🧩 *@e280/* **lattice**
 
-Flexible panels. Web components. Drag-and-drop tabs.
+Web components. Layout UX with vertical/horizontal panel splitting. Drag-and-drop tabs.
 

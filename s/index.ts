@@ -1,3 +1,3 @@
 
-console.log("🤖")
+export * from "./setup.js"
 

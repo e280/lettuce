@@ -32,5 +32,8 @@
 	"bugs": {
 		"url": "https://github.com/e280/lattice/issues"
 	},
-	"homepage": "https://github.com/e280/lattice#readme"
+	"homepage": "https://github.com/e280/lattice#readme",
+	"dependencies": {
+		"@benev/slate": "^0.3.0-14"
+	}
 }
