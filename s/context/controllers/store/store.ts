@@ -7,6 +7,6 @@ export type Store = Partial<{
 }>
 
 export function store(storage: Storage) {
-	return json_storage_proxy<Store>(storage, "construct_")
+	return json_storage_proxy<Store>(storage, "lettuce_")
 }
 
