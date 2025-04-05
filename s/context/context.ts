@@ -9,12 +9,12 @@ import {LayoutController} from "./controllers/layout/controller.js"
 import {StockLayouts} from "./controllers/layout/parts/utils/stock_layouts.js"
 import {DropCoordinator} from "./controllers/drop_coordinator/controller.js"
 
-export interface LatticeOptions {
+export interface LettuceOptions {
 	panels: Pojo<PanelSpec>,
 	layouts: StockLayouts,
 }
 
-export class LatticeContext extends Context {
+export class LettuceContext extends Context {
 	theme = theme
 
 	/** editor app persistence */
@@ -32,7 +32,7 @@ export class LatticeContext extends Context {
 	/** drop events */
 	drops = new DropCoordinator()
 
-	constructor({panels, layouts}: LatticeOptions) {
+	constructor({panels, layouts}: LettuceOptions) {
 		super()
 
 		this.panels = panels
@@ -44,5 +44,5 @@ export class LatticeContext extends Context {
 	}
 }
 
-export const latticeNexus = new Nexus<LatticeContext>()
+export const lettuceNexus = new Nexus<LettuceContext>()
 

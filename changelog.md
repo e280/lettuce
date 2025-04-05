@@ -1,5 +1,5 @@
 
-# `@e280/lattice` changelog
+# `@e280/lettuce` changelog
 
 - 🟥 *harmful -- breaking change*
 - 🔶 *maybe harmful -- deprecation, or possible breaking change*

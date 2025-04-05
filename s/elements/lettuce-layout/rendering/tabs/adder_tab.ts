@@ -2,11 +2,11 @@
 import {html} from "@benev/slate"
 
 import {LayoutMeta} from "../utils/layout_meta.js"
-import {latticeNexus} from "../../../../context/context.js"
+import {lettuceNexus} from "../../../../context/context.js"
 import {icon_feather_plus} from "../../../../icons/groups/feather/plus.js"
 import {Layout} from "../../../../context/controllers/layout/parts/types.js"
 
-export const AdderTab = latticeNexus.lightView(_ => ({meta, pane}: {
+export const AdderTab = lettuceNexus.lightView(_ => ({meta, pane}: {
 		meta: LayoutMeta
 		pane: Layout.Pane
 	}) => {

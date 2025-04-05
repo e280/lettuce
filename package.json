@@ -1,7 +1,7 @@
 {
-	"name": "@e280/lattice",
+	"name": "@e280/lettuce",
 	"version": "0.0.0-0",
-	"description": "web ui for panel layouts",
+	"description": "splitty panelly leafy layouts",
 	"license": "MIT",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"type": "module",
@@ -15,6 +15,9 @@
 		"start": "http-server x",
 		"test": "exit 0"
 	},
+	"dependencies": {
+		"@benev/slate": "^0.3.0-14"
+	},
 	"devDependencies": {
 		"http-server": "^14.1.1",
 		"npm-run-all": "^4.1.5",
@@ -27,13 +30,10 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/e280/lattice.git"
+		"url": "git+https://github.com/e280/lettuce.git"
 	},
 	"bugs": {
-		"url": "https://github.com/e280/lattice/issues"
+		"url": "https://github.com/e280/lettuce/issues"
 	},
-	"homepage": "https://github.com/e280/lattice#readme",
-	"dependencies": {
-		"@benev/slate": "^0.3.0-14"
-	}
+	"homepage": "https://github.com/e280/lettuce#readme"
 }

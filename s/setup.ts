@@ -1,10 +1,10 @@
 
 import {register_to_dom} from "@benev/slate"
-import {LatticeLayout} from "./elements/lattice-layout/element.js"
-import {LatticeContext, LatticeOptions, latticeNexus} from "./context/context.js"
+import {LettuceLayout} from "./elements/lettuce-layout/element.js"
+import {LettuceContext, LettuceOptions, lettuceNexus} from "./context/context.js"
 
-export function setupLattice(options: LatticeOptions) {
-	latticeNexus.context = new LatticeContext(options)
-	register_to_dom({LatticeLayout})
+export function setupLettuce(options: LettuceOptions) {
+	lettuceNexus.context = new LettuceContext(options)
+	register_to_dom({LettuceLayout})
 }
 

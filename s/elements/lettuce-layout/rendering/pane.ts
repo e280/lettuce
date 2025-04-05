@@ -10,7 +10,7 @@ import {render_leaf} from "./leaf.js"
 import {defined} from "../../../tools/defined.js"
 import {LayoutMeta} from "./utils/layout_meta.js"
 import {sizing_styles} from "../parts/sizing_styles.js"
-import {latticeNexus} from "../../../context/context.js"
+import {lettuceNexus} from "../../../context/context.js"
 import {render_adder_leaf} from "./utils/render_adder_leaf.js"
 import {Layout} from "../../../context/controllers/layout/parts/types.js"
 
@@ -18,7 +18,7 @@ export const render_pane = (meta: LayoutMeta) => (
 		pane: Layout.Pane,
 	) => {
 
-	const {gesture} = latticeNexus.context
+	const {gesture} = lettuceNexus.context
 
 	const activeLeaf = (pane.active_leaf_index !== null)
 		? pane.children[pane.active_leaf_index]!

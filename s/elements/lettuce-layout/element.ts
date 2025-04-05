@@ -3,11 +3,11 @@ import {html} from "@benev/slate"
 
 import {Resizer} from "./resize/resizer.js"
 import {TabDragger} from "./parts/tab_dragger.js"
-import {latticeNexus} from "../../context/context.js"
+import {lettuceNexus} from "../../context/context.js"
 import {leaf_management} from "./parts/leaf_management.js"
 import {make_layout_renderer} from "./rendering/utils/make_layout_renderer.js"
 
-export const LatticeLayout = latticeNexus.shadowComponent(use => {
+export const LettuceLayout = lettuceNexus.shadowComponent(use => {
 	const {layout, panels, drops} = use.context
 	const dropzone = drops.editor
 
