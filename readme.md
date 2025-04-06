@@ -14,3 +14,7 @@
 	- done efficiently with *slots,* tab doesn't reinitialize or rerender to move
 	- that's actually legit neato if you have heavy-weight stuff in tabs
 
+### how to do
+
+- ****
+

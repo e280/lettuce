@@ -1,27 +1,25 @@
 
-import {Context, Nexus, Pojo} from "@benev/slate"
+import {Context, Nexus} from "@benev/slate"
 
 import {theme} from "./theme.js"
+import {Lettuce} from "./lettuce.js"
 import {store} from "./controllers/store/store.js"
-import {PanelSpec} from "../panels/panel_parts.js"
+import {PanelSpecs} from "../panels/panel_parts.js"
 import {Gesture} from "./controllers/gesture/controller.js"
 import {LayoutController} from "./controllers/layout/controller.js"
-import {StockLayouts} from "./controllers/layout/parts/utils/stock_layouts.js"
 import {DropCoordinator} from "./controllers/drop_coordinator/controller.js"
+import {StockLayouts} from "./controllers/layout/parts/utils/stock_layouts.js"
 
-export interface LettuceOptions {
-	panels: Pojo<PanelSpec>,
-	layouts: StockLayouts,
-}
+export class LettuceContext<xPanels extends PanelSpecs = PanelSpecs, xLayouts extends StockLayouts = StockLayouts> extends Context {
+	static nexus = new Nexus<LettuceContext>()
 
-export class LettuceContext extends Context {
 	theme = theme
 
 	/** editor app persistence */
 	store = store(localStorage)
 
 	/** panels available to the user */
-	panels: Pojo<PanelSpec>
+	panels: xPanels
 
 	/** layout state, actions, and helpers */
 	layout: LayoutController
@@ -32,7 +30,7 @@ export class LettuceContext extends Context {
 	/** drop events */
 	drops = new DropCoordinator()
 
-	constructor({panels, layouts}: LettuceOptions) {
+	constructor({panels, layouts}: Lettuce<xPanels, xLayouts>) {
 		super()
 
 		this.panels = panels
@@ -43,6 +41,4 @@ export class LettuceContext extends Context {
 		)
 	}
 }
-
-export const lettuceNexus = new Nexus<LettuceContext>()
 

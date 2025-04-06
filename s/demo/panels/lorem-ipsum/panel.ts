@@ -2,7 +2,7 @@
 import {html} from "@benev/slate"
 
 import {styles} from "./styles.js"
-import {lettuceNexus} from "../../../context/context.js"
+import {LettuceContext} from "../../../context/context.js"
 import {panel, PanelProps} from "../../../panels/panel_parts.js"
 import {icon_feather_list} from "../../../icons/groups/feather/list.js"
 
@@ -10,7 +10,7 @@ export const LoremIpsumPanel = panel({
 	label: "lorem",
 	icon: icon_feather_list,
 
-	view: lettuceNexus.shadowView(use => ({}: PanelProps) => {
+	view: LettuceContext.nexus.shadowView(use => ({}: PanelProps) => {
 		use.name("lorem-ipsum")
 		use.styles(styles)
 		return html`

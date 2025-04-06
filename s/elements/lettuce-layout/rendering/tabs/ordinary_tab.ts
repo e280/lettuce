@@ -2,7 +2,7 @@
 import {html} from "@benev/slate"
 
 import {LayoutMeta} from "../utils/layout_meta.js"
-import {lettuceNexus} from "../../../../context/context.js"
+import {LettuceContext} from "../../../../context/context.js"
 import {icon_feather_x} from "../../../../icons/groups/feather/x.js"
 import {Layout} from "../../../../context/controllers/layout/parts/types.js"
 
@@ -13,7 +13,7 @@ const inside_x_button = (event: MouseEvent) => {
 	return event.target === x || x.contains(target)
 }
 
-export const OrdinaryTab = lettuceNexus.lightView(use => ({
+export const OrdinaryTab = LettuceContext.nexus.lightView(use => ({
 		meta, pane, leaf, leafIndex,
 	}: {
 		meta: LayoutMeta

@@ -2,7 +2,7 @@
 import {html} from "@benev/slate"
 
 import {styles} from "./styles.js"
-import {lettuceNexus} from "../../../context/context.js"
+import {LettuceContext} from "../../../context/context.js"
 import {panel, PanelProps} from "../../../panels/panel_parts.js"
 import {getMetaVersion} from "../../../tools/get-meta-version.js"
 import {icon_feather_info} from "../../../icons/groups/feather/info.js"
@@ -11,7 +11,7 @@ export const AboutPanel = panel({
 	label: "about",
 	icon: icon_feather_info,
 
-	view: lettuceNexus.shadowView(use => ({}: PanelProps) => {
+	view: LettuceContext.nexus.shadowView(use => ({}: PanelProps) => {
 		use.name("about")
 		use.styles(styles)
 
