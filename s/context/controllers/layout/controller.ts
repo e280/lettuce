@@ -42,7 +42,8 @@ export class LayoutController {
 	}
 
 	#load_from_store() {
-		const layoutFile = this.store.layout
+		let layoutFile = this.store.layout
+
 		if (layoutFile)
 			this.#tree.transmute(() => layoutFile.root)
 	}

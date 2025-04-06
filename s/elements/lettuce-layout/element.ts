@@ -20,6 +20,7 @@ export const LettuceLayout = LettuceContext.nexus.shadowComponent(use => {
 		panels,
 		element: use.element,
 		seeker: layout.seeker,
+		actions: layout.actions,
 	}))
 
 	leaves.add_new_leaves()
