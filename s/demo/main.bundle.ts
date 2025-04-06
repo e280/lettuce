@@ -1,5 +1,5 @@
 
-import {html} from "@benev/slate"
+import {cssReset, html, nexus} from "@benev/slate"
 import {Lettuce} from "../context/lettuce.js"
 import {getMetaVersion} from "../tools/get-meta-version.js"
 import {icon_feather_info} from "../icons/groups/feather/info.js"
@@ -10,6 +10,8 @@ import {icon_feather_help_circle} from "../icons/groups/feather/help-circle.js"
 import loremCss from "./styles/lorem.css.js"
 import aboutCss from "./styles/about.css.js"
 import unknownCss from "./styles/unknown.css.js"
+
+nexus.context.theme = cssReset
 
 Lettuce
 	.panels(panel => ({

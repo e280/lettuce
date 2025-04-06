@@ -1,6 +1,6 @@
 
-import {Id} from "../../tools/fresh_id.js"
 import {Content} from "@benev/slate"
+import {Id} from "../../tools/fresh_id.js"
 
 export interface PanelProps {
 	leafId: Id
