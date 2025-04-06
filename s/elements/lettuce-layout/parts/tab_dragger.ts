@@ -3,7 +3,7 @@ import {Signal, signal} from "@benev/slate"
 
 import {is_within} from "./drag_utils.js"
 import {Id} from "../../../tools/fresh_id.js"
-import {LettuceContext} from "../../../context/context.js"
+import {Salad} from "../../../context/salad.js"
 import {Layout} from "../../../context/controllers/layout/parts/types.js"
 import {LayoutSeeker} from "../../../context/controllers/layout/parts/seeker.js"
 import {LayoutActions} from "../../../context/controllers/layout/parts/actions.js"
@@ -22,7 +22,7 @@ export class TabDragger {
 	#seeker: LayoutSeeker
 	#actions: LayoutActions
 
-	constructor(public context: LettuceContext, layout: LayoutController) {
+	constructor(public context: Salad, layout: LayoutController) {
 		this.#seeker = layout.seeker
 		this.#actions = layout.actions
 		this.#operation = signal(undefined)

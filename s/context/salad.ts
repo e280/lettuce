@@ -3,15 +3,19 @@ import {Context, Nexus} from "@benev/slate"
 
 import {theme} from "./theme.js"
 import {Lettuce} from "./lettuce.js"
-import {store} from "./controllers/store/store.js"
 import {PanelSpecs} from "./panels/types.js"
+import {store} from "./controllers/store/store.js"
 import {Gesture} from "./controllers/gesture/controller.js"
 import {LayoutController} from "./controllers/layout/controller.js"
 import {DropCoordinator} from "./controllers/drop_coordinator/controller.js"
 import {StockLayouts} from "./controllers/layout/parts/utils/stock_layouts.js"
 
-export class LettuceContext<xPanels extends PanelSpecs = PanelSpecs, xLayouts extends StockLayouts = StockLayouts> extends Context {
-	static nexus = new Nexus<LettuceContext>()
+export class Salad<
+		xPanels extends PanelSpecs = PanelSpecs,
+		xLayouts extends StockLayouts = StockLayouts,
+	> extends Context {
+
+	static nexus = new Nexus<Salad>()
 
 	theme = theme
 

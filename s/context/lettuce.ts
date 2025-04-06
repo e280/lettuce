@@ -1,7 +1,7 @@
 
 import {register_to_dom} from "@benev/slate"
 
-import {LettuceContext} from "./context.js"
+import {Salad} from "./salad.js"
 import {PanelSpecs} from "./panels/types.js"
 import {LayoutHelper} from "./layout-helper.js"
 import {PanelHelper} from "./panels/panel-helper.js"
@@ -20,7 +20,7 @@ export class Lettuce<xPanels extends PanelSpecs, xLayouts extends StockLayouts> 
 	})
 
 	setContext() {
-		LettuceContext.nexus.context = new LettuceContext(this)
+		Salad.nexus.context = new Salad(this)
 		return this
 	}
 
