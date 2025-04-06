@@ -1,9 +1,9 @@
 
-import {Pojo, html, render} from "@benev/slate"
+import {Pojo, render} from "@benev/slate"
 
 import {leaf_slot} from "./leaf_slot.js"
 import {Id} from "../../../tools/fresh_id.js"
-import {PanelSpec} from "../../../panels/panel_parts.js"
+import {PanelSpec} from "../../../context/panels/types.js"
 import {LayoutSeeker} from "../../../context/controllers/layout/parts/seeker.js"
 
 export const leaf_management = ({
@@ -33,8 +33,8 @@ export const leaf_management = ({
 				if (!(key in panels))
 					throw new Error(`unknown panel "${leaf.panel}"`)
 
-				const {view} = panels[key]
-				const content = html`${view([{leafId: leaf.id}])}`
+				const {render: panelRender} = panels[key]
+				const content = panelRender({leafId: leaf.id})
 
 				render(content, div)
 				element.appendChild(div)

@@ -63,7 +63,7 @@ export const OrdinaryTab = LettuceContext.nexus.lightView(use => ({
 				>
 
 				<span class=icon>
-					${icon}
+					${icon()}
 				</span>
 
 				<span class=x ?data-available=${active}>

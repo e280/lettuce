@@ -2,19 +2,21 @@
 import {register_to_dom} from "@benev/slate"
 
 import {LettuceContext} from "./context.js"
+import {PanelSpecs} from "./panels/types.js"
 import {LayoutHelper} from "./layout-helper.js"
-import {PanelSpecs} from "../panels/panel_parts.js"
+import {PanelHelper} from "./panels/panel-helper.js"
 import {LettuceLayout} from "../elements/lettuce-layout/element.js"
 import {StockLayouts} from "./controllers/layout/parts/utils/stock_layouts.js"
 
 export class Lettuce<xPanels extends PanelSpecs, xLayouts extends StockLayouts> {
-	// static nexus = new Nexus<LettuceContext>()
-
 	constructor(public panels: xPanels, public layouts: xLayouts) {}
 
-	static panels = <xPanels extends PanelSpecs>(panels: xPanels) => ({
-		layout: <xLayouts extends StockLayouts>(fn: (helper: LayoutHelper<xPanels>) => xLayouts) =>
-			new this<xPanels, xLayouts>(panels, fn(new LayoutHelper<xPanels>())),
+	static panels = <xPanels extends PanelSpecs>(panelFn: (helper: PanelHelper) => xPanels) => ({
+		layout: <xLayouts extends StockLayouts>(layoutFn: (helper: LayoutHelper<xPanels>) => xLayouts) =>
+			new this<xPanels, xLayouts>(
+				panelFn(new PanelHelper()),
+				layoutFn(new LayoutHelper<xPanels>()),
+			),
 	})
 
 	setContext() {

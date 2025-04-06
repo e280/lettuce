@@ -1,6 +1,6 @@
 
 import {freshId} from "../tools/fresh_id.js"
-import {PanelSpecs} from "../panels/panel_parts.js"
+import {PanelSpecs} from "./panels/types.js"
 import {Layout} from "./controllers/layout/parts/types.js"
 
 export class LayoutHelper<xPanels extends PanelSpecs> {

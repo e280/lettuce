@@ -1,8 +1,7 @@
 
 import {css} from "@benev/slate"
-import {standard_panel_styles} from "../../../panels/standard_panel_styles.js"
-
-export const styles = css`
+import {standard_panel_styles} from "../../panels/standard_panel_styles.js"
+export default css`
 
 ${standard_panel_styles}
 

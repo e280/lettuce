@@ -22,7 +22,7 @@ export function render_adder_leaf(
 					)
 				}}
 				>
-				${panel.icon}
+				${panel.icon()}
 				<span>${panel.label}</span>
 			</button>
 		`)}`
