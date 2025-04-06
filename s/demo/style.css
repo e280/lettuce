@@ -41,18 +41,22 @@ html, body {
 	background: black;
 }
 
-lettuce-layout {
+body {
 	width: 100vw;
 	height: 100vh;
+}
 
-	--alpha: yellow;
-	--bravo: aqua;
-	--charlie: indigo;
-	--bg-a: #181818;
-	--bg-b: #000;
-	--bg-c: #333;
+lettuce-layout {
+	color: #8fae94;
+	background: #1b3125;
+
+	--highlight: #76ff6b;
+	--special: yellow;
+	--pane: transparent;
+	--taskbar: transparent;
+	--tab: transparent;
+	--gutter: #0b120e;
 	--focal: transparent;
 	--pointer-lock: yellow;
-	--taskbar-size: 1.5em;
 }
 

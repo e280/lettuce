@@ -37,7 +37,6 @@ export const LettuceLayout = lettuceNexus.shadowComponent(use => {
 	return html`
 		<div
 			class=layout
-			@contextmenu=${(e: Event) => e.preventDefault()}
 			@pointermove=${resizer.track_mouse_movement}
 			@pointerup=${resizer.end}
 			?data-dropzone-indicator=${dropzone.indicator}

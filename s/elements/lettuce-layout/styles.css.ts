@@ -14,21 +14,15 @@ export const styles = css`
 	background: #111;
 	color: #fff8;
 
-	--alpha: var(--alpha);
-	--bravo: var(--bravo);
-	--charlie: var(--charlie);
-	--bg-a: var(--bg-a);
-	--bg-b: var(--bg-b);
-	--focal: var(--focal);
-	--pointer-lock: var(--pointer-lock);
-	--taskbar-size: var(--taskbar-size);
-}
-
-:host {
-	--resizer: var(--bg-b);
-	--taskbar: var(--bg-a);
+	--taskbar-size: 1.5em;
+	--highlight: yellow;
+	--special: aqua;
+	--pane: #181818;
+	--taskbar: #181818;
 	--tab: transparent;
-	--pane: var(--bg-a);
+	--gutter: #000;
+	--focal: transparent;
+	--pointer-lock: yellow;
 }
 
 .layout {
@@ -45,10 +39,10 @@ export const styles = css`
 		z-index: 10;
 		background: color-mix(
 			in srgb,
-			var(--bravo) 2%,
+			var(--special) 2%,
 			transparent
 		);
-		border: 0.25em dashed var(--bravo);
+		border: 0.25em dashed var(--special);
 		pointer-events: none;
 	}
 
@@ -81,7 +75,7 @@ export const styles = css`
 .resizer {
 	flex: 0 0 ${size_of_resize_handle_in_rem}rem;
 	cursor: ew-resize;
-	background: var(--resizer);
+	background: var(--gutter);
 }
 
 .pane {
@@ -106,8 +100,8 @@ export const styles = css`
 		position: absolute;
 		inset: 0;
 		opacity: 0.1;
-		border: 0.2em dashed var(--bravo);
-		background: color-mix(in srgb, var(--bravo) 25%, transparent 75%);
+		border: 0.2em dashed var(--special);
+		background: color-mix(in srgb, var(--special) 25%, transparent 75%);
 		pointer-events: none;
 	}
 
@@ -127,7 +121,7 @@ export const styles = css`
 
 				opacity: 0.6;
 				&:hover { opacity: 1; }
-				&:hover:active { color: var(--alpha); }
+				&:hover:active { color: var(--highlight); }
 			}
 		}
 
@@ -182,7 +176,7 @@ export const styles = css`
 			&:hover {
 				opacity: 0.9;
 				transform: scale(1.1);
-				color: var(--alpha);
+				color: var(--highlight);
 			}
 
 			&:active {
@@ -214,7 +208,7 @@ export const styles = css`
 		left: 0;
 		height: 100%;
 		width: 2px;
-		background: var(--bravo);
+		background: var(--special);
 		border-radius: 1em;
 		pointer-events: none;
 
@@ -245,12 +239,12 @@ export const styles = css`
 
 		opacity: 0.6;
 		&:hover { opacity: 1; }
-		&:hover:active { color: var(--alpha); }
+		&:hover:active { color: var(--highlight); }
 
 		&[data-active] {
 			opacity: 1;
-			color: var(--alpha);
-			border-color: var(--alpha);
+			color: var(--highlight);
+			border-color: var(--highlight);
 			background: var(--pane);
 		}
 
