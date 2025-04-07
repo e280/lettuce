@@ -15,7 +15,7 @@
 
 <br/>
 
-## how to make a big fat layout salad
+## make a layout salad
 
 - **install it down**
   ```sh
