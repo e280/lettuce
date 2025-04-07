@@ -11,7 +11,7 @@
 - it's like for editor apps and stuff like https://omniclip.app/
 - you can drag-and-drop tabs between panels
   - done efficiently with *slots,* tab doesn't reinitialize or rerender to move
-  - that's actually legit neato if you have heavy-weight stuff in tabs
+  - that's actually *legit neato* if you have heavy-weight stuff in tabs
 
 <br/>
 
@@ -82,11 +82,17 @@
     .setup()
   ```
 
-### you can do stuff with `lettuce`
+### you can do stuff with that `lettuce` instance
 
-the `lettuce` instance you now have is like, the context for the layout system.
+that `lettuce` instance you get is the context for the layout system.
 
 it has a bunch of facilities and stuff for manipulating the layout and stuff.
 
-i literally don't have time to fully document it rn... plz help
+i literally don't have time to exhaustively document it rn... plz help
+
+use your lsp or read [lettuce.ts](./s/context/lettuce.ts)
+
+### i made this open sourcedly just for you
+
+pay your respects and gimmie a github star
 
