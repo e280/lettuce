@@ -28,18 +28,20 @@
 - **css it this way**
   ```css
   lettuce-layout {
-	  background: #111;
 	  color: #fff8;
+	  background: #111;
 
-	  --taskbar-size: 1.5em;
+	  --scale: 1.5em;
 	  --highlight: yellow;
 	  --special: aqua;
+	  --warn: red;
+	  --warntext: white;
 	  --pane: #181818;
 	  --taskbar: #181818;
 	  --tab: transparent;
 	  --gutter: #000;
 	  --focal: transparent;
-	  --pointer-lock: yellow;
+	  --pointerlock: yellow;
   }
   ```
 - **javascript it that way**

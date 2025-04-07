@@ -50,13 +50,16 @@ lettuce-layout {
 	color: #8fae94;
 	background: #1b3125;
 
+	--scale: 1.5em;
 	--highlight: #76ff6b;
 	--special: yellow;
+	--warn: red;
+	--warntext: white;
 	--pane: transparent;
 	--taskbar: transparent;
 	--tab: transparent;
 	--gutter: #0d1f15;
 	--focal: transparent;
-	--pointer-lock: yellow;
+	--pointerlock: yellow;
 }
 

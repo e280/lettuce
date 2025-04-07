@@ -10,19 +10,21 @@ export const styles = css`
 	width: 100%;
 	height: 100%;
 
-	font-family: sans-serif;
-	background: #111;
 	color: #fff8;
+	background: #111;
+	font-family: sans-serif;
 
-	--taskbar-size: 1.5em;
+	--scale: 1.5em;
 	--highlight: yellow;
 	--special: aqua;
+	--warn: red;
+	--warntext: white;
 	--pane: #181818;
 	--taskbar: #181818;
 	--tab: transparent;
 	--gutter: #000;
 	--focal: transparent;
-	--pointer-lock: yellow;
+	--pointerlock: yellow;
 }
 
 .layout {
@@ -91,7 +93,7 @@ export const styles = css`
 	}
 
 	&[data-is-pointer-locked] {
-		border-color: var(--pointer-lock);
+		border-color: var(--pointerlock);
 	}
 
 	&[data-drag]::after {
@@ -108,7 +110,7 @@ export const styles = css`
 	> .taskbar {
 		display: flex;
 		justify-content: end;
-		font-size: var(--taskbar-size);
+		font-size: var(--scale);
 
 		> * {
 			flex: 0 0 auto;
@@ -137,8 +139,8 @@ export const styles = css`
 			> button {
 				padding: 0.2em 0.3em;
 
-				&.x:hover { color: red; }
-				&.x:hover:active { color: color-mix(in srgb, white, red); }
+				&.x:hover { color: var(--warn); }
+				&.x:hover:active { color: color-mix(in srgb, var(--warntext), var(--warn)); }
 
 				> svg {
 					width: 1em;
@@ -262,8 +264,8 @@ export const styles = css`
 
 			&[data-available]:hover {
 				opacity: 1;
-				color: white;
-				background: red;
+				color: var(--warntext);
+				background: var(--warn);
 				border-radius: 1em;
 			}
 		}
