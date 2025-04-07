@@ -2,7 +2,7 @@
 import {html} from "@benev/slate"
 
 import {LayoutMeta} from "../utils/layout_meta.js"
-import {Lettuce} from "../../../../context/lettuce-rofl.js"
+import {Lettuce} from "../../../../context/lettuce.js"
 import {icon_feather_plus} from "../../../../icons/groups/feather/plus.js"
 import {Layout} from "../../../../context/controllers/layout/parts/types.js"
 

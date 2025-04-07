@@ -2,7 +2,7 @@
 import {Context, Nexus} from "@benev/slate"
 
 import {theme} from "./theme.js"
-import {Lmao} from "./lmao.js"
+import {Salad} from "./salad.js"
 import {PanelSpecs} from "./panels/types.js"
 import {store} from "./controllers/store/store.js"
 import {Gesture} from "./controllers/gesture/controller.js"
@@ -34,7 +34,7 @@ export class Lettuce<
 	/** drop events */
 	drops = new DropCoordinator()
 
-	constructor({panels, layouts}: Lmao<xPanels, xLayouts>) {
+	constructor({panels, layouts}: Salad<xPanels, xLayouts>) {
 		super()
 
 		this.panels = panels

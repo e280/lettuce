@@ -3,7 +3,7 @@ import {Signal, signal} from "@benev/slate"
 
 import {is_within} from "./drag_utils.js"
 import {Id} from "../../../tools/fresh_id.js"
-import {Lettuce} from "../../../context/lettuce-rofl.js"
+import {Lettuce} from "../../../context/lettuce.js"
 import {Layout} from "../../../context/controllers/layout/parts/types.js"
 import {LayoutSeeker} from "../../../context/controllers/layout/parts/seeker.js"
 import {LayoutActions} from "../../../context/controllers/layout/parts/actions.js"

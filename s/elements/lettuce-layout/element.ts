@@ -3,7 +3,7 @@ import {html} from "@benev/slate"
 
 import {styles} from "./styles.css.js"
 import {Resizer} from "./resize/resizer.js"
-import {Lettuce} from "../../context/lettuce-rofl.js"
+import {Lettuce} from "../../context/lettuce.js"
 import {TabDragger} from "./parts/tab_dragger.js"
 import {leaf_management} from "./parts/leaf_management.js"
 import {make_layout_renderer} from "./rendering/utils/make_layout_renderer.js"
