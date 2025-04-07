@@ -1,9 +1,6 @@
 
 import {css} from "@benev/slate"
-import {panelStyles} from "../../context/panels/panel-styles.js"
 export default css`
-
-${panelStyles}
 
 :host {
 	display: flex;

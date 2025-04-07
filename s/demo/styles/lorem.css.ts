@@ -1,9 +1,6 @@
 
 import {css} from "@benev/slate"
-import {panelStyles} from "../../context/panels/panel-styles.js"
 export default css`
-
-${panelStyles}
 
 section {
 	font-size: 1.5em;

@@ -9,6 +9,9 @@
 
 ## v0.0
 
+### v0.0.2
+- 🔶 i deleted `panelStyles`, now they're baked into layout `::slotted(*)`.
+
 ### v0.0.1
 - 🔶 okay okay i renamed `PanelHelper` to `Pan`. maybe some other crap.  
   before i have users, first breaking change *doesn't count in semver!*  

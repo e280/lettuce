@@ -190,7 +190,10 @@ export const styles = css`
 }
 
 ::slotted(*) {
-	display: contents;
+	display: block;
+	position: absolute;
+	inset: 0;
+	overflow: auto;
 }
 
 .tabs {
