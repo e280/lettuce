@@ -85,6 +85,25 @@
     .setup()
   ```
 
+### keep yourself organized
+
+- you probably want to keep each of your panels in its own file
+- if you're using `@benev/slate` views, you can bring in a `PanelHelper` like this
+  ```ts
+  import {panels} from "@e280/lettuce"
+
+  export const aboutPanel = panels.shadowView({
+    label: "about",
+    icon: () => html`🥬`,
+    render: use => panel => {
+      use.styles(css`h1 {color: skyblue;}`)
+      return html`
+        <h1>hello</h1>
+      `
+    },
+  })
+  ```
+
 ### you can do stuff with that `lettuce` instance
 that `lettuce` instance you get is the context for the layout system.  
 it has a bunch of facilities and stuff for manipulating the layout and stuff.  

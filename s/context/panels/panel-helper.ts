@@ -3,14 +3,18 @@ import {PanelProps, PanelSpec} from "./types.js"
 import {nexus as slateNexus, Content, Context, LightViewRenderer, Nexus, ShadowViewRenderer} from "@benev/slate"
 
 export class PanelHelper {
+	constructor(public nexus: Nexus<Context> = slateNexus) {}
 
-	shadowView({nexus = slateNexus, label, icon, render}: {
-			nexus?: Nexus<Context>,
+	plain(panel: PanelSpec) {
+		return panel
+	}
+
+	shadowView({label, icon, render}: {
 			label: string,
 			icon: () => Content,
 			render: ShadowViewRenderer<Context, [PanelProps]>,
 		}): PanelSpec {
-		const View = nexus.shadowView(render)
+		const View = this.nexus.shadowView(render)
 		return {
 			label,
 			icon,
@@ -18,13 +22,12 @@ export class PanelHelper {
 		}
 	}
 
-	lightView({nexus = slateNexus, label, icon, render}: {
-			nexus?: Nexus<Context>,
+	lightView({label, icon, render}: {
 			label: string,
 			icon: () => Content,
 			render: LightViewRenderer<Context, [PanelProps]>,
 		}): PanelSpec {
-		const View = nexus.lightView(render)
+		const View = this.nexus.lightView(render)
 		return {
 			label,
 			icon,
@@ -32,4 +35,6 @@ export class PanelHelper {
 		}
 	}
 }
+
+export const panels = new PanelHelper()
 
