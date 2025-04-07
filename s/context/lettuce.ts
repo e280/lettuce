@@ -15,8 +15,10 @@ export class Lettuce<
 		xLayouts extends StockLayouts = StockLayouts,
 	> extends Context {
 
+	/** slate nexus for initializing views and stuff */
 	static nexus = new Nexus<Lettuce>()
 
+	/** css theme applied across all lettuce views and components (but not your panels actually) */
 	theme = theme
 
 	/** editor app persistence */
@@ -36,13 +38,8 @@ export class Lettuce<
 
 	constructor({panels, layouts}: Salad<xPanels, xLayouts>) {
 		super()
-
 		this.panels = panels
-
-		this.layout = new LayoutController(
-			this.store,
-			layouts,
-		)
+		this.layout = new LayoutController(this.store, layouts)
 	}
 }
 
