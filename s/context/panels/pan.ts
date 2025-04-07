@@ -2,7 +2,8 @@
 import {PanelProps, PanelSpec} from "./types.js"
 import {nexus as slateNexus, Content, Context, LightViewRenderer, Nexus, ShadowViewRenderer} from "@benev/slate"
 
-export class PanelHelper {
+/** helps you build panels */
+export class Pan {
 	constructor(public nexus: Nexus<Context> = slateNexus) {}
 
 	plain(panel: PanelSpec) {
@@ -36,5 +37,5 @@ export class PanelHelper {
 	}
 }
 
-export const panels = new PanelHelper()
+export const pan = new Pan()
 

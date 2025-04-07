@@ -3,7 +3,8 @@ import {freshId} from "../tools/fresh_id.js"
 import {PanelSpecs} from "./panels/types.js"
 import {Layout} from "./controllers/layout/parts/types.js"
 
-export class LayoutHelper<xPanels extends PanelSpecs> {
+/** helps you build layouts */
+export class Layman<xPanels extends PanelSpecs> {
 	single(panel: keyof xPanels) {
 		return (): Layout.Cell => ({
 			id: freshId(),

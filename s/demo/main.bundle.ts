@@ -14,9 +14,9 @@ import unknownCss from "./styles/unknown.css.js"
 nexus.context.theme = cssReset
 
 Salad
-	.panels(panel => ({
+	.panels(pan => ({
 
-		about: panel.shadowView({
+		about: pan.shadowView({
 			label: "about",
 			icon: () => icon_feather_info,
 			render: use => _props => {
@@ -34,7 +34,7 @@ Salad
 			},
 		}),
 
-		lorem: panel.shadowView({
+		lorem: pan.shadowView({
 			label: "lorem",
 			icon: () => icon_feather_list,
 			render: use => _props => {
@@ -51,7 +51,7 @@ Salad
 			},
 		}),
 
-		unknown: panel.shadowView({
+		unknown: pan.shadowView({
 			label: "unknown",
 			icon: () => icon_feather_help_circle,
 			render: use => _props => {
@@ -62,9 +62,9 @@ Salad
 		}),
 	}))
 
-	.layout(layout => ({
-		default: layout.single("about"),
-		empty: layout.single("about"),
+	.layout(layman => ({
+		default: layman.single("about"),
+		empty: layman.single("about"),
 	}))
 
 	.setup()

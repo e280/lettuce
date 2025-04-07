@@ -2,7 +2,7 @@
 
 import {css} from "@benev/slate"
 
-export const standard_panel_styles = css`
+export const panelStyles = css`
 
 :host {
 	display: block;

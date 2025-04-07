@@ -9,6 +9,7 @@
 - it's web components bruh
 - pane splitting, resizing, vertical, horizontal, you get it
 - it's like for editor apps and stuff like https://omniclip.app/
+- uses [@benev/slate](https://github.com/benevolent-games/slate) and [lit](https://lit.dev/)
 - you can drag-and-drop tabs between panels
   - done efficiently with *slots,* tab doesn't reinitialize or rerender to move
   - that's actually *legit neato* if you have heavy-weight stuff in tabs
@@ -51,10 +52,10 @@
   import {html, nexus, cssReset} from "@benev/slate"
 
   const lettuce = Salad
-    .panels(panel => ({
+    .panels(pan => ({
 
       // example panel using @benev/slate shadowView
-      about: panel.shadowView({
+      about: pan.shadowView({
         label: "about",
         icon: () => html`🥬`,
         render: use => panel => {
@@ -66,13 +67,13 @@
       }),
 
       // example panel just using lit html
-      lit: {
+      lit: pan.plain({
         label: "lit",
         icon: () => html`🔥`,
         render: () => html`
           <p>this is an example</p>
         `,
-      },
+      }),
     }))
 
     // layout configuration
@@ -87,12 +88,12 @@
 
 ### keep yourself organized
 
-- you probably want to keep each of your panels in its own file
-- if you're using `@benev/slate` views, you can bring in a `PanelHelper` like this
+- keep each of your panels in its own file
+- you can use `Salad.pan` to help with making panels in a type-happy way
   ```ts
-  import {panels} from "@e280/lettuce"
+  import {Salad} from "@e280/lettuce"
 
-  export const aboutPanel = panels.shadowView({
+  export const aboutPanel = Salad.pan.shadowView({
     label: "about",
     icon: () => html`🥬`,
     render: use => panel => {
