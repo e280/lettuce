@@ -17,6 +17,7 @@ export const styles = css`
 	--scale: 1.5em;
 	--highlight: yellow;
 	--special: aqua;
+	--dropcover: 10%;
 	--warn: red;
 	--warntext: white;
 	--pane: #181818;
@@ -39,12 +40,8 @@ export const styles = css`
 		position: fixed;
 		inset: 0;
 		z-index: 10;
-		background: color-mix(
-			in srgb,
-			var(--special) 2%,
-			transparent
-		);
-		border: 0.25em dashed var(--special);
+		background: color-mix(in srgb, transparent, var(--special) var(--dropcover));
+		border: 0.25em dashed color-mix(in srgb, transparent, var(--special) 50%);
 		pointer-events: none;
 	}
 
@@ -101,9 +98,8 @@ export const styles = css`
 		display: block;
 		position: absolute;
 		inset: 0;
-		opacity: 0.1;
-		border: 0.2em dashed var(--special);
-		background: color-mix(in srgb, var(--special) 25%, transparent 75%);
+		border: 0.2em dashed color-mix(in srgb, transparent, var(--special) 50%);
+		background: color-mix(in srgb, transparent, var(--special) var(--dropcover));
 		pointer-events: none;
 	}
 

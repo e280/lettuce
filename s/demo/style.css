@@ -53,6 +53,7 @@ lettuce-layout {
 	--scale: 1.5em;
 	--highlight: #76ff6b;
 	--special: yellow;
+	--dropcover: 10%;
 	--warn: red;
 	--warntext: white;
 	--pane: transparent;

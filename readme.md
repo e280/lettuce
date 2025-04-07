@@ -34,6 +34,7 @@
 	  --scale: 1.5em;
 	  --highlight: yellow;
 	  --special: aqua;
+	  --dropcover: 10%;
 	  --warn: red;
 	  --warntext: white;
 	  --pane: #181818;
