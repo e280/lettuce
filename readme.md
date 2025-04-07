@@ -13,48 +13,74 @@
   - done efficiently with *slots,* tab doesn't reinitialize or rerender to move
   - that's actually legit neato if you have heavy-weight stuff in tabs
 
-### 📦 `npm install @e280/lettuce`
+<br/>
 
-### do it kinda like this
+## how to make a big fat layout salad
 
-```ts
-import {Salad} from "@e280/lettuce"
-import {html, nexus, cssReset} from "@benev/slate"
+- **install it down**
+  ```sh
+  npm install @e280/lettuce
+  ```
+- **html it up**
+  ```html
+  <lettuce-layout></lettuce-layout>
+  ```
+- **css it this way**
+  ```css
+  lettuce-layout {
+	  background: #111;
+	  color: #fff8;
 
-const lettuce = Salad
-  .panels(panel => ({
+	  --taskbar-size: 1.5em;
+	  --highlight: yellow;
+	  --special: aqua;
+	  --pane: #181818;
+	  --taskbar: #181818;
+	  --tab: transparent;
+	  --gutter: #000;
+	  --focal: transparent;
+	  --pointer-lock: yellow;
+  }
+  ```
+- **javascript it that way**
+  ```ts
+  import {Salad} from "@e280/lettuce"
+  import {html, nexus, cssReset} from "@benev/slate"
 
-    // example panel using @benev/slate shadowView
-    about: panel.shadowView({
-      label: "about",
-      icon: () => html`🥬`,
-      render: use => panel => {
-        use.styles(css`h1 {color: skyblue;}`)
-        return html`
-          <h1>hello</h1>
-        `
+  const lettuce = Salad
+    .panels(panel => ({
+
+      // example panel using @benev/slate shadowView
+      about: panel.shadowView({
+        label: "about",
+        icon: () => html`🥬`,
+        render: use => panel => {
+          use.styles(css`h1 {color: skyblue;}`)
+          return html`
+            <h1>hello</h1>
+          `
+        },
+      }),
+
+      // example panel just using lit html
+      lit: {
+        label: "lit",
+        icon: () => html`🔥`,
+        render: () => html`
+          <p>this is an example</p>
+        `,
       },
-    }),
+    }))
 
-    // example panel just using lit html
-    lit: {
-      label: "lit",
-      icon: () => html`🔥`,
-      render: () => html`
-        <p>this is an example</p>
-      `,
-    },
-  }))
+    // layout configuration
+    .layout(layout => ({
+      default: layout.single("about"), // when user firsts visits
+      empty: layout.single("about"), // when user deletes all panes
+    }))
 
-  // layout configuration
-  .layout(layout => ({
-    default: layout.single("about"), // when user firsts visits
-    empty: layout.single("about"), // when user deletes all panes
-  }))
-
-  // set lettuce context and register elements to dom
-  .setup()
-```
+    // set lettuce context and register elements to dom
+    .setup()
+  ```
 
 ### you can do stuff with `lettuce`
 
@@ -62,5 +88,5 @@ the `lettuce` instance you now have is like, the context for the layout system.
 
 it has a bunch of facilities and stuff for manipulating the layout and stuff.
 
-i literally don't have time to fully document it rn — plz help
+i literally don't have time to fully document it rn... plz help
 
