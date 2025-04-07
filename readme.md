@@ -15,13 +15,13 @@
 
 ### 📦 `npm install @e280/lettuce`
 
-### do it like this
+### do it kinda like this
 
 ```ts
-import {Lettuce} from "@e280/lettuce"
+import {Salad} from "@e280/lettuce"
 import {html, nexus, cssReset} from "@benev/slate"
 
-const salad = Lettuce
+const lettuce = Salad
   .panels(panel => ({
 
     // example panel using @benev/slate shadowView
@@ -55,4 +55,12 @@ const salad = Lettuce
   // set lettuce context and register elements to dom
   .setup()
 ```
+
+### you can do stuff with `lettuce`
+
+the `lettuce` instance you now have is like, the context for the layout system.
+
+it has a bunch of facilities and stuff for manipulating the layout and stuff.
+
+i literally don't have time to fully document it rn — plz help
 
