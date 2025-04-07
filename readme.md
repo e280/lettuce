@@ -85,9 +85,9 @@
 ### you can do stuff with that `lettuce` instance
 that `lettuce` instance you get is the context for the layout system.  
 it has a bunch of facilities and stuff for manipulating the layout and stuff.  
-i literally don't have time to exhaustively document it rn... plz help  
+i literally don't have time to exhaustively document it rn... *plz help.*  
 use your lsp or read [lettuce.ts](./s/context/lettuce.ts)  
 
 ### i made this open sourcedly just for you
-pay your respects, gimmie a github star  
+pay your respects, gimmie a github star.  
 
