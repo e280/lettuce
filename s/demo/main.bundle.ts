@@ -1,6 +1,6 @@
 
 import {cssReset, html, nexus} from "@benev/slate"
-import {Lettuce} from "../context/lettuce.js"
+import {Lmao} from "../context/lmao.js"
 import {getMetaVersion} from "../tools/get-meta-version.js"
 import {icon_feather_info} from "../icons/groups/feather/info.js"
 import {icon_feather_list} from "../icons/groups/feather/list.js"
@@ -13,7 +13,7 @@ import unknownCss from "./styles/unknown.css.js"
 
 nexus.context.theme = cssReset
 
-Lettuce
+Lmao
 	.panels(panel => ({
 
 		about: panel.shadowView({

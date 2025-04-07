@@ -6,7 +6,6 @@
 ### splitty-panelly tabby draggy-droppy leafy layout ui
 
 - 👉 **https://lettuce.e280.org/** 👈 *try it, nerd!*
-- 📦 `npm install @e280/lettuce`
 - it's web components bruh
 - pane splitting, resizing, vertical, horizontal, you get it
 - it's like for editor apps and stuff like https://omniclip.app/
@@ -14,13 +13,15 @@
   - done efficiently with *slots,* tab doesn't reinitialize or rerender to move
   - that's actually legit neato if you have heavy-weight stuff in tabs
 
-### how it do
+### 📦 `npm install @e280/lettuce`
+
+### do it like this
 
 ```ts
-import {html, nexus, cssReset} from "@benev/slate"
 import {Lettuce} from "@e280/lettuce"
+import {html, nexus, cssReset} from "@benev/slate"
 
-Lettuce
+const salad = Lettuce
   .panels(panel => ({
 
     // example panel using @benev/slate shadowView

@@ -2,7 +2,7 @@
 import {Context, Nexus} from "@benev/slate"
 
 import {theme} from "./theme.js"
-import {Lettuce} from "./lettuce.js"
+import {Lmao} from "./lmao.js"
 import {PanelSpecs} from "./panels/types.js"
 import {store} from "./controllers/store/store.js"
 import {Gesture} from "./controllers/gesture/controller.js"
@@ -10,12 +10,12 @@ import {LayoutController} from "./controllers/layout/controller.js"
 import {DropCoordinator} from "./controllers/drop_coordinator/controller.js"
 import {StockLayouts} from "./controllers/layout/parts/utils/stock_layouts.js"
 
-export class Salad<
+export class Lettuce<
 		xPanels extends PanelSpecs = PanelSpecs,
 		xLayouts extends StockLayouts = StockLayouts,
 	> extends Context {
 
-	static nexus = new Nexus<Salad>()
+	static nexus = new Nexus<Lettuce>()
 
 	theme = theme
 
@@ -34,7 +34,7 @@ export class Salad<
 	/** drop events */
 	drops = new DropCoordinator()
 
-	constructor({panels, layouts}: Lettuce<xPanels, xLayouts>) {
+	constructor({panels, layouts}: Lmao<xPanels, xLayouts>) {
 		super()
 
 		this.panels = panels

@@ -3,12 +3,12 @@ import {html} from "@benev/slate"
 
 import {styles} from "./styles.css.js"
 import {Resizer} from "./resize/resizer.js"
-import {Salad} from "../../context/salad.js"
+import {Lettuce} from "../../context/lettuce-rofl.js"
 import {TabDragger} from "./parts/tab_dragger.js"
 import {leaf_management} from "./parts/leaf_management.js"
 import {make_layout_renderer} from "./rendering/utils/make_layout_renderer.js"
 
-export const LettuceLayout = Salad.nexus.shadowComponent(use => {
+export const LettuceLayout = Lettuce.nexus.shadowComponent(use => {
 	use.styles(styles)
 
 	const {layout, panels, drops} = use.context
