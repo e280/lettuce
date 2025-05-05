@@ -1,13 +1,15 @@
 
 # `@e280/lettuce` changelog
-
-- 🟥 *harmful -- breaking change*
-- 🔶 *maybe harmful -- deprecation, or possible breaking change*
-- 🍏 *harmless -- addition, fix, or enhancement*
+- 🟥 breaking change
+- 🔶 deprecation or possible breaking change
+- 🍏 harmless addition, fix, or enhancement
 
 <br/>
 
 ## v0.0
+
+### v0.0.3
+- 🍏 updated npm dependencies
 
 ### v0.0.2
 - 🔶 i deleted `panelStyles`, now they're baked into layout `::slotted(*)`.
