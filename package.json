@@ -1,44 +1,43 @@
 {
 	"name": "@e280/lettuce",
-	"version": "0.0.3",
+	"version": "0.1.0-0",
 	"description": "splitty panelly leafy layouts",
 	"license": "MIT",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"type": "module",
-	"main": "x/index.js",
+	"main": "./x/index.js",
+	"exports": {
+		".": "./x/index.js"
+	},
 	"files": [
 		"x",
 		"s"
 	],
 	"scripts": {
-		"build": "rm -rf x && run-s build-code build-ssg links",
-		"build-code": "turtle build --out=x",
-		"build-ssg": "turtle ssg --in=s,x --out=x",
-		"start": "run-p start-http start-turtle",
-		"start-http": "http-server x",
-		"start-turtle": "turtle watch --in=s,x --out=x -v",
-		"links": "run-s links-s links-assets",
-		"links-s": "ln -s \"$(realpath s)\" x/s",
-		"links-assets": "ln -s \"$(realpath assets)\" x/assets",
-		"test": "exit 0"
+		"build": "run-s _clean _ln _tsc _scute",
+		"start": "octo 'scute -vw' 'tsc -w' 'node --watch x/tests.test.js' 'http-server x'",
+		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +",
+		"test": "node x/tests.test.js",
+		"test-inspect": "node inspect x/tests.test.js",
+		"_clean": "rm -rf x && mkdir x",
+		"_tsc": "tsc",
+		"_scute": "scute -v",
+		"_ln": "run-s _ln:s _ln:assets",
+		"_ln:s": "ln -s \"$(realpath s)\" x/s",
+		"_ln:assets": "ln -s \"$(realpath assets)\" x/assets"
 	},
 	"dependencies": {
-		"@benev/slate": "^0.3.2"
+		"@e280/sly": "^0.2.0",
+		"@e280/strata": "^0.2.2",
+		"@e280/stz": "^0.2.14",
+		"lit": "^3.3.1"
 	},
 	"devDependencies": {
-		"@benev/turtle": "^0.6.11",
+		"@e280/scute": "^0.1.1",
 		"http-server": "^14.1.1",
 		"npm-run-all": "^4.1.5",
-		"typescript": "^5.8.3"
+		"typescript": "^5.9.3"
 	},
-	"keywords": [
-		"splitty",
-		"panelly",
-		"leafy",
-		"panel",
-		"layout",
-		"ui"
-	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/e280/lettuce.git"
@@ -46,5 +45,13 @@
 	"bugs": {
 		"url": "https://github.com/e280/lettuce/issues"
 	},
-	"homepage": "https://github.com/e280/lettuce#readme"
+	"homepage": "https://github.com/e280/lettuce#readme",
+	"keywords": [
+		"splitty",
+		"panelly",
+		"leafy",
+		"panel",
+		"layout",
+		"ui"
+	]
 }
