@@ -1,8 +1,8 @@
 
 import {dom} from "@e280/sly"
+import {Desk} from "./desk/view.js"
 import {Studio} from "../studio.js"
 import {PanelSpecs} from "../types.js"
-import {Desk} from "./desk/component.js"
 
 export type UiViews = ReturnType<typeof prepareDom>["views"]
 export type UiComponents = ReturnType<typeof prepareDom>["components"]

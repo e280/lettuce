@@ -1,4 +1,5 @@
 
+import {Kv} from "@e280/kv"
 import {Content} from "@e280/sly"
 import {Id} from "../layout/types.js"
 import {Layout} from "../layout/layout.js"
@@ -6,6 +7,13 @@ import {Layout} from "../layout/layout.js"
 export type StudioOptions<PS extends PanelSpecs> = {
 	panels: PS
 	layout: Layout
+}
+
+export type PersistenceOptions = {
+	layout: Layout
+	kv?: Kv
+	debounceMs?: number
+	loadOnStorageEvent?: boolean
 }
 
 export interface PanelProps {

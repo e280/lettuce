@@ -6,6 +6,7 @@
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"type": "module",
 	"main": "./x/index.js",
+	"sideEffects": false,
 	"exports": {
 		".": "./x/index.js"
 	},
@@ -27,6 +28,7 @@
 		"_ln:assets": "ln -s \"$(realpath assets)\" x/assets"
 	},
 	"dependencies": {
+		"@e280/kv": "^0.1.0",
 		"@e280/sly": "^0.2.0",
 		"@e280/strata": "^0.2.2",
 		"@e280/stz": "^0.2.14",
