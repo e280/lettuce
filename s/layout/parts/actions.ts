@@ -10,11 +10,6 @@ export class Actions {
 		private stock: LayoutStock,
 	) {}
 
-	async reset() {
-		const root = this.stock.default()
-		await this.tree.mutate(state => state.root = root)
-	}
-
 	async #mut<R>(fn: (seeker: Seeker, setRoot: (root: LayoutNode.Cell) => void) => R) {
 		let r: R
 		await this.tree.mutate(state => {
@@ -22,6 +17,13 @@ export class Actions {
 			r = fn(seeker, root => state.root = root)
 		})
 		return r!
+	}
+
+	async reset() {
+		return this.#mut((_seeker, setRoot) => {
+			const root = this.stock.default()
+			setRoot(root)
+		})
 	}
 
 	async addSurface(dockId: Id, panel: string) {
