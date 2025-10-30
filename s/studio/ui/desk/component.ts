@@ -29,9 +29,8 @@ export const Desk = ({studio}: {studio: Studio<any>}) => (
 		const resizer = use.once(() => new Resizer(layout))
 
 		const render_layout = use.once(() => make_layout_renderer({
-			layout,
+			studio,
 			resizer,
-			panels: studio.panels,
 			dragger: new TabDragger(layout),
 		}))
 

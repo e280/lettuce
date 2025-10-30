@@ -13,25 +13,26 @@ const inside_x_button = (event: MouseEvent) => {
 }
 
 export const OrdinaryTab = ({
-		panels, meta, pane, leaf, leafIndex,
+		meta, pane, leaf, leafIndex,
 	}: {
-		panels: PanelSpecs
 		meta: LayoutMeta
 		pane: LayoutNode.Dock
 		leaf: LayoutNode.Surface
 		leafIndex: number
 	}) => {
 
-	const {icon, label} = panels[leaf.panel]
+	const {icon, label} = meta.studio.panels[leaf.panel]
 	const active = pane.activeChildIndex === leafIndex
 	const show_drag_indicator = meta.dragger.is_leaf_indicated(pane.id, leafIndex)
 
 	const close = () => meta
+		.studio
 		.layout
 		.actions
 		.deleteSurface(leaf.id)
 
 	const activate = () => meta
+		.studio
 		.layout
 		.actions
 		.setDockActiveSurface(pane.id, leafIndex)

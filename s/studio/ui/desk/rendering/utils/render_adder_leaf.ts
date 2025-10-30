@@ -4,7 +4,7 @@ import {LayoutMeta} from "./layout_meta.js"
 import {LayoutNode} from "../../../../../layout/types.js"
 
 export function render_adder_leaf(
-		{layout, panels}: LayoutMeta,
+		{studio: {layout, panels}}: LayoutMeta,
 		pane: LayoutNode.Dock,
 	) {
 

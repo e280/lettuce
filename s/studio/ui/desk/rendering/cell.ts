@@ -6,9 +6,9 @@ import {alternator} from "../parts/alternator.js"
 import {LayoutNode} from "../../../../layout/types.js"
 import {sizing_styles} from "../parts/sizing_styles.js"
 
-export const render_cell = (meta: LayoutMeta) => (
-		node: LayoutNode.Cell,
-	) => html`
+export const render_cell =
+	(meta: LayoutMeta) =>
+	(node: LayoutNode.Cell) => html`
 
 	<div
 		class=cell

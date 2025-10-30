@@ -11,6 +11,7 @@ export const AdderTab = ({meta, dock}: {
 
 	const active = dock.activeChildIndex === null
 	const activate = () => meta
+		.studio
 		.layout
 		.actions
 		.setDockActiveSurface(dock.id, null)
