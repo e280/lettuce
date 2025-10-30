@@ -25,7 +25,7 @@ export default ssg.page(import.meta.url, async orb => ({
 	},
 
 	body: html`
-		<lettuce-layout></lettuce-layout>
+		<lettuce-desk></lettuce-desk>
 	`,
 }))
 
