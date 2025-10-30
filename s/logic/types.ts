@@ -4,7 +4,8 @@ import {Trunk} from "@e280/strata"
 
 export type Id = string
 
-export type LayoutOptions = {
+export type LayoutOptions<PS extends PanelSpecs> = {
+	panels: PS
 	stock: LayoutStock
 }
 
@@ -24,8 +25,12 @@ export interface PanelSpecs {
 	[key: string]: PanelSpec
 }
 
-export function panel(t: PanelSpec) {
-	return t
+export function asPanel(s: PanelSpec) {
+	return s
+}
+
+export function asPanels<PS extends PanelSpecs>(s: PS) {
+	return s
 }
 
 export namespace LayoutNode {

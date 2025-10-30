@@ -1,4 +1,30 @@
-//
+
+import {Layout} from "../logic/layout.js"
+import {AboutPanel} from "./panels/about/panel.js"
+
+const panels = Layout.asPanels({
+	about: {
+		label: "about",
+		icon: () => "A",
+		render: () => AboutPanel(),
+	},
+	unknown: {
+		label: "unknown",
+		icon: () => "U",
+		render: () => "UNKNOWN",
+	},
+})
+
+const layout = new Layout({
+	panels,
+	stock: {
+		empty: () => Layout.makeCell(panels, "unknown"),
+		default: () => Layout.makeCell(panels, "about"),
+	},
+})
+
+
+
 // import {cssReset, html, nexus} from "@benev/slate"
 // import {Salad} from "../context/salad.js"
 // import {getMetaVersion} from "../tools/get-meta-version.js"
@@ -68,4 +94,4 @@
 // 	}))
 //
 // 	.setup()
-//
+

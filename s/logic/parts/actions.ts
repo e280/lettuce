@@ -7,7 +7,7 @@ import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_acti
 export class Actions {
 	constructor(
 		private tree: LayoutTree,
-		private options: LayoutOptions,
+		private options: LayoutOptions<any>,
 	) {}
 
 	async reset() {
