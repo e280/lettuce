@@ -12,12 +12,12 @@ export function makeCell<PS extends PanelSpecs>(panels: PS, panelLabel: keyof PS
 		vertical: true,
 		children: [{
 			id: freshId(),
-			kind: "pane",
+			kind: "dock",
 			size: null,
-			active_leaf_index: 0,
+			activeChildIndex: 0,
 			children: [{
 				id: freshId(),
-				kind: "leaf",
+				kind: "surface",
 				panel: panelLabel as string,
 			}],
 		}],

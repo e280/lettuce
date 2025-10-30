@@ -4,7 +4,9 @@ import {Id, LayoutNode, LayoutReport} from "../types.js"
 export class Seeker {
 	constructor(private getRoot: () => LayoutNode.Cell) {}
 
-	get root() { return this.getRoot() }
+	get root() {
+		return this.getRoot()
+	}
 
 	*list() {
 		const stack: LayoutReport[] = [[this.root, null, 0]]
@@ -33,16 +35,16 @@ export class Seeker {
 			.map(([node]) => node) as LayoutNode.Cell[]
 	}
 
-	get panes() {
+	get docks() {
 		return [...this.list()]
-			.filter(([node]) => node.kind === "pane")
-			.map(([node]) => node) as LayoutNode.Pane[]
+			.filter(([node]) => node.kind === "dock")
+			.map(([node]) => node) as LayoutNode.Dock[]
 	}
 
-	get leaves() {
+	get surfaces() {
 		return [...this.list()]
-			.filter(([node]) => node.kind === "leaf")
-			.map(([node]) => node) as LayoutNode.Leaf[]
+			.filter(([node]) => node.kind === "surface")
+			.map(([node]) => node) as LayoutNode.Surface[]
 	}
 }
 

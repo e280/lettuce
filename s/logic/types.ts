@@ -9,7 +9,8 @@ export type LayoutOptions<PS extends PanelSpecs> = {
 	stock: LayoutStock
 }
 
-export type LayoutTree = Trunk<{root: LayoutNode.Cell}>
+export type Blueprint = {root: LayoutNode.Cell}
+export type BlueprintTree = Trunk<Blueprint>
 
 export interface PanelProps {
 	leafId: Id
@@ -34,38 +35,37 @@ export function asPanels<PS extends PanelSpecs>(s: PS) {
 }
 
 export namespace LayoutNode {
-	export type Kind = "cell" | "pane" | "leaf"
+	export type Kind = "cell" | "dock" | "surface"
 
-	export interface Base {
-		kind: Kind
+	/** groups of things, stacked horizontally or vertically */
+	export type Cell = {
+		id: Id
+		kind: "cell"
+		vertical: boolean
+		size: number | null
+		children: (Cell | Dock)[]
 	}
 
-	export interface Leaf {
+	/** contains surfaces, has control ui for tabbing and splitting etc */
+	export type Dock = {
 		id: Id
-		kind: "leaf"
+		kind: "dock"
+		size: number | null
+		children: Surface[]
+		activeChildIndex: number | null
+	}
+
+	/** end-zone location to render a panel onto */
+	export type Surface = {
+		id: Id
+		kind: "surface"
 		panel: string
 	}
 
-	export interface Pane {
-		id: Id
-		kind: "pane"
-		children: Leaf[]
-		size: number | null
-		active_leaf_index: number | null
-	}
-
-	export interface Cell {
-		id: Id
-		kind: "cell"
-		children: (Cell | Pane)[]
-		vertical: boolean
-		size: number | null
-	}
-
 	export type Any = (
-		| Leaf
-		| Pane
 		| Cell
+		| Dock
+		| Surface
 	)
 }
 
@@ -75,10 +75,10 @@ export type LayoutFile = {
 }
 
 export type LayoutReport<N extends LayoutNode.Any = LayoutNode.Any> = (
-	N extends LayoutNode.Leaf
-		? [N, LayoutNode.Pane, number]
+	N extends LayoutNode.Surface
+		? [N, LayoutNode.Dock, number]
 
-	: N extends LayoutNode.Pane
+	: N extends LayoutNode.Dock
 		? [N, LayoutNode.Cell, number]
 
 	: N extends LayoutNode.Cell

@@ -1,56 +1,56 @@
 
 import {LayoutNode} from "../types.js"
 
-export function movement_is_within_same_pane(
-		source_pane: LayoutNode.Pane,
-		destination_pane: LayoutNode.Pane,
+export function movement_is_within_same_dock(
+		sourceDock: LayoutNode.Dock,
+		destinationDock: LayoutNode.Dock,
 	) {
-	return source_pane === destination_pane
+	return sourceDock.id === destinationDock.id
 }
 
 export function same_place(
-		source_index: number,
-		destination_index: number,
+		sourceIndex: number,
+		destinationIndex: number,
 	) {
 	return (
-		source_index === destination_index ||
-		source_index === (destination_index - 1)
+		sourceIndex === destinationIndex ||
+		sourceIndex === (destinationIndex - 1)
 	)
 }
 
 export function movement_is_forward(
-		source_index: number,
-		destination_index: number,
+		sourceIndex: number,
+		destinationIndex: number,
 	) {
-	return source_index < destination_index
+	return sourceIndex < destinationIndex
 }
 
-export function get_active_leaf(pane: LayoutNode.Pane) {
-	return pane.active_leaf_index !== null
-		? pane.children[pane.active_leaf_index]
+export function get_active_surface(dock: LayoutNode.Dock) {
+	return dock.activeChildIndex !== null
+		? dock.children[dock.activeChildIndex]
 		: null
 }
 
-export function maintain_which_leaf_is_active(pane: LayoutNode.Pane, fun: () => void) {
-	const reapply = remember_which_leaf_is_active(pane)
-	fun()
+export function maintain_which_surface_is_active(dock: LayoutNode.Dock, fn: () => void) {
+	const reapply = remember_which_surface_is_active(dock)
+	fn()
 	reapply()
 }
 
-export function remember_which_leaf_is_active(pane: LayoutNode.Pane) {
-	const original_index = pane.active_leaf_index
-	const active_leaf_id = get_active_leaf(pane)?.id
+export function remember_which_surface_is_active(dock: LayoutNode.Dock) {
+	const originalIndex = dock.activeChildIndex
+	const activeSurfaceId = get_active_surface(dock)?.id
 
 	return () => {
-		if (active_leaf_id === null)
-			pane.active_leaf_index = null
+		if (activeSurfaceId === null)
+			dock.activeChildIndex = null
 		else {
-			const new_index = pane.children
-				.findIndex(leaf => leaf.id === active_leaf_id)
-			pane.active_leaf_index = (new_index === -1)
-				? original_index
-				: new_index
-			ensure_active_index_is_in_safe_range(pane)
+			const newIndex = dock.children
+				.findIndex(surface => surface.id === activeSurfaceId)
+			dock.activeChildIndex = (newIndex === -1)
+				? originalIndex
+				: newIndex
+			ensure_active_index_is_in_safe_range(dock)
 		}
 	}
 }
@@ -65,11 +65,11 @@ export function clear_size_of_last_child(node: LayoutNode.Cell) {
 		last.size = null
 }
 
-export function ensure_active_index_is_in_safe_range(pane: LayoutNode.Pane) {
-	pane.active_leaf_index = pane.active_leaf_index === null
+export function ensure_active_index_is_in_safe_range(dock: LayoutNode.Dock) {
+	dock.activeChildIndex = dock.activeChildIndex === null
 		? null
-		: pane.active_leaf_index > (pane.children.length - 1)
+		: dock.activeChildIndex > (dock.children.length - 1)
 			? null
-			: pane.active_leaf_index
+			: dock.activeChildIndex
 }
 

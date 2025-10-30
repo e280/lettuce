@@ -1,12 +1,12 @@
 
 import {Seeker} from "./seeker.js"
 import {freshId} from "../../tools/fresh-id.js"
-import {Id, LayoutNode, LayoutOptions, LayoutTree} from "../types.js"
-import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_leaf, maintain_which_leaf_is_active, movement_is_forward, movement_is_within_same_pane, same_place} from "./action-utils.js"
+import {Id, LayoutNode, LayoutOptions, BlueprintTree} from "../types.js"
+import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
-		private tree: LayoutTree,
+		private tree: BlueprintTree,
 		private options: LayoutOptions<any>,
 	) {}
 
@@ -22,47 +22,47 @@ export class Actions {
 		})
 	}
 
-	async addLeaf(paneId: Id, panel: string) {
+	async addSurface(dockId: Id, panel: string) {
 		await this.#mut(seeker => {
-			const [pane] = seeker.find<LayoutNode.Pane>(paneId)
+			const [dock] = seeker.find<LayoutNode.Dock>(dockId)
 			const id = freshId()
-			const leaf: LayoutNode.Leaf = {id, kind: "leaf", panel}
-			pane.children.push(leaf)
-			return [leaf, pane.children.indexOf(leaf)] as [LayoutNode.Leaf, number]
+			const surface: LayoutNode.Surface = {id, kind: "surface", panel}
+			dock.children.push(surface)
+			return [surface, dock.children.indexOf(surface)] as [LayoutNode.Surface, number]
 		})
 	}
 
-	async setPaneActiveLeaf(paneId: Id, activeLeafIndex: number | null) {
+	async setDockActiveSurface(dockId: Id, activeSurfaceIndex: number | null) {
 		await this.#mut(seeker => {
-			const [pane] = seeker.find<LayoutNode.Pane>(paneId)
-			pane.active_leaf_index = activeLeafIndex
+			const [dock] = seeker.find<LayoutNode.Dock>(dockId)
+			dock.activeChildIndex = activeSurfaceIndex
 		})
 	}
 
 	async resize(id: Id, size: number | null) {
 		await this.#mut(seeker => {
-			const [node] = seeker.find<LayoutNode.Cell | LayoutNode.Pane>(id)
+			const [node] = seeker.find<LayoutNode.Cell | LayoutNode.Dock>(id)
 			node.size = size
 		})
 	}
 
-	async deleteLeaf(id: Id) {
+	async deleteSurface(id: Id) {
 		await this.#mut(seeker => {
-			const [, parentPane, leafIndex] = seeker.find<LayoutNode.Leaf>(id)
-			parentPane.children.splice(leafIndex, 1)
-			ensure_active_index_is_in_safe_range(parentPane)
+			const [, parentDock, surfaceIndex] = seeker.find<LayoutNode.Surface>(id)
+			parentDock.children.splice(surfaceIndex, 1)
+			ensure_active_index_is_in_safe_range(parentDock)
 		})
 	}
 
-	async deletePane(id: Id) {
+	async deleteDock(id: Id) {
 		await this.#mut((seeker, setRoot) => {
-			const [, parentCell, paneIndex] = seeker.find<LayoutNode.Pane>(id)
+			const [, parentCell, dockIndex] = seeker.find<LayoutNode.Dock>(id)
 			const [, grandparentCell, parentCellIndex] = seeker.find<LayoutNode.Cell>(parentCell.id)
 
-			parentCell.children.splice(paneIndex, 1)
+			parentCell.children.splice(dockIndex, 1)
 			clear_size_of_last_child(parentCell)
 
-			if (seeker.panes.length === 0)
+			if (seeker.docks.length === 0)
 				setRoot(this.options.stock.empty())
 
 			else if (parentCell.children.length === 0) {
@@ -80,18 +80,18 @@ export class Actions {
 		})
 	}
 
-	async splitPane(id: Id, vertical: boolean) {
+	async splitDock(id: Id, vertical: boolean) {
 		await this.#mut(seeker => {
-			const [pane, parentCell, paneIndex] = seeker.find<LayoutNode.Pane>(id)
-			const previousSize = pane.size
+			const [dock, parentCell, dockIndex] = seeker.find<LayoutNode.Dock>(id)
+			const previousSize = dock.size
 
 			if (parentCell.vertical === vertical) {
-				let new_size: null | number
+				let newSize: null | number
 
 				if (previousSize) {
 					const half = previousSize / 2
-					pane.size = half
-					new_size = half
+					dock.size = half
+					newSize = half
 				}
 				else {
 					const x = (
@@ -100,59 +100,59 @@ export class Actions {
 							.reduce((previous, current) =>
 								previous + (current.size ?? 0), 0)
 					)
-					pane.size = (100 - x) / 2
-					new_size = null
+					dock.size = (100 - x) / 2
+					newSize = null
 				}
 
-				const newPane: LayoutNode.Pane = {
+				const newDock: LayoutNode.Dock = {
 					id: freshId(),
-					kind: "pane",
+					kind: "dock",
 					children: [],
-					active_leaf_index: null,
-					size: new_size,
+					activeChildIndex: null,
+					size: newSize,
 				}
 
-				parentCell.children.splice(paneIndex + 1, 0, newPane)
+				parentCell.children.splice(dockIndex + 1, 0, newDock)
 			}
 			else {
-				pane.size = 50
+				dock.size = 50
 				const newCell: LayoutNode.Cell = {
 					id: freshId(),
 					kind: "cell",
 					size: previousSize,
 					vertical,
-					children: [pane, {
+					children: [dock, {
 						id: freshId(),
-						kind: "pane",
+						kind: "dock",
 						size: null,
 						children: [],
-						active_leaf_index: null,
+						activeChildIndex: null,
 					}],
 				}
-				parentCell.children.splice(paneIndex, 1, newCell)
+				parentCell.children.splice(dockIndex, 1, newCell)
 			}
 		})
 	}
 
-	async moveLeaf(
-			leafId: Id,
-			paneId: Id,
+	async moveSurface(
+			surfaceId: Id,
+			dockId: Id,
 			destinationIndex: number,
 		) {
 		await this.#mut(seeker => {
-			const [leaf, sourcePane, sourceIndex] = seeker.find<LayoutNode.Leaf>(leafId)
-			const [destinationPane] = seeker.find<LayoutNode.Pane>(paneId)
-			const leafIsActive = leaf === get_active_leaf(sourcePane)
+			const [surface, sourceDock, sourceIndex] = seeker.find<LayoutNode.Surface>(surfaceId)
+			const [destinationDock] = seeker.find<LayoutNode.Dock>(dockId)
+			const surfaceIsActive = surface === get_active_surface(sourceDock)
 
 			const delete_at_source = () =>
-				sourcePane.children.splice(sourceIndex, 1)
+				sourceDock.children.splice(sourceIndex, 1)
 
 			const insert_at_destination = () =>
-				destinationPane.children.splice(destinationIndex, 0, leaf)
+				destinationDock.children.splice(destinationIndex, 0, surface)
 
-			if (movement_is_within_same_pane(sourcePane, destinationPane)) {
+			if (movement_is_within_same_dock(sourceDock, destinationDock)) {
 				if (!same_place(sourceIndex, destinationIndex))
-					maintain_which_leaf_is_active(sourcePane, () => {
+					maintain_which_surface_is_active(sourceDock, () => {
 						if (movement_is_forward(sourceIndex, destinationIndex)) {
 							insert_at_destination()
 							delete_at_source()
@@ -164,16 +164,16 @@ export class Actions {
 					})
 			}
 			else {
-				if (leafIsActive) {
+				if (surfaceIsActive) {
 					insert_at_destination()
-					destinationPane.active_leaf_index = destinationIndex
+					destinationDock.activeChildIndex = destinationIndex
 				}
 				else {
-					maintain_which_leaf_is_active(destinationPane, () => {
+					maintain_which_surface_is_active(destinationDock, () => {
 						insert_at_destination()
 					})
 				}
-				maintain_which_leaf_is_active(sourcePane, () => {
+				maintain_which_surface_is_active(sourceDock, () => {
 					delete_at_source()
 				})
 			}
