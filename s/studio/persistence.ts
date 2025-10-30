@@ -43,7 +43,7 @@ export class Persistence {
 		) {
 
 		this.dispose.schedule(
-			effect(() => options.layout.getBlueprint(), save)
+			effect(() => options.layout.getBlueprint(), () => { save() })
 		)
 
 		if (options.loadOnStorageEvent ?? defaults.loadOnStorageEvent)
