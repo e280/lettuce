@@ -1,8 +1,9 @@
 
-import {Layout} from "../logic/layout.js"
+import {Layout} from "../layout/layout.js"
+import {Studio} from "../studio/studio.js"
 import {AboutPanel} from "./panels/about/panel.js"
 
-const panels = Layout.asPanels({
+const panels = Studio.asPanels({
 	about: {
 		label: "about",
 		icon: () => "A",
@@ -16,14 +17,13 @@ const panels = Layout.asPanels({
 })
 
 const layout = new Layout({
-	panels,
-	stock: {
-		empty: () => Layout.makeCell(panels, "unknown"),
-		default: () => Layout.makeCell(panels, "about"),
-	},
+	empty: () => Layout.makeCell<keyof typeof panels>("unknown"),
+	default: () => Layout.makeCell<keyof typeof panels>("about"),
 })
 
-layout.ui.registerComponents()
+const studio = new Studio({panels, layout})
+
+studio.ui.registerComponents()
 
 
 

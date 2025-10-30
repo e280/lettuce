@@ -1,7 +1,7 @@
 
 import {dom} from "@e280/sly"
-import {Layout} from "../logic/layout.js"
-import {PanelSpecs} from "../logic/types.js"
+import {Studio} from "../studio.js"
+import {PanelSpecs} from "../types.js"
 import {LettuceLayout} from "./lettuce-layout/component.js"
 
 export type UiViews = ReturnType<typeof prepareDom>["views"]
@@ -11,8 +11,8 @@ export class Ui {
 	views: UiViews
 	components: UiComponents
 
-	constructor(layout: Layout<any>) {
-		const {views, components} = prepareDom(layout)
+	constructor(studio: Studio<any>) {
+		const {views, components} = prepareDom(studio)
 		this.views = views
 		this.components = components
 	}
@@ -22,9 +22,9 @@ export class Ui {
 	}
 }
 
-function prepareDom<PS extends PanelSpecs>(layout: Layout<PS>) {
+function prepareDom<PS extends PanelSpecs>(studio: Studio<PS>) {
 	const views = {
-		LettuceLayout: LettuceLayout({layout}),
+		LettuceLayout: LettuceLayout({studio}),
 	}
 
 	return {

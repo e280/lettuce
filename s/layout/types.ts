@@ -1,38 +1,10 @@
 
-import {Content} from "@e280/sly"
 import {Trunk} from "@e280/strata"
 
 export type Id = string
 
-export type LayoutOptions<PS extends PanelSpecs> = {
-	panels: PS
-	stock: LayoutStock
-}
-
 export type Blueprint = {root: LayoutNode.Cell}
 export type BlueprintTree = Trunk<Blueprint>
-
-export interface PanelProps {
-	leafId: Id
-}
-
-export interface PanelSpec {
-	label: string
-	icon: () => Content
-	render: (props: PanelProps) => Content
-}
-
-export interface PanelSpecs {
-	[key: string]: PanelSpec
-}
-
-export function asPanel(s: PanelSpec) {
-	return s
-}
-
-export function asPanels<PS extends PanelSpecs>(s: PS) {
-	return s
-}
 
 export namespace LayoutNode {
 	export type Kind = "cell" | "dock" | "surface"

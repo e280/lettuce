@@ -1,17 +1,17 @@
 
 import {Seeker} from "./seeker.js"
 import {freshId} from "../../tools/fresh-id.js"
-import {Id, LayoutNode, LayoutOptions, BlueprintTree} from "../types.js"
+import {Id, LayoutNode, BlueprintTree, LayoutStock} from "../types.js"
 import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
 		private tree: BlueprintTree,
-		private options: LayoutOptions<any>,
+		private stock: LayoutStock,
 	) {}
 
 	async reset() {
-		const root = this.options.stock.default()
+		const root = this.stock.default()
 		await this.tree.mutate(state => state.root = root)
 	}
 
@@ -63,7 +63,7 @@ export class Actions {
 			clear_size_of_last_child(parentCell)
 
 			if (seeker.docks.length === 0)
-				setRoot(this.options.stock.empty())
+				setRoot(this.stock.empty())
 
 			else if (parentCell.children.length === 0) {
 				grandparentCell!.children.splice(parentCellIndex, 1)
