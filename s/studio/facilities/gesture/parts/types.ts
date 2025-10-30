@@ -1,5 +1,5 @@
 
-import {Id} from "../../../../../layout/types.js"
+import {Id} from "../../../../layout/types.js"
 
 export type Focalization = {
 	paneId: Id

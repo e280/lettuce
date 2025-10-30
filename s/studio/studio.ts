@@ -1,7 +1,7 @@
 
 import {Ui} from "./ui/ui.js"
 import {Layout} from "../layout/layout.js"
-import {Gesture} from "./ui/facilities/gesture/gesture.js"
+import {Gesture} from "./facilities/gesture/gesture.js"
 import {asPanels, PanelSpecs, StudioOptions} from "./types.js"
 
 export class Studio<PS extends PanelSpecs = PanelSpecs> {
@@ -10,7 +10,6 @@ export class Studio<PS extends PanelSpecs = PanelSpecs> {
 	panels: PS
 	layout: Layout
 	ui: Ui
-
 	gesture = new Gesture()
 
 	constructor(options: StudioOptions<PS>) {
@@ -21,7 +20,5 @@ export class Studio<PS extends PanelSpecs = PanelSpecs> {
 
 	// TODO
 	persistence: any
-	controls: any
-	drops: any
 }
 

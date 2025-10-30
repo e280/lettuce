@@ -85,7 +85,7 @@ export const render_pane =
 						${render_adder_leaf(meta, pane)}
 					</div>
 				`
-			})}
+			}
 		</div>
 	`
 }

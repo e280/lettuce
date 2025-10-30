@@ -14,8 +14,7 @@ export const Desk = ({studio}: {studio: Studio<any>}) => (
 	view(use => () => {
 		use.styles(themeCss, styleCss)
 
-		const {layout, panels, drops} = studio
-		const dropzone = drops.editor
+		const {layout, panels} = studio
 
 		const surfaceManager = use.once(leaf_management(
 			use.element,
@@ -39,10 +38,6 @@ export const Desk = ({studio}: {studio: Studio<any>}) => (
 				class=layout
 				@pointermove=${resizer.track_mouse_movement}
 				@pointerup=${resizer.end}
-				?data-dropzone-indicator=${dropzone.indicator}
-				@dragover=${dropzone.dragover}
-				@dragleave=${dropzone.dragleave}
-				@drop=${dropzone.drop}
 				>
 
 				${render_layout(layout.seeker.root)}
