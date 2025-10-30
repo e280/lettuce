@@ -4,7 +4,7 @@ import {Layout} from "../layout.js"
 import {PanelSpecs} from "../types.js"
 import {LettuceLayout} from "../../lettuce-layout/component.js"
 
-export class Dom {
+export class Ui {
 	views: LettuceViews
 	components: LettuceComponents
 

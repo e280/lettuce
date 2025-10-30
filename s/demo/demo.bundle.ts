@@ -23,7 +23,7 @@ const layout = new Layout({
 	},
 })
 
-layout.dom.registerComponents()
+layout.ui.registerComponents()
 
 
 
