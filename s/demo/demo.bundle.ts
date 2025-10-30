@@ -23,6 +23,8 @@ const layout = new Layout({
 	},
 })
 
+layout.dom.registerComponents()
+
 
 
 // import {cssReset, html, nexus} from "@benev/slate"

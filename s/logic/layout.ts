@@ -1,5 +1,6 @@
 
 import {Trunk} from "@e280/strata"
+import {Dom} from "./parts/dom.js"
 import {Seeker} from "./parts/seeker.js"
 import {Actions} from "./parts/actions.js"
 import {makeCell} from "./parts/make-cell.js"
@@ -12,12 +13,14 @@ export class Layout<PS extends PanelSpecs> {
 	#tree: LayoutTree
 	seeker: Seeker
 	actions: Actions
+	dom: Dom
 
 	constructor(options: LayoutOptions<PS>) {
 		const root = options.stock.default()
 		this.#tree = new Trunk({root})
 		this.seeker = new Seeker(() => this.#tree.state.root as LayoutNode.Cell)
 		this.actions = new Actions(this.#tree, options)
+		this.dom = new Dom(this)
 	}
 
 	persistence: any
