@@ -15,15 +15,17 @@ export class Actions {
 		await this.tree.mutate(state => state.root = root)
 	}
 
-	async #mut(fn: (seeker: Seeker, setRoot: (root: LayoutNode.Cell) => void) => void) {
+	async #mut<R>(fn: (seeker: Seeker, setRoot: (root: LayoutNode.Cell) => void) => R) {
+		let r: R
 		await this.tree.mutate(state => {
 			const seeker = new Seeker(() => state.root)
-			fn(seeker, root => state.root = root)
+			r = fn(seeker, root => state.root = root)
 		})
+		return r!
 	}
 
 	async addSurface(dockId: Id, panel: string) {
-		await this.#mut(seeker => {
+		return this.#mut(seeker => {
 			const [dock] = seeker.find<LayoutNode.Dock>(dockId)
 			const id = freshId()
 			const surface: LayoutNode.Surface = {id, kind: "surface", panel}
@@ -33,21 +35,21 @@ export class Actions {
 	}
 
 	async setDockActiveSurface(dockId: Id, activeSurfaceIndex: number | null) {
-		await this.#mut(seeker => {
+		return this.#mut(seeker => {
 			const [dock] = seeker.find<LayoutNode.Dock>(dockId)
 			dock.activeChildIndex = activeSurfaceIndex
 		})
 	}
 
 	async resize(id: Id, size: number | null) {
-		await this.#mut(seeker => {
+		return this.#mut(seeker => {
 			const [node] = seeker.find<LayoutNode.Cell | LayoutNode.Dock>(id)
 			node.size = size
 		})
 	}
 
 	async deleteSurface(id: Id) {
-		await this.#mut(seeker => {
+		return this.#mut(seeker => {
 			const [, parentDock, surfaceIndex] = seeker.find<LayoutNode.Surface>(id)
 			parentDock.children.splice(surfaceIndex, 1)
 			ensure_active_index_is_in_safe_range(parentDock)
@@ -55,7 +57,7 @@ export class Actions {
 	}
 
 	async deleteDock(id: Id) {
-		await this.#mut((seeker, setRoot) => {
+		return this.#mut((seeker, setRoot) => {
 			const [, parentCell, dockIndex] = seeker.find<LayoutNode.Dock>(id)
 			const [, grandparentCell, parentCellIndex] = seeker.find<LayoutNode.Cell>(parentCell.id)
 
@@ -81,7 +83,7 @@ export class Actions {
 	}
 
 	async splitDock(id: Id, vertical: boolean) {
-		await this.#mut(seeker => {
+		return this.#mut(seeker => {
 			const [dock, parentCell, dockIndex] = seeker.find<LayoutNode.Dock>(id)
 			const previousSize = dock.size
 
@@ -139,7 +141,7 @@ export class Actions {
 			dockId: Id,
 			destinationIndex: number,
 		) {
-		await this.#mut(seeker => {
+		return this.#mut(seeker => {
 			const [surface, sourceDock, sourceIndex] = seeker.find<LayoutNode.Surface>(surfaceId)
 			const [destinationDock] = seeker.find<LayoutNode.Dock>(dockId)
 			const surfaceIsActive = surface === get_active_surface(sourceDock)
