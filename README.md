@@ -170,7 +170,7 @@
     import {view} from "@e280/sly"
 
     view(use => () => html`
-      <p>root id: ${layout.seeker.root.id}</p>
+      <p>node count: ${[...layout.seeker.list()].length}</p>
     `)
     ```
 - **you can use strata effects to magically respond to changes**
@@ -178,7 +178,7 @@
     import {effect} from "@e280/strata"
 
     effect(() => {
-      console.log("layout node count", [...layout.seeker.list()].length)
+      console.log("node count changed", [...layout.seeker.list()].length)
     })
     ```
 
