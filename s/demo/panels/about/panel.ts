@@ -3,7 +3,7 @@ import {css, html} from "lit"
 import {cssReset, view} from "@e280/sly"
 import {getMetaVersion} from "../../../tools/get-meta-version.js"
 
-export const AboutPanel = view(use => () => {
+export const AboutPanel = view(use => ({resetLayout}: {resetLayout: () => void}) => {
 	use.css(cssReset, style)
 
 	const version = use.once(() => getMetaVersion())
@@ -14,6 +14,7 @@ export const AboutPanel = view(use => () => {
 			<h2><span>lettuce</span> <span>v${version}</span></h2>
 			<p>a leafy panelling ui system for cool apps</p>
 			<p>go to the github, nerd: <a href="http://github.com/e280/lettuce">github.com/e280/lettuce</a></p>
+			<button @click="${resetLayout}">reset layout</button>
 		<div>
 	`
 })
@@ -38,6 +39,10 @@ const style = css`
 		h2 {
 			> span:nth-child(1) { color: var(--highlight); }
 			> span:nth-child(2) { font-weight: normal; opacity: 0.4; }
+		}
+
+		button {
+			padding: 0.5em;
 		}
 	}
 `

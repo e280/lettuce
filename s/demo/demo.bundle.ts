@@ -1,6 +1,8 @@
 
 import {Layout} from "../layout/layout.js"
 import {Studio} from "../studio/studio.js"
+import {asPanels} from "../studio/types.js"
+import {Stocker} from "../layout/stocker.js"
 import {GnuPanel} from "./panels/gnu/panel.js"
 import {AboutPanel} from "./panels/about/panel.js"
 import {Persistence} from "../studio/persistence.js"
@@ -9,11 +11,13 @@ import {icon_feather_info} from "../studio/ui/icons/groups/feather/info.js"
 import {icon_feather_list} from "../studio/ui/icons/groups/feather/list.js"
 import {icon_feather_folder} from "../studio/ui/icons/groups/feather/folder.js"
 
-const panels = Studio.asPanels({
+const panels = asPanels({
 	about: {
 		label: "about",
 		icon: () => icon_feather_info,
-		render: () => AboutPanel(),
+		render: () => AboutPanel({
+			resetLayout: async() => layout.actions.reset(),
+		}),
 	},
 	gnu: {
 		label: "gnu",
@@ -27,9 +31,13 @@ const panels = Studio.asPanels({
 	},
 })
 
+const s = new Stocker<typeof panels>()
+
 const layout = new Layout({
-	empty: () => Layout.makeCell<keyof typeof panels>("about"),
-	default: () => Layout.makeCell<keyof typeof panels>("about"),
+	stock: {
+		empty: () => s.blank(),
+		default: () => s.vertical(s.tabs("about", "gnu", "brotein")),
+	},
 })
 
 const studio = new Studio({panels, layout})

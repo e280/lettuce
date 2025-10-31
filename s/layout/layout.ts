@@ -3,21 +3,18 @@ import {deep} from "@e280/stz"
 import {Trunk} from "@e280/strata"
 import {Seeker} from "./parts/seeker.js"
 import {Actions} from "./parts/actions.js"
-import {makeCell} from "./parts/make-cell.js"
-import {LayoutNode, BlueprintTree, LayoutStock, Blueprint} from "./types.js"
+import {LayoutNode, BlueprintTree, Blueprint, LayoutOptions} from "./types.js"
 
 export class Layout {
-	static makeCell = makeCell
-
 	seeker: Seeker
 	actions: Actions
 	#blueprint: BlueprintTree
 
-	constructor(stock: LayoutStock) {
-		const root = stock.default()
+	constructor(options: LayoutOptions) {
+		const root = options.stock.default()
 		this.#blueprint = new Trunk({root})
 		this.seeker = new Seeker(() => this.#blueprint.state.root as LayoutNode.Cell)
-		this.actions = new Actions(this.#blueprint, stock)
+		this.actions = new Actions(this.#blueprint, options.stock)
 	}
 
 	getBlueprint() {

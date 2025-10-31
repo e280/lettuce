@@ -3,6 +3,10 @@ import {Trunk} from "@e280/strata"
 
 export type Id = string
 
+export type LayoutOptions = {
+	stock: LayoutStock
+}
+
 export type Blueprint = {root: LayoutNode.Cell}
 export type BlueprintTree = Trunk<Blueprint>
 
