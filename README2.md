@@ -20,16 +20,16 @@
 ## 🥬 make a quick layout salad
 > *how to setup lettuce in your app*
 
-### 🌱 lettuce npm+html+css
-1. **install it down**
+### 🌱 lettuce installation, html, and css
+1. **install**
     ```sh
     npm install @e280/lettuce lit
     ```
-1. **html it up**
+1. **html**
     ```html
     <lettuce-desk></lettuce-desk>
     ```
-1. **css like this**
+1. **css**
     ```css
     lettuce-desk {
 	    color: #fff8;
@@ -51,12 +51,12 @@
     ```
 
 ### 🌱 lettuce typescript
-1. import stuff
+1. **imports**
     ```ts
     import {html} from "lit"
     import * as lettuce from "@e280/lettuce"
     ```
-1. setup your panels
+1. **setup your panels**
     ```ts
     const panels = lettuce.asPanels({
       alpha: {
@@ -76,7 +76,7 @@
       },
     })
     ```
-1. setup your layout (builder is a handy helper)
+1. **setup your layout (builder is a handy helper)**
     ```ts
     const b = new lettuce.Builder<keyof typeof panels>()
 
@@ -87,7 +87,7 @@
       },
     })
     ```
-1. enable localstorage persistence (optional)
+1. **enable localstorage persistence (optional)**
     ```ts
     await lettuce.Persistence.setup({
       layout,
@@ -97,11 +97,11 @@
       loadOnStorageEvent: true,
     })
     ```
-1. setup a studio for displaying the layout in browser
+1. **setup a studio for displaying the layout in browser**
     ```ts
     const studio = new lettuce.Studio({panels, layout})
     ```
-1. register the web components to the dom
+1. **register the web components to the dom**
     ```ts
     studio.ui.registerComponents()
     ```
@@ -113,13 +113,26 @@
 ## 🥬 layout
 > *layout engine with serializable state*
 
-### 🌱 layout direct import can run in node or whatever
-- **direct import avoids browser concerns**
+### 🌱 layout package export path
+- **import directly to avoid browser concerns (for running under node etc)**
     ```ts
     import * as lettuce from "@e280/lettuce/layout"
     ```
 
-### 🌱 layout [seeker.ts](./s/layout/parts/seeker.ts) — read and query state
+### 🌱 layout concepts explained
+- **`LayoutNode.Cell`**
+    - a cell is a group that arranges its children either vertically or horizontally.
+    - this is where splits are expressed.
+    - a cell's children can be docks or more cells.
+- **`LayoutNode.Dock`**
+    - a dock contains the ui with the little tab buttons, splitting buttons, x button, etc.
+    - a dock's children must be surfaces.
+- **`LayoutNode.Surface`**
+    - a surface is the rendering target location of where a panel will be rendered.
+    - it uses a `<slot>` to magically render your panel into the location of this surface.
+
+### 🌱 layout [seeker.ts](./s/layout/parts/seeker.ts) — read and query immutable state
+- *read the source code for the real details*
 - `layout.seeker.root`
 - `layout.seeker.list()`
 - `layout.seeker.find(id)`
@@ -128,6 +141,7 @@
 - `layout.seeker.surfaces`
 
 ### 🌱 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
+- *read the source code for the real details*
 - `layout.actions.reset()`
 - `layout.actions.addSurface(dockId, panel)`
 - `layout.actions.setDockActiveSurface(dockId, activeSurfaceIndex)`
@@ -174,6 +188,7 @@
 > *in-browser layout user-experience*
 
 ### 🌱 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
+- *read the source code for the real details*
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
     ```ts
