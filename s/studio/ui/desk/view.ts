@@ -10,39 +10,39 @@ import {TabDragger} from "./parts/tab-dragger.js"
 import {SurfaceManager} from "./parts/surface-manager.js"
 import {makeLayoutRenderer} from "./rendering/utils/make-layout-renderer.js"
 
-export const Desk = ({studio}: {studio: Studio<any>}) => (
+export const Desk = (
+	({studio}: {studio: Studio<any>}) =>
 	view(use => () => {
-		use.styles(themeCss, styleCss)
 
-		const {layout, panels} = studio
+	use.styles(themeCss, styleCss)
+	const {layout, panels} = studio
 
-		const surfaceManager = use.once(() => new SurfaceManager(
-			use.element,
-			layout,
-			panels,
-		))
+	const surfaceManager = use.once(() => new SurfaceManager(
+		use.element,
+		layout,
+		panels,
+	))
 
-		surfaceManager.addNewSurfaces()
-		surfaceManager.deleteOldSurfaces()
+	surfaceManager.addNewSurfaces()
+	surfaceManager.deleteOldSurfaces()
 
-		const resizer = use.once(() => new Resizer(layout))
+	const resizer = use.once(() => new Resizer(layout))
 
-		const renderLayout = use.once(() => makeLayoutRenderer({
-			studio,
-			resizer,
-			dragger: new TabDragger(layout),
-		}))
+	const renderLayout = use.once(() => makeLayoutRenderer({
+		studio,
+		resizer,
+		dragger: new TabDragger(layout),
+	}))
 
-		return html`
-			<div
-				class=layout
-				@pointermove=${resizer.track_mouse_movement}
-				@pointerup=${resizer.end}
-				>
+	return html`
+		<div
+			class=layout
+			@pointermove=${resizer.track_mouse_movement}
+			@pointerup=${resizer.end}
+			>
 
-				${renderLayout(layout.seeker.root)}
-			</div>
-		`
-	})
-)
+			${renderLayout(layout.seeker.root)}
+		</div>
+	`
+}))
 

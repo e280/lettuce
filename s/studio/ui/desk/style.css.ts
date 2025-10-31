@@ -73,9 +73,10 @@ export default css`
 	flex: 0 0 ${size_of_resize_handle_in_rem}rem;
 	cursor: ew-resize;
 	background: var(--gutter);
+	user-select: none;
 }
 
-.pane {
+.dock {
 	display: flex;
 	flex-direction: column;
 	background: var(--taskbar);
@@ -105,6 +106,7 @@ export default css`
 		display: flex;
 		justify-content: end;
 		font-size: var(--scale);
+		user-select: none;
 
 		> * {
 			flex: 0 0 auto;

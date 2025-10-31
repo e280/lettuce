@@ -38,7 +38,7 @@ export const renderDock =
 
 	return html`
 		<div
-			class=pane
+			class=dock
 			style="${sizingStyles(dock.size)}"
 
 			?data-is-focal="${isFocal}"
