@@ -4,7 +4,7 @@
 # 🥬 lettuce
 > *flexible layout ui for web apps*
 
-### 🌱 splitty-panelly tabby draggy-droppy leafy layout ui
+### 🥗 splitty-panelly tabby draggy-droppy leafy layout ui
 - 👉 **https://lettuce.e280.org/** 👈 *try it, nerd!*
 - pane splitting, resizing, vertical, horizontal — you get it
 - dude, it's web components
@@ -20,7 +20,7 @@
 ## 🥬 make a quick layout salad
 > *how to setup lettuce in your app*
 
-### 🌱 lettuce installation, html, and css
+### 🥗 lettuce installation, html, and css
 1. **install**
     ```sh
     npm install @e280/lettuce lit
@@ -50,7 +50,7 @@
     }
     ```
 
-### 🌱 lettuce typescript
+### 🥗 lettuce typescript
 1. **imports**
     ```ts
     import {html} from "lit"
@@ -113,13 +113,13 @@
 ## 🥬 layout
 > *layout engine with serializable state*
 
-### 🌱 layout package export path
+### 🥗 layout package export path
 - **import directly to avoid browser concerns (for running under node etc)**
     ```ts
     import * as lettuce from "@e280/lettuce/layout"
     ```
 
-### 🌱 layout concepts explained
+### 🥗 layout concepts explained
 - **`LayoutNode.Cell`**
     - a cell is a group that arranges its children either vertically or horizontally.
     - this is where splits are expressed.
@@ -131,7 +131,7 @@
     - a surface is the rendering target location of where a panel will be rendered.
     - it uses a `<slot>` to magically render your panel into the location of this surface.
 
-### 🌱 layout [seeker.ts](./s/layout/parts/seeker.ts) — read and query immutable state
+### 🥗 layout [seeker.ts](./s/layout/parts/seeker.ts) — read and query immutable state
 - *read the source code for the real details*
 - `layout.seeker.root`
 - `layout.seeker.list()`
@@ -140,7 +140,7 @@
 - `layout.seeker.docks`
 - `layout.seeker.surfaces`
 
-### 🌱 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
+### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
 - *read the source code for the real details*
 - `layout.actions.reset()`
 - `layout.actions.addSurface(dockId, panel)`
@@ -151,7 +151,7 @@
 - `layout.actions.splitDock(id, vertical)`
 - `layout.actions.moveSurface(id, dockId, destinationIndex)`
 
-### 🌱 layout state management, using [strata](https://github.com/e280/strata#readme)
+### 🥗 layout state management, using [strata](https://github.com/e280/strata#readme)
 - **layout contains a serializable data structure called a `Blueprint`**
     ```ts
     const blueprint = layout.getBlueprint()
@@ -189,7 +189,7 @@
 ## 🥬 studio
 > *in-browser layout user-experience*
 
-### 🌱 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
+### 🥗 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
 - *read the source code for the real details*
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
