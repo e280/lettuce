@@ -52,13 +52,13 @@ export type LayoutFile = {
 
 export type LayoutReport<N extends LayoutNode.Any = LayoutNode.Any> = (
 	N extends LayoutNode.Surface
-		? [N, LayoutNode.Dock, number]
+		? [node: N, parent: LayoutNode.Dock, index: number]
 
 	: N extends LayoutNode.Dock
-		? [N, LayoutNode.Cell, number]
+		? [node: N, parent: LayoutNode.Cell, index: number]
 
 	: N extends LayoutNode.Cell
-		? [N, LayoutNode.Cell | null, number]
+		? [node: N, parent: LayoutNode.Cell | null, index: number]
 
 	: never
 )

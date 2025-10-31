@@ -1,10 +1,9 @@
 
 import {LayoutNode} from "./types.js"
 import {freshId} from "../tools/fresh-id.js"
-import {PanelSpecs} from "../studio/types.js"
 
-export class Stocker<PS extends PanelSpecs> {
-	tabs = (...panels: (keyof PS)[]): LayoutNode.Dock => ({
+export class Builder<K extends string> {
+	tabs = (...panels: K[]): LayoutNode.Dock => ({
 		kind: "dock",
 		id: freshId(),
 		size: null,
@@ -37,8 +36,8 @@ export class Stocker<PS extends PanelSpecs> {
 	})
 
 	blank = () => this.cell(this.tabs())
-	singleton = (panel: keyof PS) => this.cell(this.tabs(panel))
+	singleton = (panel: K) => this.cell(this.tabs(panel))
 
-	setup = <R>(fn: (stocker: Stocker<PS>) => R) => fn(this)
+	setup = <R>(fn: (stocker: Builder<K>) => R) => fn(this)
 }
 

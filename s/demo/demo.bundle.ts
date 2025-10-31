@@ -2,7 +2,7 @@
 import {Layout} from "../layout/layout.js"
 import {Studio} from "../studio/studio.js"
 import {asPanels} from "../studio/types.js"
-import {Stocker} from "../layout/stocker.js"
+import {Builder} from "../layout/builder.js"
 import {GnuPanel} from "./panels/gnu/panel.js"
 import {AboutPanel} from "./panels/about/panel.js"
 import {Persistence} from "../studio/persistence.js"
@@ -31,16 +31,14 @@ const panels = asPanels({
 	},
 })
 
-const s = new Stocker<typeof panels>()
+const b = new Builder<keyof typeof panels>()
 
 const layout = new Layout({
 	stock: {
-		empty: () => s.blank(),
-		default: () => s.vertical(s.tabs("about", "gnu", "brotein")),
+		empty: () => b.blank(),
+		default: () => b.cell(b.tabs("about", "gnu", "brotein")),
 	},
 })
-
-const studio = new Studio({panels, layout})
 
 await Persistence.setup({
 	layout,
@@ -48,6 +46,8 @@ await Persistence.setup({
 	loadOnStorageEvent: true,
 	kv: Persistence.localStorageKv(),
 })
+
+const studio = new Studio({panels, layout})
 
 studio.ui.registerComponents()
 

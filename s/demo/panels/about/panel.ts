@@ -13,7 +13,7 @@ export const AboutPanel = view(use => ({resetLayout}: {resetLayout: () => void})
 			<img alt="" src="/assets/lettuce.avif"/>
 			<h2><span>lettuce</span> <span>v${version}</span></h2>
 			<p>a leafy panelling ui system for cool apps</p>
-			<p>go to the github, nerd: <a href="http://github.com/e280/lettuce">github.com/e280/lettuce</a></p>
+			<p>go to the github, nerd: <a href="http://github.com/e280/lettuce#readme">github.com/e280/lettuce</a></p>
 			<button @click="${resetLayout}">reset layout</button>
 		<div>
 	`

@@ -38,7 +38,7 @@
 	  --dropcover: 10%;
 	  --warn: red;
 	  --warntext: white;
-	  --pane: #181818;
+	  --dock: #181818;
 	  --taskbar: #181818;
 	  --tab: transparent;
 	  --gutter: #000;
