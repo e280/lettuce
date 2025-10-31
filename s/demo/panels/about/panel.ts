@@ -4,7 +4,6 @@ import {cssReset, view} from "@e280/sly"
 import {getMetaVersion} from "../../../tools/get-meta-version.js"
 
 export const AboutPanel = view(use => () => {
-	use.name("about")
 	use.css(cssReset, style)
 
 	const version = use.once(() => getMetaVersion())
