@@ -42,9 +42,10 @@ const layout = new Layout({
 
 await Persistence.setup({
 	layout,
+	kv: Persistence.localStorageKv(),
+	key: "lettuceBlueprint",
 	debounceMs: 250,
 	loadOnStorageEvent: true,
-	kv: Persistence.localStorageKv(),
 })
 
 const studio = new Studio({panels, layout})

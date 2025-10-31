@@ -12,7 +12,7 @@ export class Persistence {
 
 	static setup = async(options: PersistenceOptions) => {
 		const {layout, kv, debounceMs} = options
-		const store = kv.store<Blueprint>("lettuceBlueprint")
+		const store = kv.store<Blueprint>(options.key)
 
 		const load = async() => {
 			const freshBlueprint = await store.get()
