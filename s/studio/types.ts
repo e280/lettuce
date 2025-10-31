@@ -11,9 +11,9 @@ export type StudioOptions<PS extends PanelSpecs> = {
 
 export type PersistenceOptions = {
 	layout: Layout
-	kv?: Kv
-	debounceMs?: number
-	loadOnStorageEvent?: boolean
+	kv: Kv
+	debounceMs: number
+	loadOnStorageEvent: boolean
 }
 
 export interface PanelProps {

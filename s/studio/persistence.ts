@@ -5,19 +5,13 @@ import {debounce, disposer} from "@e280/stz"
 import {Blueprint} from "../layout/types.js"
 import {PersistenceOptions} from "./types.js"
 
-const defaults = {
-	debounceMs: 250,
-	loadOnStorageEvent: true,
-}
-
 export class Persistence {
-	static setup = async(options: PersistenceOptions) => {
-		const {
-			layout,
-			kv = new Kv(new StorageDriver(window.localStorage)),
-			debounceMs = defaults.debounceMs,
-		} = options
+	static localStorageKv = () => new Kv(
+		new StorageDriver(window.localStorage)
+	)
 
+	static setup = async(options: PersistenceOptions) => {
+		const {layout, kv, debounceMs} = options
 		const store = kv.store<Blueprint>("lettuceBlueprint")
 
 		const load = async() => {
@@ -46,7 +40,7 @@ export class Persistence {
 			effect(() => options.layout.getBlueprint(), () => { save() })
 		)
 
-		if (options.loadOnStorageEvent ?? defaults.loadOnStorageEvent)
+		if (options.loadOnStorageEvent)
 			this.dispose.schedule(
 				StorageDriver.onStorageEvent(load)
 			)

@@ -23,6 +23,13 @@ const layout = new Layout({
 })
 
 const studio = new Studio({panels, layout})
-await Persistence.setup({layout})
+
+await Persistence.setup({
+	layout,
+	debounceMs: 250,
+	loadOnStorageEvent: true,
+	kv: Persistence.localStorageKv(),
+})
+
 studio.ui.registerComponents()
 
