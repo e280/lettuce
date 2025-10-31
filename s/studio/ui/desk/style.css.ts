@@ -18,7 +18,7 @@ export default css`
 	--dropcover: 10%;
 	--warn: red;
 	--warntext: white;
-	--pane: #181818;
+	--dock: #181818;
 	--taskbar: #181818;
 	--tab: transparent;
 	--gutter: #000;
@@ -144,12 +144,12 @@ export default css`
 		}
 	}
 
-	> .leaf {
+	> .surface {
 		position: relative;
 		flex: 1 1 auto;
 		display: block;
 		padding: 0.5em;
-		background: var(--pane);
+		background: var(--dock);
 	}
 
 	> .adder {
@@ -244,7 +244,7 @@ export default css`
 			opacity: 1;
 			color: var(--highlight);
 			border-color: var(--highlight);
-			background: var(--pane);
+			background: var(--dock);
 		}
 
 		> .icon {

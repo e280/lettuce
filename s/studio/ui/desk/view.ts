@@ -6,9 +6,9 @@ import styleCss from "./style.css.js"
 import themeCss from "../theme.css.js"
 import {Studio} from "../../studio.js"
 import {Resizer} from "./resize/resizer.js"
-import {TabDragger} from "./parts/tab_dragger.js"
-import {leaf_management} from "./parts/leaf_management.js"
-import {make_layout_renderer} from "./rendering/utils/make_layout_renderer.js"
+import {TabDragger} from "./parts/tab-dragger.js"
+import {SurfaceManager} from "./parts/surface-manager.js"
+import {makeLayoutRenderer} from "./rendering/utils/make-layout-renderer.js"
 
 export const Desk = ({studio}: {studio: Studio<any>}) => (
 	view(use => () => {
@@ -16,18 +16,18 @@ export const Desk = ({studio}: {studio: Studio<any>}) => (
 
 		const {layout, panels} = studio
 
-		const surfaceManager = use.once(leaf_management(
+		const surfaceManager = use.once(() => new SurfaceManager(
 			use.element,
 			layout,
 			panels,
 		))
 
-		surfaceManager.add_new_leaves()
-		surfaceManager.delete_old_leaves()
+		surfaceManager.addNewSurfaces()
+		surfaceManager.deleteOldSurfaces()
 
 		const resizer = use.once(() => new Resizer(layout))
 
-		const render_layout = use.once(() => make_layout_renderer({
+		const renderLayout = use.once(() => makeLayoutRenderer({
 			studio,
 			resizer,
 			dragger: new TabDragger(layout),
@@ -40,7 +40,7 @@ export const Desk = ({studio}: {studio: Studio<any>}) => (
 				@pointerup=${resizer.end}
 				>
 
-				${render_layout(layout.seeker.root)}
+				${renderLayout(layout.seeker.root)}
 			</div>
 		`
 	})

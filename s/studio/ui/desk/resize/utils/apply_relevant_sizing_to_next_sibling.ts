@@ -11,14 +11,14 @@ export function apply_relevant_sizing_to_next_sibling(
 
 	if (
 			resize.next &&
-			resize.next.initial_size !== null &&
+			resize.next.initialSize !== null &&
 			resize.next.node.size !== null
 		) {
 
 		layout.actions.resize(
 			resize.next.node.id,
 			capPercent(
-				resize.next.initial_size + (resize.initial_size - new_size_of_current_cell)
+				resize.next.initialSize + (resize.initialSize - new_size_of_current_cell)
 			)
 		)
 	}

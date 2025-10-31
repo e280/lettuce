@@ -17,7 +17,7 @@ export type PersistenceOptions = {
 }
 
 export interface PanelProps {
-	leafId: Id
+	surfaceId: Id
 }
 
 export interface PanelSpec {

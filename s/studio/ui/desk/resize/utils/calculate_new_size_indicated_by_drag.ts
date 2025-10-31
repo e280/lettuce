@@ -18,6 +18,6 @@ export function calculate_new_size_indicated_by_drag(
 		diff = percentage(pixels, resize.width)
 	}
 
-	return capPercent(resize.initial_size - diff)
+	return capPercent(resize.initialSize - diff)
 }
 

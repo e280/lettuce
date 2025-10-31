@@ -6,9 +6,9 @@ export type ResizeOperation = {
 	node: LayoutNode.Cell | LayoutNode.Dock
 	next: null | {
 		node: LayoutNode.Cell | LayoutNode.Dock
-		initial_size: number | null
+		initialSize: number | null
 	}
-	initial_size: number
+	initialSize: number
 	x: number
 	y: number
 	width: number

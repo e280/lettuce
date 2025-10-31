@@ -1,11 +1,10 @@
 
 import {html} from "lit"
-import {PanelSpecs} from "../../../../types.js"
-import {LayoutMeta} from "../utils/layout_meta.js"
+import {LayoutMeta} from "../utils/layout-meta.js"
 import {LayoutNode} from "../../../../../layout/types.js"
 import {icon_feather_x} from "../../../icons/groups/feather/x.js"
 
-const inside_x_button = (event: MouseEvent) => {
+const insideXButton = (event: MouseEvent) => {
 	const target = event.target as Element
 	const tab = event.currentTarget as HTMLElement
 	const x = tab.querySelector(".x") as HTMLElement
@@ -13,41 +12,41 @@ const inside_x_button = (event: MouseEvent) => {
 }
 
 export const OrdinaryTab = ({
-		meta, pane, leaf, leafIndex,
+		meta, dock, surface, surfaceIndex,
 	}: {
 		meta: LayoutMeta
-		pane: LayoutNode.Dock
-		leaf: LayoutNode.Surface
-		leafIndex: number
+		dock: LayoutNode.Dock
+		surface: LayoutNode.Surface
+		surfaceIndex: number
 	}) => {
 
-	const {icon, label} = meta.studio.panels[leaf.panel]
-	const active = pane.activeChildIndex === leafIndex
-	const show_drag_indicator = meta.dragger.is_leaf_indicated(pane.id, leafIndex)
+	const {icon, label} = meta.studio.panels[surface.panel]
+	const active = dock.activeChildIndex === surfaceIndex
+	const show_drag_indicator = meta.dragger.isSurfaceIndicated(dock.id, surfaceIndex)
 
 	const close = () => meta
 		.studio
 		.layout
 		.actions
-		.deleteSurface(leaf.id)
+		.deleteSurface(surface.id)
 
 	const activate = () => meta
 		.studio
 		.layout
 		.actions
-		.setDockActiveSurface(pane.id, leafIndex)
+		.setDockActiveSurface(dock.id, surfaceIndex)
 
 	const click = (event: MouseEvent) => {
 		if (!active) {
 			activate()
 			return
 		}
-		if (inside_x_button(event))
+		if (insideXButton(event))
 			close()
 	}
 
 	return html`
-		<div class=tab data-tab-for-leaf="${leaf.id}">
+		<div class=tab data-tab-for-surface="${surface.id}">
 			<div
 				class=insert-indicator
 				?data-drag=${show_drag_indicator}
@@ -60,7 +59,7 @@ export const OrdinaryTab = ({
 				@click=${click}
 
 				draggable=true
-				@dragstart=${meta.dragger.tab.start(leaf.id)}
+				@dragstart=${meta.dragger.tab.start(surface.id)}
 				>
 
 				<span class=icon>

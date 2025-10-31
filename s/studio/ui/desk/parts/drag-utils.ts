@@ -1,5 +1,5 @@
 
-export function is_within(target: EventTarget | null, selector: string): HTMLElement | undefined {
+export function isWithin(target: EventTarget | null, selector: string): HTMLElement | undefined {
 	let node = target as HTMLElement | null
 
 	while (node) {

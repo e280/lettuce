@@ -56,7 +56,7 @@ lettuce-layout {
 	--dropcover: 10%;
 	--warn: red;
 	--warntext: white;
-	--pane: transparent;
+	--dock: transparent;
 	--taskbar: transparent;
 	--tab: transparent;
 	--gutter: #0d1f15;

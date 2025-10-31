@@ -1,27 +1,27 @@
 
 import {html} from "lit"
 
-import {LayoutMeta} from "./utils/layout_meta.js"
+import {LayoutMeta} from "./utils/layout-meta.js"
 import {alternator} from "../parts/alternator.js"
 import {LayoutNode} from "../../../../layout/types.js"
-import {sizing_styles} from "../parts/sizing_styles.js"
+import {sizingStyles} from "../parts/sizing-styles.js"
 
-export const render_cell =
+export const renderCell =
 	(meta: LayoutMeta) =>
-	(node: LayoutNode.Cell) => html`
+	(cell: LayoutNode.Cell) => html`
 
 	<div
 		class=cell
-		?data-vertical=${node.vertical}
-		style="${sizing_styles(node.size)}">
+		?data-vertical=${cell.vertical}
+		style="${sizingStyles(cell.size)}">
 
 		${alternator(
-			node.children,
-			(child) => meta.render_layout(child),
+			cell.children,
+			(child) => meta.renderLayout(child),
 			(child, index) => html`
 				<div
 					class=resizer
-					@pointerdown=${meta.resizer.start(node, child, index)}
+					@pointerdown=${meta.resizer.start(cell, child, index)}
 				></div>
 			`,
 		)}

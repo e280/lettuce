@@ -23,9 +23,9 @@ export class Resizer {
 		this.#operation = {
 			node: child,
 			parent: node,
-			initial_size: child.size ?? 50,
+			initialSize: child.size ?? 50,
 			next: next
-				? {node: next, initial_size: next.size}
+				? {node: next, initialSize: next.size}
 				: null,
 			x: event.clientX,
 			y: event.clientY,

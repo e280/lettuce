@@ -1,6 +1,6 @@
 
 import {html} from "lit"
-import {LayoutMeta} from "../utils/layout_meta.js"
+import {LayoutMeta} from "../utils/layout-meta.js"
 import {LayoutNode} from "../../../../../layout/types.js"
 import {icon_feather_plus} from "../../../icons/groups/feather/plus.js"
 
@@ -16,7 +16,7 @@ export const AdderTab = ({meta, dock}: {
 		.actions
 		.setDockActiveSurface(dock.id, null)
 
-	const show_drag_indicator = meta.dragger.is_leaf_indicated(dock.id, dock.children.length)
+	const show_drag_indicator = meta.dragger.isSurfaceIndicated(dock.id, dock.children.length)
 
 	return html`
 		<div class=tab>

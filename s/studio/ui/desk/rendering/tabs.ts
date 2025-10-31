@@ -1,22 +1,22 @@
 
 import {html} from "lit"
-import {AdderTab} from "./tabs/adder_tab.js"
-import {LayoutMeta} from "./utils/layout_meta.js"
-import {OrdinaryTab} from "./tabs/ordinary_tab.js"
+import {AdderTab} from "./tabs/adder-tab.js"
+import {LayoutMeta} from "./utils/layout-meta.js"
+import {OrdinaryTab} from "./tabs/ordinary-tab.js"
 import {LayoutNode} from "../../../../layout/types.js"
 
-export const render_tabs = (
+export const renderTabs = (
 		meta: LayoutMeta,
-		pane: LayoutNode.Dock,
+		dock: LayoutNode.Dock,
 	) => html`
 
-	${pane.children.map((leaf, leafIndex) => OrdinaryTab({
+	${dock.children.map((leaf, leafIndex) => OrdinaryTab({
 			meta,
-			pane,
-			leaf,
-			leafIndex,
+			dock: dock,
+			surface: leaf,
+			surfaceIndex: leafIndex,
 		}))}
 
-	${AdderTab({meta, dock: pane})}
+	${AdderTab({meta, dock: dock})}
 `
 

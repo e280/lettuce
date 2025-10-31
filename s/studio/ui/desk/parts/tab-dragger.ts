@@ -1,16 +1,16 @@
 
 import {signal, SignalFn} from "@e280/strata"
-import {is_within} from "./drag_utils.js"
+import {isWithin} from "./drag-utils.js"
 import {Layout} from "../../../../layout/layout.js"
 import {Seeker} from "../../../../layout/parts/seeker.js"
 import {Id, LayoutNode} from "../../../../layout/types.js"
 import {Actions} from "../../../../layout/parts/actions.js"
 
 export type TabDragOperation = {
-	leafId: Id
-	proposed_destination: null | {
-		paneId: Id
-		leafIndex: number
+	surfaceId: Id
+	proposedDestination: null | {
+		dockId: Id
+		surfaceIndex: number
 	}
 }
 
@@ -25,87 +25,91 @@ export class TabDragger {
 		this.#operation = signal<TabDragOperation | undefined>(undefined)
 	}
 
-	is_leaf_indicated(paneId: Id, leafIndex: number) {
+	isSurfaceIndicated(dockId: Id, surfaceIndex: number) {
 		const operation = this.#operation.value
 		return (
 			operation &&
-			operation.proposed_destination &&
-			operation.proposed_destination.paneId === paneId &&
-			operation.proposed_destination.leafIndex === leafIndex
+			operation.proposedDestination &&
+			operation.proposedDestination.dockId === dockId &&
+			operation.proposedDestination.surfaceIndex === surfaceIndex
 		)
 	}
 
-	is_pane_indicated(paneId: Id) {
+	isDockIndicated(dockId: Id) {
 		const operation = this.#operation.value
 		return (
 			operation &&
-			operation.proposed_destination &&
-			operation.proposed_destination.paneId === paneId
+			operation.proposedDestination &&
+			operation.proposedDestination.dockId === dockId
 		)
 	}
 
 	tab = {
-		start: (leafId: Id) =>  (_: DragEvent) => {
+		start: (surfaceId: Id) =>  (_: DragEvent) => {
 			this.#operation.value = {
-				leafId,
-				proposed_destination: null,
+				surfaceId: surfaceId,
+				proposedDestination: null,
 			}
 		},
 	}
 
-	pane = {
-		enter: (paneId: Id) => (event: DragEvent) => {
+	dock = {
+		enter: (dockId: Id) => (event: DragEvent) => {
 			const operation = this.#operation.value
 
 			if (!operation)
 				return
 
-			const [pane] = this.#seeker.find<LayoutNode.Dock>(paneId)
-			const within_tab = is_within(event.target, `[data-tab-for-leaf]`)
+			const [dock] = this.#seeker.find<LayoutNode.Dock>(dockId)
+			const isWithinTab = isWithin(event.target, `[data-tab-for-surface]`)
 
-			this.#operation.value = within_tab
+			this.#operation.value = isWithinTab
 				? (() => {
-					const leafId = within_tab.getAttribute("data-tab-for-leaf")!
-					const [leaf] = this
+					const surfaceId = isWithinTab.getAttribute("data-tab-for-surface")!
+					const [surface] = this
 						.#seeker
-						.find<LayoutNode.Surface>(leafId)
+						.find<LayoutNode.Surface>(surfaceId)
 					return {
-						leafId: operation.leafId,
-						proposed_destination: {
-							paneId: pane.id,
-							leafIndex: pane.children.indexOf(leaf),
+						surfaceId: operation.surfaceId,
+						proposedDestination: {
+							dockId: dock.id,
+							surfaceIndex: dock.children.indexOf(surface),
 						},
 					}
 				})()
 				: {
-					leafId: operation.leafId,
-					proposed_destination: {
-						paneId: pane.id,
-						leafIndex: pane.children.length,
+					surfaceId: operation.surfaceId,
+					proposedDestination: {
+						dockId: dock.id,
+						surfaceIndex: dock.children.length,
 					},
 				}
 		},
+
 		leave: () => (event: DragEvent) => {
 			const operation = this.#operation.value
 			if (operation && event.relatedTarget === null)
 				this.#operation.value = {
-					leafId: operation.leafId,
-					proposed_destination: null,
+					surfaceId: operation.surfaceId,
+					proposedDestination: null,
 				}
 		},
+
 		over: () => (event: DragEvent) => {
 			event.preventDefault()
 		},
+
 		end: () => (_: DragEvent) => {
 			this.#operation.value = undefined
 		},
+
 		drop: () => (_: DragEvent) => {
 			const operation = this.#operation.value
-			if (operation && operation.proposed_destination)
+			if (operation && operation.proposedDestination)
 				this.#actions.moveSurface(
-					operation.leafId,
-					operation.proposed_destination.paneId,
-					operation.proposed_destination.leafIndex,
+					operation.surfaceId,
+					operation.proposedDestination.dockId,
+					operation.proposedDestination.surfaceIndex,
 				)
 			this.#operation.value = undefined
 		},
