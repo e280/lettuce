@@ -10,14 +10,8 @@ export function renderAdderSurface(
 
 	function click(name: string) {
 		return async() => {
-			const [, leafIndex] = await layout.actions.addSurface(
-				dock.id,
-				name as any,
-			)
-			await layout.actions.setDockActiveSurface(
-				dock.id,
-				leafIndex,
-			)
+			const {index} = await layout.actions.addSurface(dock.id, name)
+			await layout.actions.setDockActiveSurface(dock.id, index)
 		}
 	}
 

@@ -2,9 +2,9 @@
 import {signal, SignalFn} from "@e280/strata"
 import {isWithin} from "./drag-utils.js"
 import {Layout} from "../../../../layout/layout.js"
-import {Seeker} from "../../../../layout/parts/seeker.js"
 import {Id, LayoutNode} from "../../../../layout/types.js"
 import {Actions} from "../../../../layout/parts/actions.js"
+import {Explorer} from "../../../../layout/parts/explorer.js"
 
 export type TabDragOperation = {
 	surfaceId: Id
@@ -16,11 +16,11 @@ export type TabDragOperation = {
 
 export class TabDragger {
 	#operation: SignalFn<TabDragOperation | undefined>
-	#seeker: Seeker
+	#explorer: Explorer
 	#actions: Actions
 
 	constructor(layout: Layout) {
-		this.#seeker = layout.seeker
+		this.#explorer = layout.explorer
 		this.#actions = layout.actions
 		this.#operation = signal<TabDragOperation | undefined>(undefined)
 	}
@@ -60,15 +60,15 @@ export class TabDragger {
 			if (!operation)
 				return
 
-			const [dock] = this.#seeker.find<LayoutNode.Dock>(dockId)
+			const dock = this.#explorer.docks.require(dockId)
 			const isWithinTab = isWithin(event.target, `[data-tab-for-surface]`)
 
 			this.#operation.value = isWithinTab
 				? (() => {
 					const surfaceId = isWithinTab.getAttribute("data-tab-for-surface")!
-					const [surface] = this
-						.#seeker
-						.find<LayoutNode.Surface>(surfaceId)
+					const surface = this.#explorer
+						.surfaces
+						.require(surfaceId)
 					return {
 						surfaceId: operation.surfaceId,
 						proposedDestination: {

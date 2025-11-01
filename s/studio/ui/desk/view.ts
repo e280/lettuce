@@ -41,7 +41,7 @@ export const Desk = (
 			@pointerup=${resizer.end}
 			>
 
-			${renderLayout(layout.seeker.root)}
+			${renderLayout(layout.explorer.root)}
 		</div>
 	`
 }))

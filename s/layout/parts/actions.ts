@@ -1,5 +1,5 @@
 
-import {Seeker} from "./seeker.js"
+import {Explorer} from "./explorer.js"
 import {freshId} from "../../tools/fresh-id.js"
 import {Id, LayoutNode, BlueprintTree, LayoutStock} from "../types.js"
 import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
@@ -10,10 +10,10 @@ export class Actions {
 		private stock: LayoutStock,
 	) {}
 
-	async #mut<R>(fn: (seeker: Seeker, setRoot: (root: LayoutNode.Cell) => void) => R) {
+	async #mut<R>(fn: (seeker: Explorer, setRoot: (root: LayoutNode.Cell) => void) => R) {
 		let r: R
 		await this.tree.mutate(state => {
-			const seeker = new Seeker(() => state.root)
+			const seeker = new Explorer(() => state.root)
 			r = fn(seeker, root => state.root = root)
 		})
 		return r!
@@ -27,66 +27,79 @@ export class Actions {
 	}
 
 	async addSurface(dockId: Id, panel: string) {
-		return this.#mut(seeker => {
-			const [dock] = seeker.find<LayoutNode.Dock>(dockId)
+		return this.#mut(explorer => {
+			const dock = explorer.docks.require(dockId)
 			const id = freshId()
 			const surface: LayoutNode.Surface = {id, kind: "surface", panel}
 			dock.children.push(surface)
-			return [surface, dock.children.indexOf(surface)] as [LayoutNode.Surface, number]
+			const index = dock.children.indexOf(surface)
+			return {surface, index}
+		})
+	}
+
+	async activateSurface(surfaceId: Id) {
+		return this.#mut(explorer => {
+			const surface = explorer.surfaces.requireReport(surfaceId)
+			const dock = explorer.surfaces.parent(surfaceId)
+			dock.activeChildIndex = surface.index
 		})
 	}
 
 	async setDockActiveSurface(dockId: Id, activeSurfaceIndex: number | null) {
-		return this.#mut(seeker => {
-			const [dock] = seeker.find<LayoutNode.Dock>(dockId)
+		return this.#mut(explorer => {
+			const dock = explorer.docks.require(dockId)
 			dock.activeChildIndex = activeSurfaceIndex
 		})
 	}
 
 	async resize(id: Id, size: number | null) {
-		return this.#mut(seeker => {
-			const [node] = seeker.find<LayoutNode.Cell | LayoutNode.Dock>(id)
+		return this.#mut(explorer => {
+			const node = explorer.all.require(id) as LayoutNode.Cell | LayoutNode.Dock
 			node.size = size
 		})
 	}
 
-	async deleteSurface(id: Id) {
-		return this.#mut(seeker => {
-			const [, parentDock, surfaceIndex] = seeker.find<LayoutNode.Surface>(id)
-			parentDock.children.splice(surfaceIndex, 1)
-			ensure_active_index_is_in_safe_range(parentDock)
+	async deleteSurface(surfaceId: Id) {
+		return this.#mut(explorer => {
+			const {index} = explorer.surfaces.requireReport(surfaceId)
+			const dock = explorer.surfaces.parent(surfaceId)
+			dock.children.splice(index, 1)
+			ensure_active_index_is_in_safe_range(dock)
 		})
 	}
 
 	async deleteDock(id: Id) {
-		return this.#mut((seeker, setRoot) => {
-			const [, parentCell, dockIndex] = seeker.find<LayoutNode.Dock>(id)
-			const [, grandparentCell, parentCellIndex] = seeker.find<LayoutNode.Cell>(parentCell.id)
+		return this.#mut((explorer, setRoot) => {
+			const {index} = explorer.docks.requireReport(id)
+			const cell = explorer.docks.parent(id)
+			const grandparent = explorer.cells.parent(cell.id)
 
-			parentCell.children.splice(dockIndex, 1)
-			clear_size_of_last_child(parentCell)
+			cell.children.splice(index, 1)
+			clear_size_of_last_child(cell)
 
-			if (seeker.docks.length === 0)
+			if (explorer.docks.nodes.length === 0)
 				setRoot(this.stock.empty())
 
-			else if (parentCell.children.length === 0) {
-				grandparentCell!.children.splice(parentCellIndex, 1)
-				clear_size_of_last_child(grandparentCell!)
+			else if (cell.children.length === 0) {
+				const cellReport = explorer.cells.requireReport(cell.id)
+				grandparent!.children.splice(cellReport.index, 1)
+				clear_size_of_last_child(grandparent!)
 			}
 
-			else if (parentCell.children.length === 1) {
-				const [onlyChild] = parentCell.children
+			else if (cell.children.length === 1) {
+				const [onlyChild] = cell.children
 				if (onlyChild.kind === "cell") {
-					parentCell.children = onlyChild.children
-					parentCell.vertical = onlyChild.vertical
+					cell.children = onlyChild.children
+					cell.vertical = onlyChild.vertical
 				}
 			}
 		})
 	}
 
-	async splitDock(id: Id, vertical: boolean) {
-		return this.#mut(seeker => {
-			const [dock, parentCell, dockIndex] = seeker.find<LayoutNode.Dock>(id)
+	async splitDock(dockId: Id, vertical: boolean) {
+		return this.#mut(explorer => {
+			const {node: dock, index: dockIndex} = explorer.docks.requireReport(dockId)
+			const parentCell = explorer.docks.parent(dockId)
 			const previousSize = dock.size
 
 			if (parentCell.vertical === vertical) {
@@ -143,9 +156,10 @@ export class Actions {
 			dockId: Id,
 			destinationIndex: number,
 		) {
-		return this.#mut(seeker => {
-			const [surface, sourceDock, sourceIndex] = seeker.find<LayoutNode.Surface>(surfaceId)
-			const [destinationDock] = seeker.find<LayoutNode.Dock>(dockId)
+		return this.#mut(explorer => {
+			const {node: surface, index: sourceIndex} = explorer.surfaces.requireReport(surfaceId)
+			const sourceDock = explorer.surfaces.parent(surfaceId)
+			const destinationDock = explorer.docks.require(dockId)
 			const surfaceIsActive = surface === get_active_surface(sourceDock)
 
 			const delete_at_source = () =>

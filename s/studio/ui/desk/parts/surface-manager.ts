@@ -15,8 +15,9 @@ export class SurfaceManager {
 	) {}
 
 	addNewSurfaces() {
-		const newSurfaces = this.layout.seeker
+		const newSurfaces = this.layout.explorer
 			.surfaces
+			.nodes
 			.filter(surface => !this.#registry.has(surface.id))
 
 		for (const surface of newSurfaces) {
@@ -41,10 +42,10 @@ export class SurfaceManager {
 	}
 
 	deleteOldSurfaces() {
-		const allSurfaces = this.layout.seeker.surfaces
+		const allSurfaces = this.layout.explorer.surfaces.nodes
 		const oldSurfaces = (
 			[...this.#registry]
-				.filter(id => !allSurfaces.some(leaf => leaf.id === id))
+				.filter(id => !allSurfaces.some(surface => surface.id === id))
 		)
 		for (const id of oldSurfaces) {
 			const div = this.element.querySelector<HTMLElement>(`[data-id="${id}"]`)

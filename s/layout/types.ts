@@ -38,11 +38,8 @@ export namespace LayoutNode {
 		panel: string
 	}
 
-	export type Any = (
-		| Cell
-		| Dock
-		| Surface
-	)
+	export type Container = Cell | Dock
+	export type Any = Cell | Dock | Surface
 }
 
 export type LayoutFile = {
@@ -50,17 +47,23 @@ export type LayoutFile = {
 	root: LayoutNode.Cell
 }
 
-export type LayoutReport<N extends LayoutNode.Any = LayoutNode.Any> = (
+export type LayoutReport<N extends LayoutNode.Any = LayoutNode.Any> = {
+	node: N
+	index: number
+	path: (LayoutNode.Cell | LayoutNode.Dock)[]
+}
+
+export type LayoutParent<N extends LayoutNode.Any = LayoutNode.Any> = (
 	N extends LayoutNode.Surface
-		? [node: N, parent: LayoutNode.Dock, index: number]
+		? LayoutNode.Dock
 
 	: N extends LayoutNode.Dock
-		? [node: N, parent: LayoutNode.Cell, index: number]
+		? LayoutNode.Cell
 
 	: N extends LayoutNode.Cell
-		? [node: N, parent: LayoutNode.Cell | null, index: number]
+		? LayoutNode.Cell | undefined
 
-	: never
+	: LayoutNode.Container
 )
 
 export type LayoutStock = {
