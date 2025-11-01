@@ -13,7 +13,7 @@ export class Layout {
 	on: Sub<[Immutable<Blueprint>]>
 	#blueprint: BlueprintTree
 
-	constructor(options: LayoutOptions) {
+	constructor(private options: LayoutOptions) {
 		const root = options.stock.default()
 		this.#blueprint = new Trunk({version: Layout.version, root})
 		this.on = this.#blueprint.on
@@ -26,6 +26,12 @@ export class Layout {
 	}
 
 	async setBlueprint(blueprint: Blueprint) {
+		if (blueprint.version !== Layout.version) {
+			console.warn(`layout blueprint invalid version (${blueprint.version}), reverting to default stock layout at version (${Layout.version})`)
+			const root = this.options.stock.default()
+			blueprint = {version: Layout.version, root}
+		}
+
 		await this.#blueprint.overwrite(blueprint)
 	}
 }
