@@ -11,6 +11,7 @@ export type Blueprint = {
 	version: number
 	root: Cell
 }
+
 export type BlueprintTree = Trunk<Blueprint>
 
 export type Kind = "cell" | "dock" | "surface"
