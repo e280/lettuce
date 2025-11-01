@@ -3,6 +3,10 @@ import {Cell, Dock} from "./types.js"
 import {freshId} from "../tools/fresh-id.js"
 
 export class Builder<K extends string = string> {
+	static fn = <K extends string = string>() => (
+		<R>(fn: (builder: Builder<K>) => R) => fn(new Builder())
+	)
+
 	tabs = (...panels: K[]): Dock => ({
 		kind: "dock",
 		id: freshId(),

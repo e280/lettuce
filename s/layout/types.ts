@@ -64,7 +64,7 @@ export type ParentOf<N extends LayoutNode = LayoutNode> = (
 )
 
 export type Stock = {
-	empty: () => Cell
 	default: () => Cell
+	empty: () => Cell
 }
 

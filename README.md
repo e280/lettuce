@@ -31,7 +31,7 @@
 
 ### 🥗 lettuce installation, html, and css
 1. **install**
-    ```sh
+    ```bash
     npm install @e280/lettuce lit
     ```
 1. **html**
@@ -65,7 +65,7 @@
     import {html} from "lit"
     import * as lettuce from "@e280/lettuce"
     ```
-1. **setup your panels**
+1. **setup your panels** — these panels are available for the user to open
     ```ts
     const panels = lettuce.asPanels({
       alpha: {
@@ -88,12 +88,17 @@
 1. **setup your layout**
     ```ts
     const layout = new lettuce.Layout({
-      stock: lettuce.buildStock<keyof typeof panels>(b => ({
-        empty: () => b.blank(),
+      stock: lettuce.Builder.fn<keyof typeof panels>()(b => ({
         default: () => b.cell(b.tabs("alpha", "bravo", "charlie")),
+        empty: () => b.blank(),
       })),
     })
     ```
+    - panels are referenced by their string keys.
+    - `Layout` is a facility for reading and manipulating.
+    - `Builder.fn` helps you build a tree of layout nodes with less verbosity (note the spooky-typing double-invocation).
+    - `stock.empty` defines the fallback state for when a user closes everything.
+    - `stock.default` defines the initial state for a first-time user.
 1. **enable localstorage persistence (optional)**
     ```ts
     const persistence = new lettuce.Persistence({
