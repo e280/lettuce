@@ -2,115 +2,227 @@
 <div align="center"><img alt="" width=256 src="./assets/lettuce.avif"/></div>
 
 # 🥬 lettuce
+> *flexible layout ui for web apps*
 
-### splitty-panelly tabby draggy-droppy leafy layout ui
-
+### 🥗 splitty-panelly tabby draggy-droppy leafy layout ui
 - 👉 **https://lettuce.e280.org/** 👈 *try it, nerd!*
-- it's web components bruh
-- pane splitting, resizing, vertical, horizontal, you get it
-- it's like for editor apps and stuff like https://omniclip.app/
-- uses [@benev/slate](https://github.com/benevolent-games/slate) and [lit](https://lit.dev/)
-- you can drag-and-drop tabs between panels
-  - done efficiently with *slots,* tab doesn't reinitialize or rerender to move
-  - that's actually *legit neato* if you have heavy-weight stuff in tabs
+- pane splitting, resizing, vertical, horizontal — you get it
+- dude, it's web components
+- uses [@e280/sly](https://github.com/e280/sly#readme) and [lit](https://lit.dev/) for ui rendering, [@e280/strata](https://github.com/e280/strata#readme) for state management
+- you can drag-and-drop tabs between panes
+  - done efficiently with *slots,* tab doesn't remount to move
+  - that's actually *legit neato* if you have heavy-weight stuff in your tabs
 
-<br/>
 
-## make a layout salad
 
-- **install it down**
-  ```sh
-  npm install @e280/lettuce
-  ```
-- **html it up**
-  ```html
-  <lettuce-layout></lettuce-layout>
-  ```
-- **css it this way**
-  ```css
-  lettuce-layout {
-	  color: #fff8;
-	  background: #111;
+<br/><br/>
 
-	  --scale: 1.5em;
-	  --highlight: yellow;
-	  --special: aqua;
-	  --dropcover: 10%;
-	  --warn: red;
-	  --warntext: white;
-	  --pane: #181818;
-	  --taskbar: #181818;
-	  --tab: transparent;
-	  --gutter: #000;
-	  --focal: transparent;
-	  --pointerlock: yellow;
-  }
-  ```
-- **javascript it that way**
-  ```ts
-  import {Salad} from "@e280/lettuce"
-  import {html, nexus, cssReset} from "@benev/slate"
+## 🥬 make a quick layout salad
+> *how to setup lettuce in your app*
 
-  const lettuce = Salad
-    .panels(pan => ({
+### 🥗 lettuce installation, html, and css
+1. **install**
+    ```sh
+    npm install @e280/lettuce lit
+    ```
+1. **html**
+    ```html
+    <lettuce-desk></lettuce-desk>
+    ```
+1. **css**
+    ```css
+    lettuce-desk {
+	    color: #fff8;
+	    background: #111;
 
-      // example panel using @benev/slate shadowView
-      about: pan.shadowView({
-        label: "about",
-        icon: () => html`🥬`,
-        render: use => panel => {
-          use.styles(css`h1 {color: skyblue;}`)
-          return html`
-            <h1>hello</h1>
-          `
-        },
-      }),
+	    --scale: 1.5em;
+	    --highlight: yellow;
+	    --special: aqua;
+	    --dropcover: 10%;
+	    --warn: red;
+	    --warntext: white;
+	    --dock: #181818;
+	    --taskbar: #181818;
+	    --tab: transparent;
+	    --gutter: #000;
+	    --focal: transparent;
+	    --pointerlock: yellow;
+    }
+    ```
 
-      // example panel just using lit html
-      lit: pan.plain({
-        label: "lit",
-        icon: () => html`🔥`,
-        render: () => html`
-          <p>this is an example</p>
-        `,
-      }),
-    }))
+### 🥗 lettuce typescript
+1. **imports**
+    ```ts
+    import {html} from "lit"
+    import * as lettuce from "@e280/lettuce"
+    ```
+1. **setup your panels**
+    ```ts
+    const panels = lettuce.asPanels({
+      alpha: {
+        label: "alpha",
+        icon: () => html`a`,
+        render: () => html`Alpha`,
+      },
+      bravo: {
+        label: "bravo",
+        icon: () => html`b`,
+        render: () => html`bravo`,
+      },
+      charlie: {
+        label: "charlie",
+        icon: () => html`c`,
+        render: () => html`charlie`,
+      },
+    })
+    ```
+1. **setup your layout (builder is a handy helper)**
+    ```ts
+    const b = new lettuce.Builder<keyof typeof panels>()
 
-    // layout configuration
-    .layout(layout => ({
-      default: layout.single("about"), // when user firsts visits
-      empty: layout.single("about"), // when user deletes all panes
-    }))
+    const layout = new lettuce.Layout({
+      stock: {
+        empty: () => b.blank(),
+        default: () => b.cell(b.tabs("alpha", "bravo", "charlie")),
+      },
+    })
+    ```
+1. **enable localstorage persistence (optional)**
+    ```ts
+    await lettuce.Persistence.setup({
+      layout,
+      kv: lettuce.Persistence.localStorageKv(),
+      key: "lettuceBlueprint",
+      debounceMs: 250,
+      loadOnStorageEvent: true,
+    })
+    ```
+1. **setup a studio for displaying the layout in browser**
+    ```ts
+    const studio = new lettuce.Studio({panels, layout})
+    ```
+1. **register the web components to the dom**
+    ```ts
+    studio.ui.registerComponents()
+    ```
 
-    // set lettuce context and register elements to dom
-    .setup()
-  ```
 
-### keep yourself organized
 
-- keep each of your panels in its own file
-- you can use `Salad.pan` to help with making panels in a type-happy way
-  ```ts
-  import {Salad} from "@e280/lettuce"
+<br/><br/>
 
-  export const aboutPanel = Salad.pan.shadowView({
-    label: "about",
-    icon: () => html`🥬`,
-    render: use => panel => {
-      use.styles(css`h1 {color: skyblue;}`)
-      return html`
-        <h1>hello</h1>
-      `
-    },
-  })
-  ```
+## 🥬 layout
+> *layout engine with serializable state*
 
-### you can do stuff with that `lettuce` instance
-that `lettuce` instance you get is the context for the layout system.  
-it has a bunch of facilities and stuff for manipulating the layout and stuff.  
-i literally don't have time to exhaustively document it rn... *plz help.*  
-use your lsp or read [lettuce.ts](./s/context/lettuce.ts)  
+### 🥗 layout package export path
+- **import directly to avoid browser concerns (for running under node etc)**
+    ```ts
+    import * as lettuce from "@e280/lettuce/layout"
+    ```
 
-### i made this open sourcedly just for you
+### 🥗 layout concepts explained
+- **`Cell`**
+    - a cell is a group that arranges its children either vertically or horizontally.
+    - this is where splits are expressed.
+    - a cell's children can be docks or more cells.
+- **`Dock`**
+    - a dock contains the ui with the little tab buttons, splitting buttons, x button, etc.
+    - a dock's children must be surfaces.
+- **`Surface`**
+    - a surface is the rendering target location of where a panel will be rendered.
+    - it uses a `<slot>` to magically render your panel into the location of this surface.
+
+### 🥗 layout [explorer.ts](./s/layout/parts/explorer.ts) — read and query immutable state
+- *read the source code for the real details*
+- `layout.explorer.root`
+- `layout.explorer.walk()`
+- `layout.explorer.all`
+- `layout.explorer.cells`
+- `layout.explorer.docks`
+- `layout.explorer.surfaces`
+
+### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
+- *read the source code for the real details*
+- `layout.actions.mutate()`
+- `layout.actions.reset()`
+- `layout.actions.addSurface(dockId, panel)`
+- `layout.actions.activateSurface(surfaceId)`
+- `layout.actions.setDockActiveSurface(dockId, activeSurfaceIndex)`
+- `layout.actions.resize(id, size)`
+- `layout.actions.deleteSurface(id)`
+- `layout.actions.deleteDock(id)`
+- `layout.actions.splitDock(id, vertical)`
+- `layout.actions.moveSurface(id, dockId, destinationIndex)`
+
+### 🥗 layout state management, using [strata](https://github.com/e280/strata#readme)
+- **layout contains a serializable data structure called a `Blueprint`**
+    ```ts
+    const blueprint = layout.getBlueprint()
+    ```
+    ```ts
+    layout.setBlueprint(blueprint)
+    ```
+- **you can manually subscribe to changes like this**
+    ```ts
+    layout.on(blueprint => {
+      console.log("layout changed", blueprint)
+    })
+    ```
+- **any strata-compatible ui (like [sly](https://github.com/e280/sly#readme)) will magically auto-rerender**
+    ```ts
+    import {view} from "@e280/sly"
+
+    view(use => () => html`
+      <p>node count: ${layout.explorer.all.count}</p>
+    `)
+    ```
+- **you can use strata effects to magically respond to changes**
+    ```ts
+    import {effect} from "@e280/strata"
+
+    effect(() => {
+      console.log("node count changed", layout.explorer.all.count)
+    })
+    ```
+
+
+
+<br/><br/>
+
+## 🥬 studio
+> *in-browser layout user-experience*
+
+### 🥗 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
+- *read the source code for the real details*
+- `studio.ui.registerComponents()` — shortcut to register the components with their default names
+- `studio.ui.views` — access to ui in the form of sly views
+    ```ts
+    import {html} from "lit"
+
+    html`
+      <div>
+        ${studio.ui.views.Desk()}
+      </div>
+    `
+    ```
+- `studio.ui.components` — access to ui in the form of web components
+    ```ts
+    import {dom} from "@e280/sly"
+
+    // manually registering the web components to the dom
+    dom.register({
+
+      // renaming the web component as an example
+      LolDesk: studio.ui.components.LettuceDesk,
+    })
+    ```
+    ```html
+    <lol-desk></lol-desk>
+    ```
+
+
+
+<br/><br/>
+
+## 🥬 i made this open sourcedly just for you
 pay your respects, gimmie a github star.  
 
