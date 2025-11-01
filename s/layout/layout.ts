@@ -6,6 +6,8 @@ import {Explorer} from "./parts/explorer.js"
 import {BlueprintTree, Blueprint, LayoutOptions, Cell} from "./types.js"
 
 export class Layout {
+	static readonly version = 1
+
 	explorer: Explorer
 	actions: Actions
 	on: Sub<[Immutable<Blueprint>]>
@@ -13,7 +15,7 @@ export class Layout {
 
 	constructor(options: LayoutOptions) {
 		const root = options.stock.default()
-		this.#blueprint = new Trunk({root})
+		this.#blueprint = new Trunk({version: Layout.version, root})
 		this.on = this.#blueprint.on
 		this.explorer = new Explorer(() => this.#blueprint.state.root as Cell)
 		this.actions = new Actions(this.#blueprint, options.stock)
