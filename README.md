@@ -135,6 +135,13 @@
     ```
 
 ### 🥗 layout concepts explained
+- **`Blueprint`**
+    - serializable layout data.
+    - contains a `version` number and a `root` cell.
+- **`LayoutNode`**
+    - any cell, dock, or surface.
+    - all nodes have a unique string `id`.
+    - all nodes have a `kind` string that is "cell", "dock", or "surface".
 - **`Cell`**
     - a cell is a group that arranges its children either vertically or horizontally.
     - this is where splits are expressed.
@@ -151,10 +158,19 @@
 - the state that explorer returns is all immutable and readonly, if you try to mutate it, an error will be thrown
 - `layout.explorer.root`
 - `layout.explorer.walk()`
-- `layout.explorer.all`
-- `layout.explorer.cells`
-- `layout.explorer.docks`
-- `layout.explorer.surfaces`
+- `layout.explorer.all` — is a "scout"
+- `layout.explorer.cells` — is a "scout"
+- `layout.explorer.docks` — is a "scout"
+- `layout.explorer.surfaces` — is a "scout"
+- all scouts have:
+  - `.getReport(id)`
+  - `.requireReport(id)`
+  - `.get(id)`
+  - `.require(id)`
+  - `.parent(id)`
+  - `.reports`
+  - `.nodes`
+  - `.count`
 
 ### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
 - *read the source code for the real details*
@@ -171,7 +187,7 @@
 - `layout.actions.moveSurface(id, dockId, destinationIndex)`
 
 ### 🥗 layout state management, using [strata](https://github.com/e280/strata#readme)
-- **layout contains a serializable data structure called a `Blueprint`**
+- **get/set the data**
     ```ts
     const blueprint = layout.getBlueprint()
     ```
