@@ -3,7 +3,7 @@ import {effect} from "@e280/strata"
 import {suite, test, expect} from "@e280/science"
 import {Layout} from "./layout.js"
 import {Blueprint} from "./types.js"
-import {basicStock} from "./testing/setup-basic-layout.js"
+import {BasicPanelName, basicStock} from "./testing/setup.js"
 
 export default suite({
 	"has cells/docks/surfaces": test(async() => {
@@ -40,7 +40,7 @@ export default suite({
 		const layout = new Layout({stock: basicStock()})
 		const [dock] = layout.explorer.docks.nodes
 		expect(layout.explorer.surfaces.count).is(3)
-		const {surface} = await layout.actions.addSurface(dock.id, "alpha")
+		const {surface} = await layout.actions.addSurface(dock.id, "alpha" satisfies BasicPanelName)
 		expect(layout.explorer.surfaces.count).is(4)
 		expect(layout.explorer.surfaces.require(surface.id).panel).is("alpha")
 	}),
