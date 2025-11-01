@@ -15,22 +15,18 @@ export const renderDock =
 	(meta: LayoutMeta) =>
 	(dock: Dock) => {
 
-	const {layout, gesture} = meta.studio
+	const {studio, dragger} = meta
+	const {layout} = studio
 
 	const activeSurface = (dock.activeChildIndex !== null)
 		? dock.children[dock.activeChildIndex]!
 		: null
 
-	const isFocal = dock.id === gesture.focal.value?.dockId
-
-	// TODO
+	const isFocal = dock.id === studio.focal.value?.dockId
 	const isPointerLocked = false
 
-	// const isPointerLocked = activeLeaf
-	// 	&& gesture.pointerLock.value?.leafId === activeLeaf.id
-
 	const focalize = () => {
-		gesture.focal.value = {
+		studio.focal.value = {
 			dockId: dock.id,
 			surfaceId: activeSurface && activeSurface.id,
 		}
@@ -45,12 +41,12 @@ export const renderDock =
 			?data-is-pointer-locked="${isPointerLocked}"
 			@pointerover="${focalize}"
 
-			?data-drag=${meta.dragger.isDockIndicated(dock.id)}
-			@dragenter=${meta.dragger.dock.enter(dock.id)}
-			@dragleave=${meta.dragger.dock.leave()}
-			@dragover=${meta.dragger.dock.over()}
-			@dragend=${meta.dragger.dock.end()}
-			@drop=${meta.dragger.dock.drop()}
+			?data-drag=${dragger.isDockIndicated(dock.id)}
+			@dragenter=${dragger.dock.enter(dock.id)}
+			@dragleave=${dragger.dock.leave()}
+			@dragover=${dragger.dock.over()}
+			@dragend=${dragger.dock.end()}
+			@drop=${dragger.dock.drop()}
 			>
 
 			<div class=taskbar>

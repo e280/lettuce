@@ -39,3 +39,8 @@ export function asPanels<PS extends PanelSpecs>(s: PS) {
 	return s
 }
 
+export type Focalization = {
+	dockId: Id
+	surfaceId: Id | null
+}
+

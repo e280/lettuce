@@ -1,14 +1,15 @@
 
+import {signal} from "@e280/strata"
 import {Ui} from "./ui/ui.js"
 import {Layout} from "../layout/layout.js"
-import {PanelSpecs, StudioOptions} from "./types.js"
-import {Gesture} from "./facilities/gesture/gesture.js"
+import {Focalization, PanelSpecs, StudioOptions} from "./types.js"
 
 export class Studio<PS extends PanelSpecs = PanelSpecs> {
 	panels: PS
 	layout: Layout
 	ui: Ui
-	gesture = new Gesture()
+
+	focal = signal<Focalization | null>(null)
 
 	constructor(options: StudioOptions<PS>) {
 		this.panels = options.panels
