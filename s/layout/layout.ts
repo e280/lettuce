@@ -1,23 +1,25 @@
 
+import {Trunk} from "@e280/strata"
 import {deep, Sub} from "@e280/stz"
-import {Immutable, Trunk} from "@e280/strata"
 import {Actions} from "./parts/actions.js"
 import {Explorer} from "./parts/explorer.js"
 import {normalizeBlueprint} from "./parts/normalize-blueprint.js"
-import {BlueprintTree, Blueprint, LayoutOptions, Cell} from "./types.js"
+import {BlueprintTree, Blueprint, LayoutOptions, Cell, Stock} from "./types.js"
 
 export class Layout {
 	static readonly version = 1
 
+	stock: Stock
 	explorer: Explorer
 	actions: Actions
-	on: Sub<[Immutable<Blueprint>]>
+	on: Sub<[Blueprint]>
 	#blueprint: BlueprintTree
 
-	constructor(private options: LayoutOptions) {
+	constructor(options: LayoutOptions) {
+		this.stock = options.stock
 		const root = options.stock.default()
 		this.#blueprint = new Trunk({version: Layout.version, root})
-		this.on = this.#blueprint.on
+		this.on = this.#blueprint.on as any
 		this.explorer = new Explorer(() => this.#blueprint.state.root as Cell)
 		this.actions = new Actions(this.#blueprint, options.stock)
 	}
@@ -31,7 +33,7 @@ export class Layout {
 			normalizeBlueprint({
 				blueprint,
 				currentVersion: Layout.version,
-				stock: this.options.stock,
+				stock: this.stock,
 			})
 		)
 	}
