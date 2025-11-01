@@ -1,7 +1,7 @@
 
 import {Layout} from "../../../../layout/layout.js"
 import {ResizeOperation} from "./utils/operation.js"
-import {LayoutNode} from "../../../../layout/types.js"
+import {Cell, Dock} from "../../../../layout/types.js"
 import {calculate_new_size_indicated_by_drag} from "./utils/calculate_new_size_indicated_by_drag.js"
 import {apply_relevant_sizing_to_next_sibling} from "./utils/apply_relevant_sizing_to_next_sibling.js"
 import {calculate_amount_of_container_overflow} from "./utils/calculate_amount_of_container_overflow.js"
@@ -11,8 +11,8 @@ export class Resizer {
 	constructor(private layout: Layout) {}
 
 	start = (
-			node: LayoutNode.Cell,
-			child: LayoutNode.Cell | LayoutNode.Dock,
+			node: Cell,
+			child: Cell | Dock,
 			index: number,
 		) => (event: PointerEvent) => {
 

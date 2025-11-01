@@ -1,12 +1,12 @@
 
 import {html} from "lit"
 import {LayoutMeta} from "../utils/layout-meta.js"
-import {LayoutNode} from "../../../../../layout/types.js"
+import {Dock} from "../../../../../layout/types.js"
 import {icon_feather_plus} from "../../../icons/groups/feather/plus.js"
 
 export const AdderTab = ({meta, dock}: {
 		meta: LayoutMeta
-		dock: LayoutNode.Dock
+		dock: Dock
 	}) => {
 
 	const active = dock.activeChildIndex === null

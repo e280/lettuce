@@ -1,11 +1,11 @@
 
 import {html} from "lit"
 import {LayoutMeta} from "./layout-meta.js"
-import {LayoutNode} from "../../../../../layout/types.js"
+import {Dock} from "../../../../../layout/types.js"
 
 export function renderAdderSurface(
 		{studio: {layout, panels}}: LayoutMeta,
-		dock: LayoutNode.Dock,
+		dock: Dock,
 	) {
 
 	function click(name: string) {

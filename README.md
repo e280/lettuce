@@ -120,14 +120,14 @@
     ```
 
 ### 🥗 layout concepts explained
-- **`LayoutNode.Cell`**
+- **`Cell`**
     - a cell is a group that arranges its children either vertically or horizontally.
     - this is where splits are expressed.
     - a cell's children can be docks or more cells.
-- **`LayoutNode.Dock`**
+- **`Dock`**
     - a dock contains the ui with the little tab buttons, splitting buttons, x button, etc.
     - a dock's children must be surfaces.
-- **`LayoutNode.Surface`**
+- **`Surface`**
     - a surface is the rendering target location of where a panel will be rendered.
     - it uses a `<slot>` to magically render your panel into the location of this surface.
 

@@ -1,9 +1,9 @@
 
 import {deep, Sub} from "@e280/stz"
 import {Immutable, Trunk} from "@e280/strata"
-import {Explorer} from "./parts/explorer.js"
 import {Actions} from "./parts/actions.js"
-import {LayoutNode, BlueprintTree, Blueprint, LayoutOptions} from "./types.js"
+import {Explorer} from "./parts/explorer.js"
+import {BlueprintTree, Blueprint, LayoutOptions, Cell} from "./types.js"
 
 export class Layout {
 	explorer: Explorer
@@ -15,7 +15,7 @@ export class Layout {
 		const root = options.stock.default()
 		this.#blueprint = new Trunk({root})
 		this.on = this.#blueprint.on
-		this.explorer = new Explorer(() => this.#blueprint.state.root as LayoutNode.Cell)
+		this.explorer = new Explorer(() => this.#blueprint.state.root as Cell)
 		this.actions = new Actions(this.#blueprint, options.stock)
 	}
 

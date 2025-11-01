@@ -1,11 +1,11 @@
 
-import {LayoutNode} from "../../../../../layout/types.js"
+import {Cell, Dock} from "../../../../../layout/types.js"
 
 export type ResizeOperation = {
-	parent: LayoutNode.Cell
-	node: LayoutNode.Cell | LayoutNode.Dock
+	parent: Cell
+	node: Cell | Dock
 	next: null | {
-		node: LayoutNode.Cell | LayoutNode.Dock
+		node: Cell | Dock
 		initialSize: number | null
 	}
 	initialSize: number

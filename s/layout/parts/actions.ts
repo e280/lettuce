@@ -1,16 +1,16 @@
 
 import {Explorer} from "./explorer.js"
 import {freshId} from "../../tools/fresh-id.js"
-import {Id, LayoutNode, BlueprintTree, LayoutStock} from "../types.js"
+import {Id, BlueprintTree, Stock, Dock, Cell, Surface} from "../types.js"
 import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
 		private tree: BlueprintTree,
-		private stock: LayoutStock,
+		private stock: Stock,
 	) {}
 
-	async #mut<R>(fn: (seeker: Explorer, setRoot: (root: LayoutNode.Cell) => void) => R) {
+	async #mut<R>(fn: (seeker: Explorer, setRoot: (root: Cell) => void) => R) {
 		let r: R
 		await this.tree.mutate(state => {
 			const seeker = new Explorer(() => state.root)
@@ -30,7 +30,7 @@ export class Actions {
 		return this.#mut(explorer => {
 			const dock = explorer.docks.require(dockId)
 			const id = freshId()
-			const surface: LayoutNode.Surface = {id, kind: "surface", panel}
+			const surface: Surface = {id, kind: "surface", panel}
 			dock.children.push(surface)
 			const index = dock.children.indexOf(surface)
 			return {surface, index}
@@ -54,7 +54,7 @@ export class Actions {
 
 	async resize(id: Id, size: number | null) {
 		return this.#mut(explorer => {
-			const node = explorer.all.require(id) as LayoutNode.Cell | LayoutNode.Dock
+			const node = explorer.all.require(id) as Cell | Dock
 			node.size = size
 		})
 	}
@@ -121,7 +121,7 @@ export class Actions {
 					newSize = null
 				}
 
-				const newDock: LayoutNode.Dock = {
+				const newDock: Dock = {
 					id: freshId(),
 					kind: "dock",
 					children: [],
@@ -133,7 +133,7 @@ export class Actions {
 			}
 			else {
 				dock.size = 50
-				const newCell: LayoutNode.Cell = {
+				const newCell: Cell = {
 					id: freshId(),
 					kind: "cell",
 					size: previousSize,

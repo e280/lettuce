@@ -1,11 +1,11 @@
 
 import {html} from "lit"
 import {LayoutMeta} from "./utils/layout-meta.js"
-import {LayoutNode} from "../../../../layout/types.js"
+import {Surface} from "../../../../layout/types.js"
 
 export const renderSurface =
 	(_meta: LayoutMeta) =>
-	(surface: LayoutNode.Surface) => html`
+	(surface: Surface) => html`
 
 	<slot name="surface-${surface.id}"></slot>
 `

@@ -3,8 +3,8 @@ import {html} from "lit"
 import {is} from "@e280/stz"
 import {renderTabs} from "./tabs.js"
 import {renderSurface} from "./surface.js"
+import {Dock} from "../../../../layout/types.js"
 import {LayoutMeta} from "./utils/layout-meta.js"
-import {LayoutNode} from "../../../../layout/types.js"
 import {sizingStyles} from "../parts/sizing-styles.js"
 import {icon_feather_x} from "../../icons/groups/feather/x.js"
 import {renderAdderSurface} from "./utils/render-adder-surface.js"
@@ -13,7 +13,7 @@ import {icon_akar_panel_split_column} from "../../icons/groups/akar/panel-split-
 
 export const renderDock =
 	(meta: LayoutMeta) =>
-	(dock: LayoutNode.Dock) => {
+	(dock: Dock) => {
 
 	const {layout, gesture} = meta.studio
 

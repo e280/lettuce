@@ -1,14 +1,14 @@
 
 import {html} from "lit"
 
+import {Cell} from "../../../../layout/types.js"
 import {LayoutMeta} from "./utils/layout-meta.js"
 import {alternator} from "../parts/alternator.js"
-import {LayoutNode} from "../../../../layout/types.js"
 import {sizingStyles} from "../parts/sizing-styles.js"
 
 export const renderCell =
 	(meta: LayoutMeta) =>
-	(cell: LayoutNode.Cell) => html`
+	(cell: Cell) => html`
 
 	<div
 		class=cell

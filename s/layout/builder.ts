@@ -1,9 +1,9 @@
 
-import {LayoutNode} from "./types.js"
+import {Cell, Dock} from "./types.js"
 import {freshId} from "../tools/fresh-id.js"
 
 export class Builder<K extends string> {
-	tabs = (...panels: K[]): LayoutNode.Dock => ({
+	tabs = (...panels: K[]): Dock => ({
 		kind: "dock",
 		id: freshId(),
 		size: null,
@@ -17,7 +17,7 @@ export class Builder<K extends string> {
 		})),
 	})
 
-	cell = (...children: (LayoutNode.Cell | LayoutNode.Dock)[]): LayoutNode.Cell => ({
+	cell = (...children: (Cell | Dock)[]): Cell => ({
 		kind: "cell",
 		id: freshId(),
 		size: null,
@@ -27,7 +27,7 @@ export class Builder<K extends string> {
 
 	horizontal = this.cell
 
-	vertical = (...children: (LayoutNode.Cell | LayoutNode.Dock)[]): LayoutNode.Cell => ({
+	vertical = (...children: (Cell | Dock)[]): Cell => ({
 		kind: "cell",
 		id: freshId(),
 		size: null,

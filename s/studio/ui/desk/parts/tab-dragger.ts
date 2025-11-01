@@ -1,8 +1,8 @@
 
 import {signal, SignalFn} from "@e280/strata"
 import {isWithin} from "./drag-utils.js"
+import {Id} from "../../../../layout/types.js"
 import {Layout} from "../../../../layout/layout.js"
-import {Id, LayoutNode} from "../../../../layout/types.js"
 import {Actions} from "../../../../layout/parts/actions.js"
 import {Explorer} from "../../../../layout/parts/explorer.js"
 

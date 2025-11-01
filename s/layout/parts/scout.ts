@@ -1,13 +1,13 @@
 
-import {Id, LayoutNode, LayoutParent, LayoutReport} from "../types.js"
+import {Id, LayoutNode, ParentOf, WalkReport} from "../types.js"
 
-export class Scout<N extends LayoutNode.Any> {
-	constructor(public iterate: () => Iterable<LayoutReport<N>>) {}
+export class Scout<N extends LayoutNode> {
+	constructor(public iterate: () => Iterable<WalkReport<N>>) {}
 
 	getReport(id: Id) {
 		for (const report of this.iterate())
 			if (report.node.id === id)
-				return report as LayoutReport<N>
+				return report as WalkReport<N>
 	}
 
 	requireReport(id: Id) {
@@ -30,7 +30,7 @@ export class Scout<N extends LayoutNode.Any> {
 	parent(id: Id) {
 		const report = this.requireReport(id)
 		if (report.path.length === 0) throw new Error(`node has no parent "${id}"`)
-		return report.path[report.path.length - 1] as LayoutParent<N>
+		return report.path[report.path.length - 1] as ParentOf<N>
 	}
 
 	/** get an array of these reports */

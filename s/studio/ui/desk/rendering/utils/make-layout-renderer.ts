@@ -11,7 +11,7 @@ export function makeLayoutRenderer(
 
 	const meta: LayoutMeta = {...draft, renderLayout}
 
-	function renderLayout(node: LayoutNode.Any) {
+	function renderLayout(node: LayoutNode) {
 		switch (node.kind) {
 			case "cell": return renderCell(meta)(node)
 			case "dock": return renderDock(meta)(node)

@@ -1,7 +1,7 @@
 
 import {html} from "lit"
 import {LayoutMeta} from "../utils/layout-meta.js"
-import {LayoutNode} from "../../../../../layout/types.js"
+import {Dock, Surface} from "../../../../../layout/types.js"
 import {icon_feather_x} from "../../../icons/groups/feather/x.js"
 
 const insideXButton = (event: MouseEvent) => {
@@ -15,8 +15,8 @@ export const OrdinaryTab = ({
 		meta, dock, surface, surfaceIndex,
 	}: {
 		meta: LayoutMeta
-		dock: LayoutNode.Dock
-		surface: LayoutNode.Surface
+		dock: Dock
+		surface: Surface
 		surfaceIndex: number
 	}) => {
 
