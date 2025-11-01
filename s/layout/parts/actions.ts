@@ -73,7 +73,6 @@ export class Actions {
 		return this.mutate((explorer, setRoot) => {
 			const {index} = explorer.docks.requireReport(id)
 			const cell = explorer.docks.parent(id)
-			const grandparent = explorer.cells.parent(cell.id)
 
 			cell.children.splice(index, 1)
 			clear_size_of_last_child(cell)
@@ -82,6 +81,7 @@ export class Actions {
 				setRoot(this.stock.empty())
 
 			else if (cell.children.length === 0) {
+				const grandparent = explorer.cells.parent(cell.id)
 				const cellReport = explorer.cells.requireReport(cell.id)
 				grandparent!.children.splice(cellReport.index, 1)
 				clear_size_of_last_child(grandparent!)
