@@ -8,10 +8,13 @@
 - 👉 **https://lettuce.e280.org/** 👈 *try it, nerd!*
 - pane splitting, resizing, vertical, horizontal — you get it
 - dude, it's web components
-- uses [@e280/sly](https://github.com/e280/sly#readme) and [lit](https://lit.dev/) for ui rendering, [@e280/strata](https://github.com/e280/strata#readme) for state management
 - you can drag-and-drop tabs between panes
   - done efficiently with *slots,* tab doesn't remount to move
   - that's actually *legit neato* if you have heavy-weight stuff in your tabs
+- using
+  - [@e280/sly](https://github.com/e280/sly#readme) and [lit](https://lit.dev/) for ui rendering
+  - [@e280/strata](https://github.com/e280/strata#readme) for state management
+  - [@e280/kv](https://github.com/e280/kv#readme) for persistence
 
 
 
@@ -87,13 +90,15 @@
     ```
 1. **enable localstorage persistence (optional)**
     ```ts
-    await lettuce.Persistence.setup({
+    const persistence = new lettuce.Persistence({
       layout,
+      key: "lettuceLayoutBlueprint",
       kv: lettuce.Persistence.localStorageKv(),
-      key: "lettuceBlueprint",
-      debounceMs: 250,
-      loadOnStorageEvent: true,
     })
+
+    await persistence.load()
+    persistence.setupAutoSave()
+    persistence.setupLoadOnStorageEvent()
     ```
 1. **setup a studio for displaying the layout in browser**
     ```ts
@@ -131,6 +136,7 @@
 
 ### 🥗 layout [explorer.ts](./s/layout/parts/explorer.ts) — read and query immutable state
 - *read the source code for the real details*
+- the state that explorer returns is all immutable and readonly, if you try to mutate it, an error will be thrown
 - `layout.explorer.root`
 - `layout.explorer.walk()`
 - `layout.explorer.all`
@@ -140,6 +146,7 @@
 
 ### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
 - *read the source code for the real details*
+- these actions are the only way you can mutate or modify the state
 - `layout.actions.mutate()`
 - `layout.actions.reset(cell?)`
 - `layout.actions.addSurface(dockId, panel)`
@@ -216,6 +223,27 @@
     ```html
     <lol-desk></lol-desk>
     ```
+
+
+
+## 🥬 persistence
+> *saving the user's customized layout*
+
+### 🥗 [persistence.ts](./s/studio/persistence.ts)
+- *read the source code for the real details*
+- we provide `Persistence` with a [@e280/kv](https://github.com/e280/kv#readme) for data storage
+    ```ts
+    const persistence = new lettuce.Persistence({
+      layout,
+      key: "lettuceLayoutBlueprint",
+      kv: lettuce.Persistence.localStorageKv(),
+    })
+    ```
+- you can provide a kv that saves to localStorage, or your own database, or whatever
+- then we can do some optional stuff
+    - `await persistence.load()` — initial load
+    - `persistence.setupAutoSave()` — establish auto-save-on-change mechanic
+    - `persistence.setupLoadOnStorageEvent()` — reload whenever another browser window or tab triggers a storage event (cross-tab synchronization)
 
 
 

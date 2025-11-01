@@ -1,7 +1,6 @@
 
-import {effect} from "@e280/strata"
-import {Kv, StorageDriver} from "@e280/kv"
-import {debounce, disposer} from "@e280/stz"
+import {debounce} from "@e280/stz"
+import {Kv, StorageDriver, Store} from "@e280/kv"
 import {Blueprint} from "../layout/types.js"
 import {PersistenceOptions} from "./types.js"
 
@@ -10,40 +9,29 @@ export class Persistence {
 		new StorageDriver(window.localStorage)
 	)
 
-	static setup = async(options: PersistenceOptions) => {
-		const {layout, kv, debounceMs} = options
-		const store = kv.store<Blueprint>(options.key)
+	store: Store<Blueprint>
 
-		const load = async() => {
-			const freshBlueprint = await store.get()
-			if (freshBlueprint)
-				await layout.setBlueprint(freshBlueprint)
-		}
-
-		const save = debounce(debounceMs, async() => {
-			await store.set(layout.getBlueprint())
-		})
-
-		await load()
-		return new this(options, load, save)
+	constructor(private options: PersistenceOptions) {
+		this.store = options.kv.store<Blueprint>(options.key)
 	}
 
-	dispose = disposer()
+	async load() {
+		const freshBlueprint = await this.store.get()
+		if (freshBlueprint)
+			await this.options.layout.setBlueprint(freshBlueprint)
+	}
 
-	constructor(
-			options: PersistenceOptions,
-			public load: () => Promise<void>,
-			public save: () => Promise<void>,
-		) {
+	async save() {
+		await this.store.set(this.options.layout.getBlueprint())
+	}
 
-		this.dispose.schedule(
-			effect(() => options.layout.getBlueprint(), () => { save() })
-		)
+	setupAutoSave(debounceMs = 250) {
+		const debouncedSave = debounce(debounceMs, async() => this.save())
+		return this.options.layout.on(() => void debouncedSave())
+	}
 
-		if (options.loadOnStorageEvent)
-			this.dispose.schedule(
-				StorageDriver.onStorageEvent(load)
-			)
+	setupLoadOnStorageEvent() {
+		return StorageDriver.onStorageEvent(() => this.load())
 	}
 }
 

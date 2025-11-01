@@ -13,8 +13,6 @@ export type PersistenceOptions = {
 	layout: Layout
 	kv: Kv
 	key: string
-	debounceMs: number
-	loadOnStorageEvent: boolean
 }
 
 export interface PanelProps {
