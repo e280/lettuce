@@ -1,9 +1,6 @@
 
-import {Science, test, expect} from "@e280/science"
+import {Science} from "@e280/science"
+import layout from "./layout/layout.test.js"
 
-await Science.run({
-	"tests run": test(async() => {
-		expect(2 + 2).is(4)
-	}),
-})
+await Science.run({layout})
 

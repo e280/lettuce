@@ -76,15 +76,13 @@
       },
     })
     ```
-1. **setup your layout (builder is a handy helper)**
+1. **setup your layout**
     ```ts
-    const b = new lettuce.Builder<keyof typeof panels>()
-
     const layout = new lettuce.Layout({
-      stock: {
+      stock: lettuce.buildStock(b => ({
         empty: () => b.blank(),
         default: () => b.cell(b.tabs("alpha", "bravo", "charlie")),
-      },
+      })),
     })
     ```
 1. **enable localstorage persistence (optional)**
@@ -143,7 +141,7 @@
 ### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
 - *read the source code for the real details*
 - `layout.actions.mutate()`
-- `layout.actions.reset()`
+- `layout.actions.reset(cell?)`
 - `layout.actions.addSurface(dockId, panel)`
 - `layout.actions.activateSurface(surfaceId)`
 - `layout.actions.setDockActiveSurface(dockId, activeSurfaceIndex)`

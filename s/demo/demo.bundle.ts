@@ -2,9 +2,9 @@
 import {Layout} from "../layout/layout.js"
 import {Studio} from "../studio/studio.js"
 import {asPanels} from "../studio/types.js"
-import {Builder} from "../layout/builder.js"
 import {GnuPanel} from "./panels/gnu/panel.js"
 import {AboutPanel} from "./panels/about/panel.js"
+import {buildStock} from "../layout/build-stock.js"
 import {Persistence} from "../studio/persistence.js"
 import {BroteinPanel} from "./panels/brotein/panel.js"
 import {icon_feather_info} from "../studio/ui/icons/groups/feather/info.js"
@@ -31,13 +31,11 @@ const panels = asPanels({
 	},
 })
 
-const b = new Builder<keyof typeof panels>()
-
 const layout = new Layout({
-	stock: {
+	stock: buildStock(b => ({
 		empty: () => b.blank(),
 		default: () => b.cell(b.tabs("about", "gnu", "brotein")),
-	},
+	})),
 })
 
 await Persistence.setup({

@@ -20,9 +20,8 @@ export class Actions {
 		return r!
 	}
 
-	async reset() {
+	async reset(root = this.stock.default()) {
 		return this.mutate((_, setRoot) => {
-			const root = this.stock.default()
 			setRoot(root)
 		})
 	}
