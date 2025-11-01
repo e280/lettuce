@@ -7,7 +7,7 @@
 ### 🥗 splitty-panelly tabby draggy-droppy leafy layout ui
 - 👉 **https://lettuce.e280.org/** 👈 *try it, nerd!*
 - pane splitting, resizing, vertical, horizontal — you get it
-- dude, it's web components
+- dude, it's web components — universal compatibility
 - you can drag-and-drop tabs between panes
   - done efficiently with *slots,* tab doesn't remount to move
   - that's actually *legit neato* if you have heavy-weight stuff in your tabs
@@ -15,6 +15,12 @@
   - [@e280/sly](https://github.com/e280/sly#readme) and [lit](https://lit.dev/) for ui rendering
   - [@e280/strata](https://github.com/e280/strata#readme) for state management
   - [@e280/kv](https://github.com/e280/kv#readme) for persistence
+
+
+
+> [!IMPORTANT]  
+> *lettuce is just an early prototype.*  
+> *more work is yet to be done in terms of features, extensibility, and customizability.*  
 
 
 
@@ -100,6 +106,7 @@
     persistence.setupAutoSave()
     persistence.setupLoadOnStorageEvent()
     ```
+    - see [@e280/kv](https://github.com/e280/kv#readme) to learn how to control where the data is saved
 1. **setup a studio for displaying the layout in browser**
     ```ts
     const studio = new lettuce.Studio({panels, layout})
@@ -223,27 +230,6 @@
     ```html
     <lol-desk></lol-desk>
     ```
-
-
-
-## 🥬 persistence
-> *saving the user's customized layout*
-
-### 🥗 [persistence.ts](./s/studio/persistence.ts)
-- *read the source code for the real details*
-- we provide `Persistence` with a [@e280/kv](https://github.com/e280/kv#readme) for data storage
-    ```ts
-    const persistence = new lettuce.Persistence({
-      layout,
-      key: "lettuceLayoutBlueprint",
-      kv: lettuce.Persistence.localStorageKv(),
-    })
-    ```
-- you can provide a kv that saves to localStorage, or your own database, or whatever
-- then we can do some optional stuff
-    - `await persistence.load()` — initial load
-    - `persistence.setupAutoSave()` — establish auto-save-on-change mechanic
-    - `persistence.setupLoadOnStorageEvent()` — reload whenever another browser window or tab triggers a storage event (cross-tab synchronization)
 
 
 
