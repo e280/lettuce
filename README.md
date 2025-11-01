@@ -143,6 +143,7 @@
 
 ### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
 - *read the source code for the real details*
+- `layout.actions.mutate()`
 - `layout.actions.reset()`
 - `layout.actions.addSurface(dockId, panel)`
 - `layout.actions.activateSurface(surfaceId)`

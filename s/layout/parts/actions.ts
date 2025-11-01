@@ -10,24 +10,25 @@ export class Actions {
 		private stock: Stock,
 	) {}
 
-	async #mut<R>(fn: (seeker: Explorer, setRoot: (root: Cell) => void) => R) {
+	/** peform a custom arbitrary mutation */
+	async mutate<R>(fn: (explorer: Explorer, setRoot: (root: Cell) => void) => R) {
 		let r: R
 		await this.tree.mutate(state => {
-			const seeker = new Explorer(() => state.root)
-			r = fn(seeker, root => state.root = root)
+			const explorer = new Explorer(() => state.root)
+			r = fn(explorer, root => state.root = root)
 		})
 		return r!
 	}
 
 	async reset() {
-		return this.#mut((_seeker, setRoot) => {
+		return this.mutate((_, setRoot) => {
 			const root = this.stock.default()
 			setRoot(root)
 		})
 	}
 
 	async addSurface(dockId: Id, panel: string) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const dock = explorer.docks.require(dockId)
 			const id = freshId()
 			const surface: Surface = {id, kind: "surface", panel}
@@ -38,7 +39,7 @@ export class Actions {
 	}
 
 	async activateSurface(surfaceId: Id) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const surface = explorer.surfaces.requireReport(surfaceId)
 			const dock = explorer.surfaces.parent(surfaceId)
 			dock.activeChildIndex = surface.index
@@ -46,21 +47,21 @@ export class Actions {
 	}
 
 	async setDockActiveSurface(dockId: Id, activeSurfaceIndex: number | null) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const dock = explorer.docks.require(dockId)
 			dock.activeChildIndex = activeSurfaceIndex
 		})
 	}
 
 	async resize(id: Id, size: number | null) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const node = explorer.all.require(id) as Cell | Dock
 			node.size = size
 		})
 	}
 
 	async deleteSurface(surfaceId: Id) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const {index} = explorer.surfaces.requireReport(surfaceId)
 			const dock = explorer.surfaces.parent(surfaceId)
 			dock.children.splice(index, 1)
@@ -69,7 +70,7 @@ export class Actions {
 	}
 
 	async deleteDock(id: Id) {
-		return this.#mut((explorer, setRoot) => {
+		return this.mutate((explorer, setRoot) => {
 			const {index} = explorer.docks.requireReport(id)
 			const cell = explorer.docks.parent(id)
 			const grandparent = explorer.cells.parent(cell.id)
@@ -97,7 +98,7 @@ export class Actions {
 	}
 
 	async splitDock(dockId: Id, vertical: boolean) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const {node: dock, index: dockIndex} = explorer.docks.requireReport(dockId)
 			const parentCell = explorer.docks.parent(dockId)
 			const previousSize = dock.size
@@ -156,7 +157,7 @@ export class Actions {
 			dockId: Id,
 			destinationIndex: number,
 		) {
-		return this.#mut(explorer => {
+		return this.mutate(explorer => {
 			const {node: surface, index: sourceIndex} = explorer.surfaces.requireReport(surfaceId)
 			const sourceDock = explorer.surfaces.parent(surfaceId)
 			const destinationDock = explorer.docks.require(dockId)
