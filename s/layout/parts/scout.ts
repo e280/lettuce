@@ -42,5 +42,11 @@ export class Scout<N extends LayoutNode> {
 	get nodes() {
 		return this.reports.map(report => report.node)
 	}
+
+	get count() {
+		let n = 0
+		for (const _ of this.iterate()) n++
+		return n
+	}
 }
 

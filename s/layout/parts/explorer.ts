@@ -38,13 +38,6 @@ export class Explorer {
 				yield report as WalkReport<N>
 	}
 
-	/** return the total count of all layout nodes in the tree */
-	get count() {
-		let n = 0
-		for (const _ of this.walk()) n++
-		return n
-	}
-
 	all = new Scout<LayoutNode>(() => this.walk())
 	cells = new Scout<Cell>(() => this.#kind("cell"))
 	docks = new Scout<Dock>(() => this.#kind("dock"))

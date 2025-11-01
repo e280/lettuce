@@ -131,19 +131,21 @@
     - a surface is the rendering target location of where a panel will be rendered.
     - it uses a `<slot>` to magically render your panel into the location of this surface.
 
-### 🥗 layout [seeker.ts](./s/layout/parts/seeker.ts) — read and query immutable state
+### 🥗 layout [explorer.ts](./s/layout/parts/explorer.ts) — read and query immutable state
 - *read the source code for the real details*
-- `layout.seeker.root`
-- `layout.seeker.list()`
-- `layout.seeker.find(id)`
-- `layout.seeker.cells`
-- `layout.seeker.docks`
-- `layout.seeker.surfaces`
+- `layout.explorer.root`
+- `layout.explorer.walk()`
+- `layout.explorer.count`
+- `layout.explorer.all`
+- `layout.explorer.cells`
+- `layout.explorer.docks`
+- `layout.explorer.surfaces`
 
 ### 🥗 layout [actions.ts](./s/layout/parts/actions.ts) — mutate state
 - *read the source code for the real details*
 - `layout.actions.reset()`
 - `layout.actions.addSurface(dockId, panel)`
+- `layout.actions.activateSurface(surfaceId)`
 - `layout.actions.setDockActiveSurface(dockId, activeSurfaceIndex)`
 - `layout.actions.resize(id, size)`
 - `layout.actions.deleteSurface(id)`
@@ -170,7 +172,7 @@
     import {view} from "@e280/sly"
 
     view(use => () => html`
-      <p>node count: ${[...layout.seeker.list()].length}</p>
+      <p>node count: ${layout.explorer.all.count}</p>
     `)
     ```
 - **you can use strata effects to magically respond to changes**
@@ -178,7 +180,7 @@
     import {effect} from "@e280/strata"
 
     effect(() => {
-      console.log("node count changed", [...layout.seeker.list()].length)
+      console.log("node count changed", layout.explorer.all.count)
     })
     ```
 
