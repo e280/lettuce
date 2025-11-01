@@ -60,26 +60,26 @@
     ```ts
     const panels = lettuce.asPanels({
       alpha: {
-        label: "alpha",
-        icon: () => html`a`,
-        render: () => html`Alpha`,
+        label: "Alpha",
+        icon: () => html`🇦`,
+        render: () => html`alpha content`,
       },
       bravo: {
-        label: "bravo",
-        icon: () => html`b`,
-        render: () => html`bravo`,
+        label: "Bravo",
+        icon: () => html`🇧`,
+        render: () => html`bravo content`,
       },
       charlie: {
-        label: "charlie",
-        icon: () => html`c`,
-        render: () => html`charlie`,
+        label: "Charlie",
+        icon: () => html`🇨`,
+        render: () => html`charlie content`,
       },
     })
     ```
 1. **setup your layout**
     ```ts
     const layout = new lettuce.Layout({
-      stock: lettuce.buildStock(b => ({
+      stock: lettuce.buildStock<keyof typeof panels>(b => ({
         empty: () => b.blank(),
         default: () => b.cell(b.tabs("alpha", "bravo", "charlie")),
       })),

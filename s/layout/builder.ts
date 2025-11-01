@@ -2,7 +2,7 @@
 import {Cell, Dock} from "./types.js"
 import {freshId} from "../tools/fresh-id.js"
 
-export class Builder<K extends string> {
+export class Builder<K extends string = string> {
 	tabs = (...panels: K[]): Dock => ({
 		kind: "dock",
 		id: freshId(),
