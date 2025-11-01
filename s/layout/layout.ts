@@ -3,6 +3,7 @@ import {deep, Sub} from "@e280/stz"
 import {Immutable, Trunk} from "@e280/strata"
 import {Actions} from "./parts/actions.js"
 import {Explorer} from "./parts/explorer.js"
+import {normalizeBlueprint} from "./parts/normalize-blueprint.js"
 import {BlueprintTree, Blueprint, LayoutOptions, Cell} from "./types.js"
 
 export class Layout {
@@ -26,13 +27,13 @@ export class Layout {
 	}
 
 	async setBlueprint(blueprint: Blueprint) {
-		if (blueprint.version !== Layout.version) {
-			console.warn(`layout blueprint invalid version (${blueprint.version}), reverting to default stock layout at version (${Layout.version})`)
-			const root = this.options.stock.default()
-			blueprint = {version: Layout.version, root}
-		}
-
-		await this.#blueprint.overwrite(blueprint)
+		await this.#blueprint.overwrite(
+			normalizeBlueprint({
+				blueprint,
+				currentVersion: Layout.version,
+				stock: this.options.stock,
+			})
+		)
 	}
 }
 
