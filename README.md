@@ -135,7 +135,6 @@
 - *read the source code for the real details*
 - `layout.explorer.root`
 - `layout.explorer.walk()`
-- `layout.explorer.count`
 - `layout.explorer.all`
 - `layout.explorer.cells`
 - `layout.explorer.docks`
