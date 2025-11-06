@@ -70,17 +70,17 @@
     const panels = lettuce.asPanels({
       alpha: {
         label: "Alpha",
-        icon: () => html`🇦`,
+        icon: () => html`A`,
         render: () => html`alpha content`,
       },
       bravo: {
         label: "Bravo",
-        icon: () => html`🇧`,
+        icon: () => html`B`,
         render: () => html`bravo content`,
       },
       charlie: {
         label: "Charlie",
-        icon: () => html`🇨`,
+        icon: () => html`C`,
         render: () => html`charlie content`,
       },
     })
@@ -225,6 +225,9 @@
 > *in-browser layout user-experience*
 
 ### 🥗 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
+```ts
+const studio = new lettuce.Studio({panels, layout})
+```
 - *read the source code for the real details*
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
