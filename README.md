@@ -41,21 +41,21 @@
 1. **css**
     ```css
     lettuce-desk {
-	    color: #fff8;
-	    background: #111;
+      color: #fff8;
+      background: #111;
 
-	    --scale: 1.5em;
-	    --highlight: yellow;
-	    --special: aqua;
-	    --dropcover: 10%;
-	    --warn: red;
-	    --warntext: white;
-	    --dock: #181818;
-	    --taskbar: #181818;
-	    --tab: transparent;
-	    --gutter: #000;
-	    --focal: transparent;
-	    --pointerlock: yellow;
+      --scale: 1.5em;
+      --highlight: yellow;
+      --special: aqua;
+      --dropcover: 10%;
+      --warn: red;
+      --warntext: white;
+      --dock: #181818;
+      --taskbar: #181818;
+      --tab: transparent;
+      --gutter: #000;
+      --focal: transparent;
+      --pointerlock: yellow;
     }
     ```
 
