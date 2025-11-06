@@ -14,6 +14,7 @@ export const Desk = (
 	({studio}: {studio: Studio<any>}) =>
 	view(use => () => {
 
+	use.name("lettuce-desk")
 	use.styles(themeCss, styleCss)
 	const {layout, panels} = studio
 
