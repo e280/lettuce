@@ -1,19 +1,20 @@
 
+import {Lens} from "@e280/strata"
 import {Explorer} from "./explorer.js"
 import {freshId} from "../../tools/fresh-id.js"
-import {Id, BlueprintTree, Stock, Dock, Cell, Surface} from "../types.js"
+import {Id, Stock, Dock, Cell, Surface, Blueprint} from "../types.js"
 import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
-		private tree: BlueprintTree,
+		private lens: Lens<Blueprint>,
 		private stock: Stock,
 	) {}
 
 	/** peform a custom arbitrary mutation */
 	async mutate<R>(fn: (explorer: Explorer, setRoot: (root: Cell) => void) => R) {
 		let r: R
-		await this.tree.mutate(state => {
+		await this.lens.mutate(state => {
 			const explorer = new Explorer(() => state.root)
 			r = fn(explorer, root => state.root = root)
 		})

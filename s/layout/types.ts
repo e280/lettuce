@@ -1,6 +1,4 @@
 
-import {Trunk} from "@e280/strata"
-
 export type Id = string
 
 export type LayoutOptions = {
@@ -11,8 +9,6 @@ export type Blueprint = {
 	version: number
 	root: Cell
 }
-
-export type BlueprintTree = Trunk<Blueprint>
 
 export type Kind = "cell" | "dock" | "surface"
 

@@ -1,10 +1,10 @@
 
-import {Trunk} from "@e280/strata"
 import {deep, Sub} from "@e280/stz"
+import {Lens, Prism} from "@e280/strata"
 import {Actions} from "./parts/actions.js"
 import {Explorer} from "./parts/explorer.js"
+import {Blueprint, LayoutOptions, Cell, Stock} from "./types.js"
 import {normalizeBlueprint} from "./parts/normalize-blueprint.js"
-import {BlueprintTree, Blueprint, LayoutOptions, Cell, Stock} from "./types.js"
 
 export class Layout {
 	static readonly version = 1
@@ -13,23 +13,27 @@ export class Layout {
 	explorer: Explorer
 	actions: Actions
 	on: Sub<[Blueprint]>
-	#blueprint: BlueprintTree
+	#prism: Prism<Blueprint>
+	#lens: Lens<Blueprint>
 
 	constructor(options: LayoutOptions) {
 		this.stock = options.stock
 		const root = options.stock.default()
-		this.#blueprint = new Trunk({version: Layout.version, root})
-		this.on = this.#blueprint.on as any
-		this.explorer = new Explorer(() => this.#blueprint.state.root as Cell)
-		this.actions = new Actions(this.#blueprint, options.stock)
+
+		this.#prism = new Prism({version: Layout.version, root})
+		this.#lens = this.#prism.lens(s => s)
+		this.on = this.#prism.on
+
+		this.explorer = new Explorer(() => this.#lens.state.root as Cell)
+		this.actions = new Actions(this.#lens, options.stock)
 	}
 
 	getBlueprint() {
-		return deep.clone(this.#blueprint.state) as Blueprint
+		return deep.clone(this.#lens.state) as Blueprint
 	}
 
 	async setBlueprint(blueprint: Blueprint) {
-		await this.#blueprint.overwrite(
+		await this.#prism.set(
 			normalizeBlueprint({
 				blueprint,
 				currentVersion: Layout.version,
