@@ -10,6 +10,14 @@
 
 ## v0.1
 
+### v0.1.2
+- 🍏 update deps
+
+### v0.1.1
+- 🍏 add desk view name `<sly-view view="lettuce-desk">`
+- 🍏 update deps
+- 🍏 improve readme
+
 ### v0.1.0
 - 🟥 big 'ol rewrite
 
