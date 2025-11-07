@@ -236,7 +236,7 @@ const studio = new lettuce.Studio({panels, layout})
 
     html`
       <div>
-        ${studio.ui.views.Desk()}
+        ${studio.ui.views.LettuceDesk()}
       </div>
     `
     ```

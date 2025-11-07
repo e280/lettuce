@@ -10,6 +10,9 @@
 
 ## v0.1
 
+### v0.2.0
+- 🟥 rename `studio.ui.views.Desk` to `studio.ui.views.LettuceDesk` for consistency
+
 ### v0.1.2
 - 🍏 update deps
 

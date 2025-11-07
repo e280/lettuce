@@ -24,13 +24,13 @@ export class Ui {
 
 function prepareDom<PS extends PanelSpecs>(studio: Studio<PS>) {
 	const views = {
-		Desk: Desk({studio}),
+		LettuceDesk: Desk({studio}),
 	}
 
 	return {
 		views,
 		components: {
-			LettuceDesk: views.Desk.component().props(() => []),
+			LettuceDesk: views.LettuceDesk.component().props(() => []),
 		},
 	}
 }
