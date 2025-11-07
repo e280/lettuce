@@ -312,7 +312,7 @@ const studio = new lettuce.Studio({panels, layout, renderer})
       <>
         {surfaces.map(surface =>
           <div key={surface.id} slot={surface.id} data-panel={surface.panel}>
-            {panels[surface.panel].render(surface)}
+            {panels[surface.panel as any as keyof typeof panels].render()}
           </div>
         )}
       </>,
