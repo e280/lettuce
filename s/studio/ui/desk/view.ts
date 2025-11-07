@@ -37,10 +37,9 @@ export const Desk = (
 
 	return html`
 		<div
-			class=layout
-			@pointermove=${resizer.track_mouse_movement}
-			@pointerup=${resizer.end}
-			>
+			class="layout"
+			@pointermove="${resizer.track_mouse_movement}"
+			@pointerup="${resizer.end}">
 
 			${renderLayout(layout.explorer.root)}
 		</div>
