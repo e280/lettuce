@@ -1,5 +1,5 @@
 
-import {dom} from "@e280/sly"
+import {dom, RegisterOptions} from "@e280/sly"
 import {Desk} from "./desk/view.js"
 import {Studio} from "../studio.js"
 import {Panels} from "../types.js"
@@ -17,8 +17,8 @@ export class Ui {
 		this.components = components
 	}
 
-	registerComponents() {
-		dom.register(this.components)
+	registerComponents(options?: RegisterOptions) {
+		dom.register(this.components, options)
 	}
 }
 
