@@ -1,17 +1,17 @@
 
 import {Layout} from "../layout/layout.js"
 import {Studio} from "../studio/studio.js"
-import {asPanels} from "../studio/types.js"
 import {Builder} from "../layout/builder.js"
 import {GnuPanel} from "./panels/gnu/panel.js"
 import {AboutPanel} from "./panels/about/panel.js"
 import {Persistence} from "../studio/persistence.js"
 import {BroteinPanel} from "./panels/brotein/panel.js"
+import {litSetup} from "../studio/setup/lit-setup.js"
 import {icon_feather_info} from "../studio/ui/icons/groups/feather/info.js"
 import {icon_feather_list} from "../studio/ui/icons/groups/feather/list.js"
 import {icon_feather_folder} from "../studio/ui/icons/groups/feather/folder.js"
 
-const panels = asPanels({
+const {panels, renderer} = litSetup({
 	about: {
 		label: "about",
 		icon: () => icon_feather_info,
@@ -48,7 +48,7 @@ await persistence.load()
 persistence.setupAutoSave()
 persistence.setupLoadOnStorageEvent()
 
-const studio = new Studio({panels, layout})
+const studio = new Studio({panels, layout, renderer})
 
 studio.ui.registerComponents()
 

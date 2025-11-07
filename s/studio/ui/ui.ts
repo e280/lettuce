@@ -2,7 +2,7 @@
 import {dom} from "@e280/sly"
 import {Desk} from "./desk/view.js"
 import {Studio} from "../studio.js"
-import {PanelSpecs} from "../types.js"
+import {Panels} from "../types.js"
 
 export type UiViews = ReturnType<typeof prepareDom>["views"]
 export type UiComponents = ReturnType<typeof prepareDom>["components"]
@@ -22,7 +22,7 @@ export class Ui {
 	}
 }
 
-function prepareDom<PS extends PanelSpecs>(studio: Studio<PS>) {
+function prepareDom<PS extends Panels>(studio: Studio<PS>) {
 	const views = {
 		LettuceDesk: Desk({studio}),
 	}

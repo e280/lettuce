@@ -1,12 +1,15 @@
 
 import {Kv} from "@e280/kv"
 import {Content} from "@e280/sly"
-import {Id} from "../layout/types.js"
 import {Layout} from "../layout/layout.js"
+import {Id, Surface} from "../layout/types.js"
 
-export type StudioOptions<PS extends PanelSpecs> = {
-	panels: PS
+export type Renderer = (desk: HTMLElement) => (surfaces: Surface[]) => void
+
+export type StudioOptions<Ps extends Panels> = {
 	layout: Layout
+	panels: Ps
+	renderer: Renderer
 }
 
 export type PersistenceOptions = {
@@ -15,30 +18,41 @@ export type PersistenceOptions = {
 	key: string
 }
 
-export interface PanelProps {
-	surfaceId: Id
-}
-
-export interface PanelSpec {
+export type Panel = {
 	label: string
 	icon: () => Content
-	render: (props: PanelProps) => Content
 }
 
-export interface PanelSpecs {
-	[key: string]: PanelSpec
+export type Panels = {
+	[key: string]: Panel
 }
 
-export function asPanel(s: PanelSpec) {
+export function asPanel(s: Panel) {
 	return s
 }
 
-export function asPanels<PS extends PanelSpecs>(s: PS) {
+export function asPanels<Ps extends Panels>(s: Ps) {
 	return s
 }
 
 export type Focal = {
 	dockId: Id
 	surfaceId: Id | null
+}
+
+export type LitPanel = Panel & {
+	render: (surface: Surface) => Content
+}
+
+export type LitPanels = {
+	[key: string]: LitPanel
+}
+
+export function asLitPanel<P extends LitPanel>(s: P) {
+	return s
+}
+
+export function asLitPanels<Ps extends LitPanels>(s: Ps) {
+	return s
 }
 
