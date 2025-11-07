@@ -1,21 +1,19 @@
 
 import {html} from "lit"
-import {dom} from "@e280/sly"
+import {Content, dom} from "@e280/sly"
+import {repeat} from "lit/directives/repeat.js"
 import {LitPanels, Renderer} from "../types.js"
-import {surfaceSlot} from "../ui/desk/parts/surface-slot.js"
+
+export const litRenderer = (panels: LitPanels): Renderer => (
+	element => surfaces => dom.render(element, repeat(surfaces, s => s.id, surface => html`
+		<div slot="${surface.id}" data-panel="${surface.panel}">
+			${panels[surface.panel].render(surface)}
+		</div>
+	`) as Content)
+)
 
 export const litSetup = <Ps extends LitPanels>(panels: Ps) => ({
 	panels,
-	renderer: <Renderer>(
-		element => surfaces => dom.render(element, surfaces.map(surface => html`
-			<div
-				data-panel="${surface.panel}"
-				slot="${surfaceSlot(surface.id)}"
-				data-id="${surface.id}">
-
-				${panels[surface.panel].render(surface)}
-			</div>
-		`))
-	),
+	renderer: litRenderer(panels),
 })
 

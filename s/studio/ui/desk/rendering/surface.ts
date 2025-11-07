@@ -7,6 +7,6 @@ export const renderSurface =
 	(_meta: LayoutMeta) =>
 	(surface: Surface) => html`
 
-	<slot name="surface-${surface.id}"></slot>
+	<slot name="${surface.id}"></slot>
 `
 
