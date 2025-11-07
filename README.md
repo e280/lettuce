@@ -1,6 +1,18 @@
 
 <div align="center"><img alt="" width=256 src="./assets/lettuce.avif"/></div>
 
+
+
+<br/><br/>
+
+> [!IMPORTANT]  
+> *lettuce is just an early prototype.*  
+> *more work is yet to be done in terms of features, extensibility, and customizability.*  
+
+
+
+<br/><br/>
+
 # 🥬 lettuce
 > *flexible layout ui for web apps*
 
@@ -13,21 +25,23 @@
   - that's actually *legit neato* if you have heavy-weight stuff in your tabs
 - using
   - [@e280/sly](https://github.com/e280/sly#readme) and [lit](https://lit.dev/) for ui rendering
-  - [@e280/strata](https://github.com/e280/strata#readme) for state management
+  - [@e280/strata](https://github.com/e280/strata#readme) for auto-reactive state management
   - [@e280/kv](https://github.com/e280/kv#readme) for persistence
 
-
-
-> [!IMPORTANT]  
-> *lettuce is just an early prototype.*  
-> *more work is yet to be done in terms of features, extensibility, and customizability.*  
+### 🥗 what you're about to read
+- [**#quickstart**](#quickstart) — full install for lit apps
+- [**#layout**](#layout) — about the layout engine
+- [**#studio**](#studio) — about the ui systems
+- [**#react**](#react) — react app compatibility
 
 
 
 <br/><br/>
 
-## 🥬 make a quick layout salad
-> *how to setup lettuce in your app*
+<a id="quickstart"></a>
+
+## 🥬 quickstart your layout salad
+> *how to setup lettuce in your lit app*
 
 ### 🥗 lettuce installation, html, and css
 1. **install**
@@ -67,7 +81,7 @@
     ```
 1. **setup your panels** — these panels are available for the user to open
     ```ts
-    const panels = lettuce.asPanels({
+    const {panels, renderer} = lettuce.litSetup({
       alpha: {
         label: "Alpha",
         icon: () => html`A`,
@@ -114,7 +128,7 @@
     - see [@e280/kv](https://github.com/e280/kv#readme) to learn how to control where the data is saved
 1. **setup a studio for displaying the layout in browser**
     ```ts
-    const studio = new lettuce.Studio({panels, layout})
+    const studio = new lettuce.Studio({panels, layout, renderer})
     ```
 1. **register the web components to the dom**
     ```ts
@@ -124,6 +138,8 @@
 
 
 <br/><br/>
+
+<a id="layout"></a>
 
 ## 🥬 layout
 > *layout engine with serializable state*
@@ -221,12 +237,14 @@
 
 <br/><br/>
 
+<a id="studio"></a>
+
 ## 🥬 studio
 > *in-browser layout user-experience*
 
 ### 🥗 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
 ```ts
-const studio = new lettuce.Studio({panels, layout})
+const studio = new lettuce.Studio({panels, layout, renderer})
 ```
 - *read the source code for the real details*
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
@@ -253,6 +271,57 @@ const studio = new lettuce.Studio({panels, layout})
     ```
     ```html
     <lol-desk></lol-desk>
+    ```
+
+
+
+<br/><br/>
+
+<a id="react"></a>
+
+## 🥬 react
+> *lettuce for your react app*
+
+### 🥗 jsx panels
+- **so, your panels need to render jsx, so do this**
+    ```ts
+    const panels = lettuce.asPanels({
+      alpha: {
+        label: "Alpha",
+        icon: () => html`A`,
+        render: () => <div>alpha content</div>,
+      },
+      bravo: {
+        label: "Bravo",
+        icon: () => html`B`,
+        render: () => <div>bravo content</div>,
+      },
+      charlie: {
+        label: "Charlie",
+        icon: () => html`C`,
+        render: () => <div>charlie content</div>,
+      },
+    })
+    ```
+    - note: your icons still have to be lit-html, sorry
+- **and you need a custom react-portal renderer**
+    ```ts
+    import {createPortal} from "react-dom"
+
+    const renderer: lettuce.Renderer = element => surfaces => createPortal(
+      <>
+        {surfaces.map(surface =>
+          <div key={surface.id} slot={surface.id} data-panel={surface.panel}>
+            {panels[surface.panel].render(surface)}
+          </div>
+        )}
+      </>,
+      element,
+    )
+    ```
+- **proceed to setup your studio as normal, you're good to go now**
+    ```ts
+    const studio = new lettuce.Studio({panels, layout, renderer})
     ```
 
 
