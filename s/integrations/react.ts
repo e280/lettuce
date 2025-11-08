@@ -1,9 +1,9 @@
 
 import {View} from "@e280/sly"
 import {Panel} from "../studio/types.js"
-import {Layout} from "../layout/layout.js"
 import {Studio} from "../studio/studio.js"
 import {Surface} from "../layout/types.js"
+import {customHooks} from "./utils/custom-hooks.js"
 
 export function reactIntegration<R>({useRef, useState, useEffect, createElement, reactify}: {
 		reactify: <Props extends any[]>(slyView: View<Props>) => (...a: any[]) => R
@@ -15,29 +15,16 @@ export function reactIntegration<R>({useRef, useState, useEffect, createElement,
 
 	type ReactPanel = Panel & { render: (surface: Surface) => R }
 	type ReactPanels = { [key: string]: ReactPanel }
+	const {useOnce} = customHooks({useRef})
 
-	function useLettuceLayout<Ps extends ReactPanels>({panels, layout}: {
-			panels: Ps
-			layout: Layout
-		}) {
+	// opt-out of default lit rendering
+	const renderer = () => () => {}
 
-		function useOnce<R>(fn: () => R) {
-			const ref = useRef<R | undefined>(undefined)
-			if (ref.current === undefined) ref.current = fn()
-			return ref.current!
-		}
-
-		const {LettuceDeskRaw, studio} = useOnce(() => {
-			const renderer = () => () => {} // opt-out of default lit rendering
-			const studio = new Studio({panels, layout, renderer})
-			const LettuceDeskRaw = reactify(studio.ui.views.LettuceDesk)
-			return {studio, LettuceDeskRaw}
-		})
-
+	const useDeskComponent = <Ps extends ReactPanels>(studio: Studio<Ps>) => {
+		const LettuceDeskRaw = useOnce(() => reactify(studio.ui.views.LettuceDesk))
 		const [surfaces, setSurfaces] = useState<Surface[]>(studio.layout.surfaces)
 		useEffect(() => studio.layout.on(() => setSurfaces(studio.layout.surfaces)), [])
-
-		const LettuceDesk = () => createElement(
+		return () => createElement(
 			LettuceDeskRaw,
 			{ props: [] },
 			surfaces.map(surface =>
@@ -48,10 +35,8 @@ export function reactIntegration<R>({useRef, useState, useEffect, createElement,
 				)
 			)
 		)
-
-		return {LettuceDesk, studio}
 	}
 
-	return {useLettuceLayout}
+	return {renderer, useDeskComponent}
 }
 

@@ -288,11 +288,9 @@ const studio = new lettuce.Studio({panels, layout, renderer})
     npm install @e280/sly-react react
     ```
 
-### 🥗 setup react panels
-- your panel render fns return jsx now
+### 🥗 setup your panels and layout
+- but this time, with jsx render fns
     ```ts
-    import {ReactNode} from "react"
-
     const panels = {
       alpha: {
         label: "Alpha",
@@ -302,29 +300,42 @@ const studio = new lettuce.Studio({panels, layout, renderer})
     }
     ```
     - note: your icons still have to be lit-html
+- and an ordinary layout
+    ```ts
+    const layout = new lettuce.Layout({
+      stock: lettuce.Builder.fn<keyof typeof panels>()(b => ({
+        default: () => b.cell(b.tabs("alpha")),
+        empty: () => b.blank(),
+      })),
+    })
+    ```
 
-### 🥗 make the react hook
+### 🥗 make your studio and the hook
 - we literally provide `reactify` and various react fns to `reactIntegration`
     ```ts
     import * as lettuce from "@e280/lettuce"
     import {reactify} from "@e280/sly-react"
     import {useRef, useState, useEffect, createElement} from "react"
 
-    export const {useLettuceLayout} = lettuce.reactIntegration({
+    const {renderer, useDeskComponent} = lettuce.reactIntegration({
       reactify,
       useRef,
       useState,
       useEffect,
       createElement,
     })
+
+    const studio = new lettuce.Studio({renderer, panels, layout})
+    const useLettuceDesk = () => useDeskComponent(studio)
     ```
     - lettuce does not depend on react, but accepts react-shaped stuff to perform the integration
+    - studio requires the `renderer` that the react integration gives you
 
-### 🥗 useLettuceLayout hook
-- a react component is produced for you to use in your jsx templates
+### 🥗 LettuceDesk component usage
+- now you can use the component
     ```ts
     const MyReactComponent = () => {
-      const {LettuceDesk, studio} = useLettuceLayout({panels, layout})
+      const LettuceDesk = useLettuceDesk()
 
       return (
         <div>
