@@ -41,5 +41,9 @@ export class Layout {
 			})
 		)
 	}
+
+	get surfaces() {
+		return this.explorer.surfaces.nodes
+	}
 }
 
