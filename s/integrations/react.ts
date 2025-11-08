@@ -20,11 +20,11 @@ export function reactIntegration<R>({useRef, useState, useEffect, createElement,
 	// opt-out of default lit rendering
 	const renderer = () => () => {}
 
-	const useDeskComponent = <Ps extends ReactPanels>(studio: Studio<Ps>) => {
+	const useDeskComponent = <Ps extends ReactPanels>(studio: Studio<Ps>) => () => {
 		const LettuceDeskRaw = useOnce(() => reactify(studio.ui.views.LettuceDesk))
 		const [surfaces, setSurfaces] = useState<Surface[]>(studio.layout.surfaces)
 		useEffect(() => studio.layout.on(() => setSurfaces(studio.layout.surfaces)), [])
-		return () => createElement(
+		return createElement(
 			LettuceDeskRaw,
 			{ props: [] },
 			surfaces.map(surface =>
