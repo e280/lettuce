@@ -282,46 +282,56 @@ const studio = new lettuce.Studio({panels, layout, renderer})
 ## 🥬 react
 > *lettuce for your react app*
 
-### 🥗 jsx panels
-- **so, your panels need to render jsx, so do this**
+### 🥗 install `react` and `sly-react`
+- sly-react allows you to turn any sly view into a react component
+    ```sh
+    npm install @e280/sly-react react
+    ```
+
+### 🥗 setup react panels
+- your panel render fns return jsx now
     ```ts
-    const panels = lettuce.asPanels({
+    import {ReactNode} from "react"
+
+    const panels = {
       alpha: {
         label: "Alpha",
         icon: () => html`A`,
-        render: () => <div>alpha content</div>,
+        render: () => <div>alpha content</div>, // 👈 jsx
       },
-      bravo: {
-        label: "Bravo",
-        icon: () => html`B`,
-        render: () => <div>bravo content</div>,
-      },
-      charlie: {
-        label: "Charlie",
-        icon: () => html`C`,
-        render: () => <div>charlie content</div>,
-      },
+    }
+    ```
+    - note: your icons still have to be lit-html
+
+### 🥗 make the react hook
+- we literally provide `reactify` and various react fns to `reactIntegration`
+    ```ts
+    import * as lettuce from "@e280/lettuce"
+    import {reactify} from "@e280/sly-react"
+    import {useRef, useState, useEffect, createElement} from "react"
+
+    export const {useLettuceLayout} = lettuce.reactIntegration({
+      reactify,
+      useRef,
+      useState,
+      useEffect,
+      createElement,
     })
     ```
-    - note: your icons still have to be lit-html, sorry
-- **and you need a custom react-portal renderer**
-    ```ts
-    import {createPortal} from "react-dom"
+    - lettuce does not depend on react, but accepts react-shaped stuff to perform the integration
 
-    const renderer: lettuce.Renderer = element => surfaces => createPortal(
-      <>
-        {surfaces.map(surface =>
-          <div key={surface.id} slot={surface.id} data-panel={surface.panel}>
-            {panels[surface.panel as any as keyof typeof panels].render()}
-          </div>
-        )}
-      </>,
-      element,
-    )
-    ```
-- **proceed to setup your studio as normal, you're good to go now**
+### 🥗 useLettuceLayout hook
+- a react component is produced for you to use in your jsx templates
     ```ts
-    const studio = new lettuce.Studio({panels, layout, renderer})
+    const MyReactComponent = () => {
+      const {LettuceDesk, studio} = useLettuceLayout({panels, layout})
+
+      return (
+        <div>
+          <LettuceDesk />
+        </div>
+      )
+    }
     ```
 
 

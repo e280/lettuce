@@ -11,9 +11,9 @@
 ## v0.1
 
 ### v0.2.0
-- 🟥 studio now requires `renderer`, which can be obtained by calling `litSetup` or `litRenderer`
+- 🟥 studio now requires `renderer`, which can be obtained via `litSetup` or `litRenderer`
 - 🟥 rename `studio.ui.views.Desk` to `studio.ui.views.LettuceDesk` for consistency
-- 🍏 react compatibility via custom renderer, see readme section
+- 🍏 added react compat via `reactIntegration`, see readme
 
 ### v0.1.2
 - 🍏 update deps
