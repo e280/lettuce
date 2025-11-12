@@ -2,8 +2,9 @@
 import {effect} from "@e280/strata"
 import {suite, test, expect} from "@e280/science"
 import {Layout} from "./layout.js"
-import {Blueprint} from "./types.js"
+import {Blueprint, Cell} from "./types.js"
 import {BasicPanelName, basicStock} from "./testing/setup.js"
+import {redistribute_child_sizes_fairly, redistribute_child_sizes_locally} from "./parts/action-utils.js"
 
 export default suite({
 	"has cells/docks/surfaces": test(async() => {
@@ -52,5 +53,52 @@ export default suite({
 		await layout.actions.splitDock(dock.id, false)
 		expect(layout.explorer.docks.count).is(2)
 	}),
+
+	...(() => {
+		let id = 0
+		const makeCell = (size: number): Cell => ({
+			id: (id++).toString(),
+			kind: "cell",
+			vertical: false,
+			children: [],
+			size,
+		})
+		return {
+			"redistribution": suite({
+				"fair": test(async() => {
+					const children = redistribute_child_sizes_fairly([
+						makeCell(0),
+						makeCell(0),
+						makeCell(0),
+					])
+					expect(children.at(0)!.size).gt(0.3)
+					expect(children.at(1)!.size).gt(0.3)
+					expect(children.at(2)!.size).gt(0.3)
+				}),
+
+				"naive": test(async() => {
+					const children = redistribute_child_sizes_locally([
+						makeCell(0),
+						makeCell(0),
+						makeCell(0),
+					])
+					expect(children.at(0)!.size).is(0)
+					expect(children.at(1)!.size).is(0)
+					expect(children.at(2)!.size).is(1)
+				}),
+
+				"naive excess": test(async() => {
+					const children = redistribute_child_sizes_locally([
+						makeCell(1),
+						makeCell(1),
+						makeCell(1),
+					])
+					expect(children.at(0)!.size).is(1)
+					expect(children.at(1)!.size).is(0)
+					expect(children.at(2)!.size).is(0)
+				}),
+			}),
+		}
+	})(),
 })
 

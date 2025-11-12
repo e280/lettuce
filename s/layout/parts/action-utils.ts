@@ -1,6 +1,6 @@
 
-import { clamp } from "../../tools/numerical.js"
-import {Cell, Container, Dock} from "../types.js"
+import {Container, Dock} from "../types.js"
+import {clamp} from "../../tools/numerical.js"
 
 export function movement_is_within_same_dock(
 		sourceDock: Dock,
@@ -60,29 +60,29 @@ export function parent(path: number[]) {
 	return path.slice(0, path.length - 1)
 }
 
-export function redistribute_child_sizes_fairly(cell: Cell) {
-	const total = cell.children.reduce((sum, c) => sum + c.size, 0)
+export function redistribute_child_sizes_fairly(children: Container[]) {
+	const total = children.reduce((sum, c) => sum + c.size, 0)
 	if (total === 0) {
-		const even = 1 / cell.children.length
-		for (const c of cell.children) c.size = even
-		return cell
+		const even = 1 / children.length
+		for (const c of children) c.size = even
+		return children
 	}
-	for (const c of cell.children) {
+	for (const c of children) {
 		c.size = clamp(c.size / total)
 	}
-	return cell
+	return children
 }
 
-export function redistribute_child_sizes_naively(cell: Cell) {
+export function redistribute_child_sizes_locally(children: Container[]) {
 	let tally = 0
-	for (const child of cell.children) {
+	for (const child of children) {
 		tally += child.size
 		if (tally > 1) child.size -= tally - 1
 		child.size = clamp(child.size)
 	}
-	const last = cell.children.at(-1)
-	if (last && tally < 1) last.size = clamp(last.size + (1 - tally))
-	return cell
+	const last = children.at(-1)
+	if (tally < 1 && last) last.size = clamp(last.size + (1 - tally))
+	return children
 }
 
 export function ensure_active_index_is_in_safe_range(dock: Dock) {

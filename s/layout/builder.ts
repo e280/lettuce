@@ -1,7 +1,7 @@
 
 import {Cell, Dock} from "./types.js"
 import {freshId} from "../tools/fresh-id.js"
-import { redistribute_child_sizes_fairly } from "./parts/action-utils.js"
+import {redistribute_child_sizes_fairly, redistribute_child_sizes_locally} from "./parts/action-utils.js"
 
 export class Builder<K extends string = string> {
 	static fn = <K extends string = string>() => (
@@ -22,20 +22,20 @@ export class Builder<K extends string = string> {
 		})),
 	})
 
-	horizontal = (size: number, ...children: (Cell | Dock)[]): Cell => redistribute_child_sizes_fairly({
+	horizontal = (size: number, ...children: (Cell | Dock)[]): Cell => ({
 		kind: "cell",
 		id: freshId(),
 		size,
 		vertical: false,
-		children,
+		children: redistribute_child_sizes_fairly(children),
 	})
 
-	vertical = (size: number, ...children: (Cell | Dock)[]): Cell => redistribute_child_sizes_fairly({
+	vertical = (size: number, ...children: (Cell | Dock)[]): Cell => ({
 		kind: "cell",
 		id: freshId(),
 		size,
 		vertical: true,
-		children,
+		children: redistribute_child_sizes_locally(children),
 	})
 
 	blank = () => this.horizontal(1, this.dock(1))

@@ -1,10 +1,10 @@
 
 import {Lens} from "@e280/strata"
 import {Explorer} from "./explorer.js"
+import {clamp} from "../../tools/numerical.js"
 import {freshId} from "../../tools/fresh-id.js"
 import {Id, Stock, Dock, Cell, Surface, Blueprint} from "../types.js"
-import {ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_naively, same_place} from "./action-utils.js"
-import { clamp } from "../../tools/numerical.js"
+import {ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_locally, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
@@ -116,7 +116,7 @@ export class Actions {
 			cell.children.splice(index, 1)
 			// // TODO
 			// clear_size_of_last_child(grandparent!)
-			redistribute_child_sizes_naively(cell)
+			redistribute_child_sizes_locally(cell.children)
 
 			if (explorer.docks.nodes.length === 0)
 				setRoot(this.stock.empty())
@@ -127,7 +127,7 @@ export class Actions {
 				grandparent.children.splice(cellReport.index, 1)
 				// // TODO
 				// clear_size_of_last_child(grandparent!)
-				redistribute_child_sizes_naively(grandparent)
+				redistribute_child_sizes_locally(grandparent.children)
 			}
 
 			else if (cell.children.length === 1) {
