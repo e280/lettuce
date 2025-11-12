@@ -3,7 +3,8 @@ import {Lens} from "@e280/strata"
 import {Explorer} from "./explorer.js"
 import {freshId} from "../../tools/fresh-id.js"
 import {Id, Stock, Dock, Cell, Surface, Blueprint} from "../types.js"
-import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
+import {ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_naively, same_place} from "./action-utils.js"
+import { clamp } from "../../tools/numerical.js"
 
 export class Actions {
 	constructor(
@@ -53,10 +54,48 @@ export class Actions {
 		})
 	}
 
-	async resize(id: Id, size: number | null) {
+	async resize(id: Id, size: number) {
 		return this.mutate(explorer => {
-			const node = explorer.all.require(id) as Cell | Dock
-			node.size = size
+			const node = explorer.all.require(id)
+			if (node.kind === "surface") throw new Error("cannot resize surface (only cells and docks can be resized)")
+			const parent = explorer.all.parent(id) as Cell | undefined
+			if (!parent) throw new Error("cannot resize root cell")
+			const index = parent.children.findIndex(n => n.id === id)
+			const next = parent.children.at(index + 1)
+
+			const initialSize = size
+			node.size = clamp(size)
+
+			if (next) {
+				const delta = node.size - initialSize
+				next.size = clamp(next.size - delta)
+			}
+
+			// TODO
+
+			// const report = explorer.all.requireReport(id)
+			// if (report.node.kind === "surface") throw new Error("cannot resize a surface node")
+			// const [parent] = report
+
+			// const node = explorer.all.require(id) as Cell | Dock
+			// node.size = size
+			//
+			// const next = node.children.at(index + 1)
+			//
+			//
+			// if (
+			// 		resize.next &&
+			// 		resize.next.initialSize !== null &&
+			// 		resize.next.node.size !== null
+			// 	) {
+			//
+			// 	layout.actions.resize(
+			// 		resize.next.node.id,
+			// 		capPercent(
+			// 			resize.next.initialSize + (resize.initialSize - new_size_of_current_cell)
+			// 		)
+			// 	)
+			// }
 		})
 	}
 
@@ -75,16 +114,20 @@ export class Actions {
 			const cell = explorer.docks.parent(id)
 
 			cell.children.splice(index, 1)
-			clear_size_of_last_child(cell)
+			// // TODO
+			// clear_size_of_last_child(grandparent!)
+			redistribute_child_sizes_naively(cell)
 
 			if (explorer.docks.nodes.length === 0)
 				setRoot(this.stock.empty())
 
 			else if (cell.children.length === 0) {
-				const grandparent = explorer.cells.parent(cell.id)
+				const grandparent = explorer.cells.parent(cell.id)!
 				const cellReport = explorer.cells.requireReport(cell.id)
-				grandparent!.children.splice(cellReport.index, 1)
-				clear_size_of_last_child(grandparent!)
+				grandparent.children.splice(cellReport.index, 1)
+				// // TODO
+				// clear_size_of_last_child(grandparent!)
+				redistribute_child_sizes_naively(grandparent)
 			}
 
 			else if (cell.children.length === 1) {
@@ -104,23 +147,24 @@ export class Actions {
 			const previousSize = dock.size
 
 			if (parentCell.vertical === vertical) {
-				let newSize: null | number
+				let newSize: number = previousSize / 2
 
-				if (previousSize) {
+				// // TODO
+				// if (previousSize) {
 					const half = previousSize / 2
 					dock.size = half
 					newSize = half
-				}
-				else {
-					const x = (
-						parentCell
-							.children
-							.reduce((previous, current) =>
-								previous + (current.size ?? 0), 0)
-					)
-					dock.size = (100 - x) / 2
-					newSize = null
-				}
+				// }
+				// else {
+				// 	const x = (
+				// 		parentCell
+				// 			.children
+				// 			.reduce((previous, current) =>
+				// 				previous + (current.size ?? 0), 0)
+				// 	)
+				// 	dock.size = (100 - x) / 2
+				// 	newSize = null
+				// }
 
 				const newDock: Dock = {
 					id: freshId(),
@@ -142,7 +186,7 @@ export class Actions {
 					children: [dock, {
 						id: freshId(),
 						kind: "dock",
-						size: null,
+						size: 100,
 						children: [],
 						activeChildIndex: null,
 					}],

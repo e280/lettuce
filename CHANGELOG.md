@@ -10,6 +10,12 @@
 
 ## v0.1
 
+### v0.3.0
+- 🟥 builder `.tabs` renamed to `.dock` for more consistent terminology
+- 🟥 builder `.cell` renamed to `.horizontal` for more consistent terminology
+- 🟥 builder fns now require size as first param
+- 🟥 blueprint `size` properties are now expressed in 0-1 fractions, and null isn't valid anymore (all panels must have a specified size)
+
 ### v0.2.0
 - 🟥 studio now requires `renderer`, which can be obtained via `litSetup` or `litRenderer`
 - 🟥 rename `studio.ui.views.Desk` to `studio.ui.views.LettuceDesk` for consistency

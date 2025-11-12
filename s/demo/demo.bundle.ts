@@ -33,7 +33,7 @@ const {panels, renderer} = litSetup({
 
 const layout = new Layout({
 	stock: Builder.fn<keyof typeof panels>()(b => ({
-		default: () => b.cell(b.tabs("about", "gnu", "brotein")),
+		default: () => b.horizontal(0, b.dock(0, "about", "gnu", "brotein")),
 		empty: () => b.blank(),
 	})),
 })

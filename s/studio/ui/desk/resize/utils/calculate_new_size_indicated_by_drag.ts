@@ -1,6 +1,6 @@
 
 import {ResizeOperation} from "./operation.js"
-import {capPercent, percentage} from "../../../../../tools/numerical.js"
+import {clamp} from "../../../../../tools/numerical.js"
 
 export function calculate_new_size_indicated_by_drag(
 		resize: ResizeOperation,
@@ -11,13 +11,13 @@ export function calculate_new_size_indicated_by_drag(
 
 	if (resize.parent.vertical) {
 		const pixels = resize.y - clientY
-		diff = percentage(pixels, resize.height)
+		diff = pixels / resize.height
 	}
 	else {
 		const pixels = resize.x - clientX
-		diff = percentage(pixels, resize.width)
+		diff = pixels / resize.width
 	}
 
-	return capPercent(resize.initialSize - diff)
+	return clamp(resize.initialSize - diff)
 }
 

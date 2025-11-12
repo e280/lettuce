@@ -1,16 +1,17 @@
 
 import {Cell, Dock} from "./types.js"
 import {freshId} from "../tools/fresh-id.js"
+import { redistribute_child_sizes_fairly } from "./parts/action-utils.js"
 
 export class Builder<K extends string = string> {
 	static fn = <K extends string = string>() => (
 		<R>(fn: (builder: Builder<K>) => R) => fn(new Builder())
 	)
 
-	tabs = (...panels: K[]): Dock => ({
+	dock = (size: number, ...panels: K[]): Dock => ({
 		kind: "dock",
 		id: freshId(),
-		size: null,
+		size,
 		activeChildIndex: panels.length === 0
 			? null
 			: 0,
@@ -21,26 +22,24 @@ export class Builder<K extends string = string> {
 		})),
 	})
 
-	cell = (...children: (Cell | Dock)[]): Cell => ({
+	horizontal = (size: number, ...children: (Cell | Dock)[]): Cell => redistribute_child_sizes_fairly({
 		kind: "cell",
 		id: freshId(),
-		size: null,
+		size,
 		vertical: false,
 		children,
 	})
 
-	horizontal = this.cell
-
-	vertical = (...children: (Cell | Dock)[]): Cell => ({
+	vertical = (size: number, ...children: (Cell | Dock)[]): Cell => redistribute_child_sizes_fairly({
 		kind: "cell",
 		id: freshId(),
-		size: null,
+		size,
 		vertical: true,
 		children,
 	})
 
-	blank = () => this.cell(this.tabs())
-	singleton = (panel: K) => this.cell(this.tabs(panel))
+	blank = () => this.horizontal(1, this.dock(1))
+	singleton = (panel: K) => this.horizontal(100, this.dock(1, panel))
 
 	setup = <R>(fn: (stocker: Builder<K>) => R) => fn(this)
 }
