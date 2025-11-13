@@ -51,6 +51,7 @@ lettuce-desk {
 	background: #1b3125;
 
 	--scale: 1.5em;
+	--gutter-size: 0.7em;
 	--highlight: #76ff6b;
 	--special: yellow;
 	--dropcover: 10%;

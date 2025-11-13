@@ -1,6 +1,5 @@
 
 import {css} from "lit"
-export const size_of_resize_handle_in_rem = 0.4
 export default css`
 
 :host {
@@ -13,6 +12,7 @@ export default css`
 	font-family: sans-serif;
 
 	--scale: 1.5em;
+	--gutter-size: 0.7em;
 	--highlight: yellow;
 	--special: aqua;
 	--dropcover: 10%;
@@ -72,7 +72,7 @@ export default css`
 }
 
 .resizer {
-	flex: 0 0 ${size_of_resize_handle_in_rem}rem;
+	flex: 0 0 var(--gutter-size);
 	cursor: ew-resize;
 	background: var(--gutter);
 }

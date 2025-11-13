@@ -59,6 +59,7 @@
       background: #111;
 
       --scale: 1.5em;
+      --gutter-size: 0.7em;
       --highlight: yellow;
       --special: aqua;
       --dropcover: 10%;

@@ -17,11 +17,11 @@ export const renderCell =
 
 		${alternator(
 			cell.children,
-			(child) => meta.renderLayout(child),
-			(child, index) => html`
+			child => meta.renderLayout(child),
+			child => html`
 				<div
 					class=resizer
-					@pointerdown=${meta.resizer.start(cell, child, index)}
+					@pointerdown=${meta.resizer.start(cell, child)}
 				></div>
 			`,
 		)}
