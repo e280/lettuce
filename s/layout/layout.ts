@@ -7,7 +7,7 @@ import {Blueprint, LayoutOptions, Cell, Stock} from "./types.js"
 import {normalizeBlueprint} from "./parts/normalize-blueprint.js"
 
 export class Layout {
-	static readonly version = 1
+	static readonly version = 2
 
 	stock: Stock
 	explorer: Explorer
