@@ -155,7 +155,7 @@ export default css`
 	}
 
 	> .panel {
-		user-select: auto;
+		user-select: text;
 	}
 
 	> .adder {
