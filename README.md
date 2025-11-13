@@ -104,7 +104,7 @@
     ```ts
     const layout = new lettuce.Layout({
       stock: lettuce.Builder.fn<keyof typeof panels>()(b => ({
-        default: () => b.cell(b.tabs("alpha", "bravo", "charlie")),
+        default: () => b.horizontal(1, b.dock(1, "alpha", "bravo", "charlie")),
         empty: () => b.blank(),
       })),
     })
@@ -305,7 +305,7 @@ const studio = new lettuce.Studio({panels, layout, renderer})
     ```ts
     const layout = new lettuce.Layout({
       stock: lettuce.Builder.fn<keyof typeof panels>()(b => ({
-        default: () => b.cell(b.tabs("alpha")),
+        default: () => b.horizontal(1, b.dock(1, "alpha")),
         empty: () => b.blank(),
       })),
     })

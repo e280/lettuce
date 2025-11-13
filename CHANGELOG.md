@@ -15,7 +15,7 @@
 - 🟥 rename `studio.ui.views.Desk` to `studio.ui.views.LettuceDesk` for consistency
 - 🟥 blueprint `size` properties are now expressed in 0-1 fractions, and null isn't valid anymore (all panels must have a specified size)
 - 🟥 builder changes
-  - 🟥 builder fns now require size as first param
+  - 🟥 builder fns now require `size` as first param
   - 🟥 builder `.tabs` renamed to `.dock` for more consistent terminology
   - 🟥 builder `.cell` renamed to `.horizontal` for more consistent terminology
 - 🍏 added react compat via `reactIntegration`, see readme
