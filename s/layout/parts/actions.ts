@@ -4,7 +4,7 @@ import {Explorer} from "./explorer.js"
 import {clamp} from "../../tools/numerical.js"
 import {freshId} from "../../tools/fresh-id.js"
 import {Id, Stock, Dock, Cell, Surface, Blueprint} from "../types.js"
-import {ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_locally, same_place} from "./action-utils.js"
+import {activate_last_child, ensure_active_index_is_in_safe_range, get_active_surface, last_child_is_active, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_locally, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
@@ -84,7 +84,9 @@ export class Actions {
 		return this.mutate(explorer => {
 			const {index} = explorer.surfaces.requireReport(surfaceId)
 			const dock = explorer.surfaces.parent(surfaceId)
+			const isLast = last_child_is_active(dock)
 			dock.children.splice(index, 1)
+			if (isLast) activate_last_child(dock)
 			ensure_active_index_is_in_safe_range(dock)
 		})
 	}
@@ -190,6 +192,7 @@ export class Actions {
 			}
 			else {
 				if (surfaceIsActive) {
+					if (last_child_is_active(sourceDock)) activate_last_child(sourceDock)
 					insert_at_destination()
 					destinationDock.activeChildIndex = destinationIndex
 				}

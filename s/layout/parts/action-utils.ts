@@ -32,6 +32,16 @@ export function get_active_surface(dock: Dock) {
 		: null
 }
 
+export function last_child_is_active(dock: Dock) {
+	return dock.activeChildIndex === (dock.children.length - 1)
+}
+
+export function activate_last_child(dock: Dock) {
+	dock.activeChildIndex = dock.activeChildIndex === null
+		? null
+		: Math.max(0, dock.activeChildIndex - 1)
+}
+
 export function maintain_which_surface_is_active(dock: Dock, fn: () => void) {
 	const reapply = remember_which_surface_is_active(dock)
 	fn()
