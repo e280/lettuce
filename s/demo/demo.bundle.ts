@@ -33,20 +33,21 @@ const {panels, renderer} = litSetup({
 
 const layout = new Layout({
 	stock: Builder.fn<keyof typeof panels>()(b => ({
-		default: () => b.horizontal(0, b.dock(0, "about", "gnu", "brotein")),
+		default: () => b.horizontal(1, b.dock(1, "about", "gnu", "brotein")),
 		empty: () => b.blank(),
 	})),
 })
 
-const persistence = new Persistence({
-	layout,
-	key: "lettuceLayoutBlueprint",
-	kv: Persistence.localStorageKv(),
-})
-
-await persistence.load()
-persistence.setupAutoSave()
-persistence.setupLoadOnStorageEvent()
+// // TODO
+// const persistence = new Persistence({
+// 	layout,
+// 	key: "lettuceLayoutBlueprint",
+// 	kv: Persistence.localStorageKv(),
+// })
+//
+// await persistence.load()
+// persistence.setupAutoSave()
+// persistence.setupLoadOnStorageEvent()
 
 const studio = new Studio({panels, layout, renderer})
 

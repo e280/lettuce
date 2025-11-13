@@ -54,6 +54,30 @@ export default suite({
 		expect(layout.explorer.docks.count).is(2)
 	}),
 
+	"split the dock, sizings, horizontal": test(async() => {
+		const layout = new Layout({stock: basicStock()})
+		const [dock] = layout.explorer.docks.nodes
+		expect(dock.size).is(1)
+		await layout.actions.splitDock(dock.id, false)
+		const [dockA, dockB] = layout.explorer.docks.nodes
+		expect(dockA.id).is(dock.id)
+		expect(dockB.id).not.is(dock.id)
+		expect(dockA.size).is(0.5)
+		expect(dockB.size).is(0.5)
+	}),
+
+	"split the dock, sizings, vertical": test(async() => {
+		const layout = new Layout({stock: basicStock()})
+		const [dock] = layout.explorer.docks.nodes
+		expect(dock.size).is(1)
+		await layout.actions.splitDock(dock.id, true)
+		const [dockA, dockB] = layout.explorer.docks.nodes
+		expect(dockA.id).is(dock.id)
+		expect(dockB.id).not.is(dock.id)
+		expect(dockA.size).is(0.5)
+		expect(dockB.size).is(0.5)
+	}),
+
 	...(() => {
 		let id = 0
 		const makeCell = (size: number): Cell => ({

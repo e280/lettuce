@@ -18,6 +18,11 @@ export class Actions {
 		await this.lens.mutate(state => {
 			const explorer = new Explorer(() => state.root)
 			r = fn(explorer, root => state.root = root)
+
+			explorer.root.size = 1
+
+			for (const cell of explorer.cells.nodes)
+				cell.children = redistribute_child_sizes_locally(cell.children)
 		})
 		return r!
 	}
@@ -145,39 +150,24 @@ export class Actions {
 			const {node: dock, index: dockIndex} = explorer.docks.requireReport(dockId)
 			const parentCell = explorer.docks.parent(dockId)
 			const previousSize = dock.size
+			const halfsize = previousSize / 2
+			const copecetic = vertical === parentCell.vertical
 
-			if (parentCell.vertical === vertical) {
-				let newSize: number = previousSize / 2
-
-				// // TODO
-				// if (previousSize) {
-					const half = previousSize / 2
-					dock.size = half
-					newSize = half
-				// }
-				// else {
-				// 	const x = (
-				// 		parentCell
-				// 			.children
-				// 			.reduce((previous, current) =>
-				// 				previous + (current.size ?? 0), 0)
-				// 	)
-				// 	dock.size = (100 - x) / 2
-				// 	newSize = null
-				// }
+			if (copecetic) {
+				dock.size = halfsize
 
 				const newDock: Dock = {
 					id: freshId(),
 					kind: "dock",
 					children: [],
 					activeChildIndex: null,
-					size: newSize,
+					size: halfsize,
 				}
 
 				parentCell.children.splice(dockIndex + 1, 0, newDock)
 			}
 			else {
-				dock.size = 50
+				dock.size = halfsize
 				const newCell: Cell = {
 					id: freshId(),
 					kind: "cell",
@@ -186,7 +176,7 @@ export class Actions {
 					children: [dock, {
 						id: freshId(),
 						kind: "dock",
-						size: 100,
+						size: halfsize,
 						children: [],
 						activeChildIndex: null,
 					}],

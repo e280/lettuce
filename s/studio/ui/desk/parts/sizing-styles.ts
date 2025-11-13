@@ -1,5 +1,5 @@
 
 export function sizingStyles(size: number) {
-	return `flex: 0 0 ${size * 100}%;`
+	return `flex: ${size} 0 0;`
 }
 
