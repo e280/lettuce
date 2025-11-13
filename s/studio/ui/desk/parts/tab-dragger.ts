@@ -105,12 +105,13 @@ export class TabDragger {
 
 		drop: () => (_: DragEvent) => {
 			const operation = this.#operation.value
-			if (operation && operation.proposedDestination)
+			if (operation && operation.proposedDestination) {
 				this.#actions.moveSurface(
 					operation.surfaceId,
 					operation.proposedDestination.dockId,
 					operation.proposedDestination.surfaceIndex,
 				)
+			}
 			this.#operation.value = undefined
 		},
 	}

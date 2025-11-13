@@ -274,6 +274,7 @@ export default css`
 		}
 
 		& svg {
+			pointer-events: none;
 			position: absolute;
 			inset: 0;
 			width: 100%;

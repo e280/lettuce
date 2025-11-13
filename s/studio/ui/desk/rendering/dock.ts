@@ -41,13 +41,12 @@ export const renderDock =
 			?data-is-pointer-locked="${isPointerLocked}"
 			@pointerover="${focalize}"
 
-			?data-drag=${dragger.isDockIndicated(dock.id)}
-			@dragenter=${dragger.dock.enter(dock.id)}
-			@dragleave=${dragger.dock.leave()}
-			@dragover=${dragger.dock.over()}
-			@dragend=${dragger.dock.end()}
-			@drop=${dragger.dock.drop()}
-			>
+			?data-drag="${dragger.isDockIndicated(dock.id)}"
+			@dragenter="${dragger.dock.enter(dock.id)}"
+			@dragleave="${dragger.dock.leave()}"
+			@dragover="${dragger.dock.over()}"
+			@dragend="${dragger.dock.end()}"
+			@drop="${dragger.dock.drop()}">
 
 			<div class=taskbar>
 				<div class=tabs>
