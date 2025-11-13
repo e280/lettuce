@@ -38,16 +38,15 @@ const layout = new Layout({
 	})),
 })
 
-// // TODO
-// const persistence = new Persistence({
-// 	layout,
-// 	key: "lettuceLayoutBlueprint",
-// 	kv: Persistence.localStorageKv(),
-// })
-//
-// await persistence.load()
-// persistence.setupAutoSave()
-// persistence.setupLoadOnStorageEvent()
+const persistence = new Persistence({
+	layout,
+	key: "lettuceLayoutBlueprint",
+	kv: Persistence.localStorageKv(),
+})
+
+await persistence.load()
+persistence.setupAutoSave()
+persistence.setupLoadOnStorageEvent()
 
 const studio = new Studio({panels, layout, renderer})
 
