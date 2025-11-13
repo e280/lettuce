@@ -19,6 +19,8 @@
   - 🟥 builder `.tabs` renamed to `.dock` for more consistent terminology
   - 🟥 builder `.cell` renamed to `.horizontal` for more consistent terminology
 - 🍏 added react compat via `reactIntegration`, see readme
+- 🍏 improved behaviors and bug fixes
+- 🍏 added `--gutter-size: 0.7em;` css variable
 
 ### v0.1.2
 - 🍏 update deps
