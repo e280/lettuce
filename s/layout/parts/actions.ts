@@ -119,8 +119,6 @@ export class Actions {
 			const cell = explorer.docks.parent(id)
 
 			cell.children.splice(index, 1)
-			// // TODO
-			// clear_size_of_last_child(grandparent!)
 			redistribute_child_sizes_locally(cell.children)
 
 			if (explorer.docks.nodes.length === 0)
@@ -130,8 +128,6 @@ export class Actions {
 				const grandparent = explorer.cells.parent(cell.id)!
 				const cellReport = explorer.cells.requireReport(cell.id)
 				grandparent.children.splice(cellReport.index, 1)
-				// // TODO
-				// clear_size_of_last_child(grandparent!)
 				redistribute_child_sizes_locally(grandparent.children)
 			}
 
