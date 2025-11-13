@@ -20,22 +20,17 @@ export const AdderTab = ({meta, dock}: {
 
 	return html`
 		<div class=tab>
-			<div
-				class=insert-indicator
-				?data-drag=${show_drag_indicator}
-			></div>
+			<div class=insert-indicator ?data-drag="${show_drag_indicator}"></div>
 
 			<button
 				data-adder
 				title="add new tab"
 				?data-active="${active}"
-				@click=${activate}
-				>
+				@click="${activate}">
 
 				<span class=icon>
 					${icon_feather_plus}
 				</span>
-
 			</button>
 		</div>
 	`

@@ -1,17 +1,7 @@
 
-export function cap(x: number, min: number, max: number) {
-	return (x < min)
-		? min
-		: (x > max)
-			? max
-			: x
-}
-
-export function capPercent(x: number) {
-	return cap(x, 0, 100)
-}
-
-export function percentage(x: number, total: number) {
-	return (x / total) * 100
+export function clamp(x: number, min = 0, max = 1) {
+	x = Math.max(x, min)
+	x = Math.min(x, max)
+	return x
 }
 

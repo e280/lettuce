@@ -1,9 +1,10 @@
 
 import {Lens} from "@e280/strata"
 import {Explorer} from "./explorer.js"
+import {clamp} from "../../tools/numerical.js"
 import {freshId} from "../../tools/fresh-id.js"
 import {Id, Stock, Dock, Cell, Surface, Blueprint} from "../types.js"
-import {clear_size_of_last_child, ensure_active_index_is_in_safe_range, get_active_surface, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, same_place} from "./action-utils.js"
+import {activate_last_child, ensure_active_index_is_in_safe_range, get_active_surface, last_child_is_active, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_locally, same_place} from "./action-utils.js"
 
 export class Actions {
 	constructor(
@@ -17,6 +18,11 @@ export class Actions {
 		await this.lens.mutate(state => {
 			const explorer = new Explorer(() => state.root)
 			r = fn(explorer, root => state.root = root)
+
+			explorer.root.size = 1
+
+			for (const cell of explorer.cells.nodes)
+				cell.children = redistribute_child_sizes_locally(cell.children)
 		})
 		return r!
 	}
@@ -53,10 +59,24 @@ export class Actions {
 		})
 	}
 
-	async resize(id: Id, size: number | null) {
+	async resize(id: Id, size: number) {
 		return this.mutate(explorer => {
-			const node = explorer.all.require(id) as Cell | Dock
-			node.size = size
+			const node = explorer.all.require(id)
+			if (node.kind === "surface") throw new Error("cannot resize surface (only cells and docks can be resized)")
+
+			const parent = explorer.all.parent(id) as Cell | undefined
+			if (!parent) throw new Error("cannot resize root cell")
+
+			const index = parent.children.findIndex(n => n.id === id)
+			const next = parent.children.at(index + 1)
+
+			const initialSize = node.size
+			node.size = clamp(size)
+
+			if (next) {
+				const delta = node.size - initialSize
+				next.size = clamp(next.size - delta)
+			}
 		})
 	}
 
@@ -64,7 +84,9 @@ export class Actions {
 		return this.mutate(explorer => {
 			const {index} = explorer.surfaces.requireReport(surfaceId)
 			const dock = explorer.surfaces.parent(surfaceId)
+			const isLast = last_child_is_active(dock)
 			dock.children.splice(index, 1)
+			if (isLast) activate_last_child(dock)
 			ensure_active_index_is_in_safe_range(dock)
 		})
 	}
@@ -75,16 +97,16 @@ export class Actions {
 			const cell = explorer.docks.parent(id)
 
 			cell.children.splice(index, 1)
-			clear_size_of_last_child(cell)
+			redistribute_child_sizes_locally(cell.children)
 
 			if (explorer.docks.nodes.length === 0)
 				setRoot(this.stock.empty())
 
 			else if (cell.children.length === 0) {
-				const grandparent = explorer.cells.parent(cell.id)
+				const grandparent = explorer.cells.parent(cell.id)!
 				const cellReport = explorer.cells.requireReport(cell.id)
-				grandparent!.children.splice(cellReport.index, 1)
-				clear_size_of_last_child(grandparent!)
+				grandparent.children.splice(cellReport.index, 1)
+				redistribute_child_sizes_locally(grandparent.children)
 			}
 
 			else if (cell.children.length === 1) {
@@ -101,39 +123,25 @@ export class Actions {
 		return this.mutate(explorer => {
 			const {node: dock, index: dockIndex} = explorer.docks.requireReport(dockId)
 			const parentCell = explorer.docks.parent(dockId)
-			const previousSize = dock.size
+			const copecetic = vertical === parentCell.vertical
 
-			if (parentCell.vertical === vertical) {
-				let newSize: null | number
-
-				if (previousSize) {
-					const half = previousSize / 2
-					dock.size = half
-					newSize = half
-				}
-				else {
-					const x = (
-						parentCell
-							.children
-							.reduce((previous, current) =>
-								previous + (current.size ?? 0), 0)
-					)
-					dock.size = (100 - x) / 2
-					newSize = null
-				}
+			if (copecetic) {
+				const halfsize = dock.size / 2
+				dock.size = halfsize
 
 				const newDock: Dock = {
 					id: freshId(),
 					kind: "dock",
 					children: [],
 					activeChildIndex: null,
-					size: newSize,
+					size: halfsize,
 				}
 
 				parentCell.children.splice(dockIndex + 1, 0, newDock)
 			}
 			else {
-				dock.size = 50
+				const previousSize = dock.size
+				dock.size = 0.5
 				const newCell: Cell = {
 					id: freshId(),
 					kind: "cell",
@@ -142,7 +150,7 @@ export class Actions {
 					children: [dock, {
 						id: freshId(),
 						kind: "dock",
-						size: null,
+						size: 0.5,
 						children: [],
 						activeChildIndex: null,
 					}],
@@ -184,6 +192,7 @@ export class Actions {
 			}
 			else {
 				if (surfaceIsActive) {
+					if (last_child_is_active(sourceDock)) activate_last_child(sourceDock)
 					insert_at_destination()
 					destinationDock.activeChildIndex = destinationIndex
 				}

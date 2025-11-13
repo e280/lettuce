@@ -1,7 +1,5 @@
 
-export function sizingStyles(size: number | null) {
-	return size !== null
-		? `flex: 0 0 ${size}%;`
-		: `flex: 1 1 auto;`
+export function sizingStyles(size: number) {
+	return `flex: ${size} 0 0;`
 }
 

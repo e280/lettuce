@@ -17,7 +17,7 @@ export type Cell = {
 	id: Id
 	kind: "cell"
 	vertical: boolean
-	size: number | null
+	size: number
 	children: (Cell | Dock)[]
 }
 
@@ -25,7 +25,7 @@ export type Cell = {
 export type Dock = {
 	id: Id
 	kind: "dock"
-	size: number | null
+	size: number
 	children: Surface[]
 	activeChildIndex: number | null
 }

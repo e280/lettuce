@@ -1,6 +1,5 @@
 
 import {css} from "lit"
-export const size_of_resize_handle_in_rem = 0.4
 export default css`
 
 :host {
@@ -13,6 +12,7 @@ export default css`
 	font-family: sans-serif;
 
 	--scale: 1.5em;
+	--gutter-size: 0.7em;
 	--highlight: yellow;
 	--special: aqua;
 	--dropcover: 10%;
@@ -27,10 +27,12 @@ export default css`
 }
 
 .layout {
+	user-select: none;
+	overflow: hidden;
+
 	display: flex;
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
 
 	&[data-dropzone-indicator]::before {
 		content: "";
@@ -64,16 +66,15 @@ export default css`
 		overflow: hidden;
 	}
 
-	&[data-vertical] > .resizer {
+	&[data-vertical] > .gutter {
 		cursor: ns-resize;
 	}
 }
 
-.resizer {
-	flex: 0 0 ${size_of_resize_handle_in_rem}rem;
+.gutter {
+	flex: 0 0 var(--gutter-size);
 	cursor: ew-resize;
 	background: var(--gutter);
-	user-select: none;
 }
 
 .dock {
@@ -106,7 +107,6 @@ export default css`
 		display: flex;
 		justify-content: end;
 		font-size: var(--scale);
-		user-select: none;
 
 		> * {
 			flex: 0 0 auto;
@@ -152,6 +152,10 @@ export default css`
 		display: block;
 		padding: 0.5em;
 		background: var(--dock);
+	}
+
+	> .panel {
+		user-select: text;
 	}
 
 	> .adder {
@@ -270,6 +274,7 @@ export default css`
 		}
 
 		& svg {
+			pointer-events: none;
 			position: absolute;
 			inset: 0;
 			width: 100%;
