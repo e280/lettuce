@@ -121,11 +121,10 @@ export class Actions {
 		return this.mutate(explorer => {
 			const {node: dock, index: dockIndex} = explorer.docks.requireReport(dockId)
 			const parentCell = explorer.docks.parent(dockId)
-			const previousSize = dock.size
-			const halfsize = previousSize / 2
 			const copecetic = vertical === parentCell.vertical
 
 			if (copecetic) {
+				const halfsize = dock.size / 2
 				dock.size = halfsize
 
 				const newDock: Dock = {
@@ -139,7 +138,8 @@ export class Actions {
 				parentCell.children.splice(dockIndex + 1, 0, newDock)
 			}
 			else {
-				dock.size = halfsize
+				const previousSize = dock.size
+				dock.size = 0.5
 				const newCell: Cell = {
 					id: freshId(),
 					kind: "cell",
@@ -148,7 +148,7 @@ export class Actions {
 					children: [dock, {
 						id: freshId(),
 						kind: "dock",
-						size: halfsize,
+						size: 0.5,
 						children: [],
 						activeChildIndex: null,
 					}],
