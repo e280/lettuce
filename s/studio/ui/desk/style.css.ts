@@ -27,10 +27,12 @@ export default css`
 }
 
 .layout {
+	user-select: none;
+	overflow: hidden;
+
 	display: flex;
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
 
 	&[data-dropzone-indicator]::before {
 		content: "";
@@ -73,7 +75,6 @@ export default css`
 	flex: 0 0 ${size_of_resize_handle_in_rem}rem;
 	cursor: ew-resize;
 	background: var(--gutter);
-	user-select: none;
 }
 
 .dock {
@@ -106,7 +107,6 @@ export default css`
 		display: flex;
 		justify-content: end;
 		font-size: var(--scale);
-		user-select: none;
 
 		> * {
 			flex: 0 0 auto;
@@ -152,6 +152,10 @@ export default css`
 		display: block;
 		padding: 0.5em;
 		background: var(--dock);
+	}
+
+	> .panel {
+		user-select: auto;
 	}
 
 	> .adder {

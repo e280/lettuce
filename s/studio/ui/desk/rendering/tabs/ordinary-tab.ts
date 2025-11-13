@@ -47,10 +47,7 @@ export const OrdinaryTab = ({
 
 	return html`
 		<div class=tab data-tab-for-surface="${surface.id}">
-			<div
-				class=insert-indicator
-				?data-drag=${show_drag_indicator}
-			></div>
+			<div class=insert-indicator ?data-drag="${show_drag_indicator}"></div>
 
 			<button
 				data-ordinary
@@ -59,8 +56,7 @@ export const OrdinaryTab = ({
 				@click=${click}
 
 				draggable=true
-				@dragstart=${meta.dragger.tab.start(surface.id)}
-				>
+				@dragstart="${meta.dragger.tab.start(surface.id)}">
 
 				<span class=icon>
 					${icon()}
