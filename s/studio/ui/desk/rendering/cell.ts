@@ -20,7 +20,7 @@ export const renderCell =
 			child => meta.renderLayout(child),
 			child => html`
 				<div
-					class=resizer
+					class=gutter
 					@pointerdown=${meta.resizer.start(cell, child)}
 				></div>
 			`,

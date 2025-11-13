@@ -66,12 +66,12 @@ export default css`
 		overflow: hidden;
 	}
 
-	&[data-vertical] > .resizer {
+	&[data-vertical] > .gutter {
 		cursor: ns-resize;
 	}
 }
 
-.resizer {
+.gutter {
 	flex: 0 0 var(--gutter-size);
 	cursor: ew-resize;
 	background: var(--gutter);
