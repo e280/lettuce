@@ -63,44 +63,20 @@ export class Actions {
 		return this.mutate(explorer => {
 			const node = explorer.all.require(id)
 			if (node.kind === "surface") throw new Error("cannot resize surface (only cells and docks can be resized)")
+
 			const parent = explorer.all.parent(id) as Cell | undefined
 			if (!parent) throw new Error("cannot resize root cell")
+
 			const index = parent.children.findIndex(n => n.id === id)
 			const next = parent.children.at(index + 1)
 
-			const initialSize = size
+			const initialSize = node.size
 			node.size = clamp(size)
 
 			if (next) {
 				const delta = node.size - initialSize
 				next.size = clamp(next.size - delta)
 			}
-
-			// TODO
-
-			// const report = explorer.all.requireReport(id)
-			// if (report.node.kind === "surface") throw new Error("cannot resize a surface node")
-			// const [parent] = report
-
-			// const node = explorer.all.require(id) as Cell | Dock
-			// node.size = size
-			//
-			// const next = node.children.at(index + 1)
-			//
-			//
-			// if (
-			// 		resize.next &&
-			// 		resize.next.initialSize !== null &&
-			// 		resize.next.node.size !== null
-			// 	) {
-			//
-			// 	layout.actions.resize(
-			// 		resize.next.node.id,
-			// 		capPercent(
-			// 			resize.next.initialSize + (resize.initialSize - new_size_of_current_cell)
-			// 		)
-			// 	)
-			// }
 		})
 	}
 
