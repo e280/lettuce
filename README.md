@@ -312,13 +312,13 @@ const studio = new lettuce.Studio({panels, layout, renderer})
     ```
 
 ### 🥗 make your studio and the hook
-- we literally provide `reactify` and various react fns to `reactIntegration`
+- we literally provide sly-react's `reactify` and various react fns to `reactIntegration`
     ```ts
     import * as lettuce from "@e280/lettuce"
     import {reactify} from "@e280/sly-react"
     import {useRef, useState, useEffect, createElement} from "react"
 
-    const {renderer, useDeskComponent} = lettuce.reactIntegration({
+    const {renderer, makeDeskComponent} = lettuce.reactIntegration({
       reactify,
       useRef,
       useState,
@@ -327,7 +327,7 @@ const studio = new lettuce.Studio({panels, layout, renderer})
     })
 
     const studio = new lettuce.Studio({renderer, panels, layout})
-    const useLettuceDesk = () => useDeskComponent(studio)
+    const LettuceDesk = makeDeskComponent(studio)
     ```
     - lettuce does not depend on react, but accepts react-shaped stuff to perform the integration
     - studio requires the `renderer` that the react integration gives you
@@ -336,11 +336,9 @@ const studio = new lettuce.Studio({panels, layout, renderer})
 - now you can use the component
     ```ts
     const MyReactComponent = () => {
-      const LettuceDesk = useLettuceDesk()
-
       return (
         <div>
-          <LettuceDesk />
+          <LettuceDesk render={surface => panels[surface.panel].render()} />
         </div>
       )
     }
