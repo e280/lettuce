@@ -21,6 +21,7 @@ export type PersistenceOptions = {
 export type Panel = {
 	label: string
 	icon: () => Content
+	limit?: number
 }
 
 export type Panels = {

@@ -175,14 +175,20 @@ export default css`
 				color 200ms linear;
 			transform: scale(1.0);
 
-			&:hover {
+			&:hover:not(:disabled) {
 				opacity: 0.9;
 				transform: scale(1.1);
 				color: var(--highlight);
 			}
 
-			&:active {
+			&:active:not(:disabled) {
 				opacity: 1;
+			}
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.3;
+				transform: none;
 			}
 
 			> svg {

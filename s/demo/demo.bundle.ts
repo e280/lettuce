@@ -14,6 +14,7 @@ import {icon_feather_folder} from "../studio/ui/icons/groups/feather/folder.js"
 const {panels, renderer} = litSetup({
 	about: {
 		label: "about",
+		limit: 1,
 		icon: () => icon_feather_info,
 		render: () => AboutPanel({
 			resetLayout: async() => layout.actions.reset(),

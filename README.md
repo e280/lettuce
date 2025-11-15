@@ -87,6 +87,7 @@
         label: "Alpha",
         icon: () => html`A`,
         render: () => html`alpha content`,
+        limit: 1, // optional max open instances
       },
       bravo: {
         label: "Bravo",
@@ -110,6 +111,7 @@
     })
     ```
     - panels are referenced by their string keys.
+    - optional `limit` restricts how many copies of a panel can exist at the same time (default unlimited). once saturated, the adder buttons disable.
     - `Layout` is a facility for reading and manipulating.
     - `Builder.fn` helps you build a tree of layout nodes with less verbosity (note the spooky-typing double-invocation).
     - `stock.empty` defines the fallback state for when a user closes everything.
@@ -350,4 +352,3 @@ const studio = new lettuce.Studio({panels, layout, renderer})
 
 ## 🥬 i made this open sourcedly just for you
 pay your respects, gimmie a github star.  
-

@@ -21,6 +21,7 @@
 - 🍏 added react compat via `reactIntegration`, see readme
 - 🍏 improved behaviors and bug fixes
 - 🍏 added `--gutter-size: 0.7em;` css variable
+- 🍏 added optional `panel.limit` so apps can cap how many copies of a panel can be opened at once
 
 ### v0.1.2
 - 🍏 update deps
