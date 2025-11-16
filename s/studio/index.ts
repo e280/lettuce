@@ -6,3 +6,4 @@ export * from "./persistence.js"
 export * from "./studio.js"
 export * from "./types.js"
 
+export * from "./ui/desk/rendering/standard-dock-buttons.js"

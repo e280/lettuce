@@ -11,6 +11,7 @@ export type Blueprint = {
 }
 
 export type Kind = "cell" | "dock" | "surface"
+export type TaskbarAlignment = "top" | "right" | "bottom" | "left"
 
 /** groups of things, stacked horizontally or vertically */
 export type Cell = {
@@ -28,6 +29,7 @@ export type Dock = {
 	size: number
 	children: Surface[]
 	activeChildIndex: number | null
+	taskbarAlignment: TaskbarAlignment
 }
 
 /** end-zone location to render a panel onto */

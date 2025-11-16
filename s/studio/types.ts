@@ -1,15 +1,33 @@
 
 import {Kv} from "@e280/kv"
 import {Content} from "@e280/sly"
+
+import type {Studio} from "./studio.js"
 import {Layout} from "../layout/layout.js"
-import {Id, Surface} from "../layout/types.js"
+import {Id, Surface, Dock} from "../layout/types.js"
 
 export type Renderer = (desk: HTMLElement) => (surfaces: Surface[]) => void
+
+export type StandardButtonKey =
+	| "closeDock"
+	| "splitHorizontal"
+	| "splitVertical"
+	| "spawnPanel"
+	| "resetLayout"
+
+export type DockContext = {
+	studio: Studio<any>
+	dock: Dock
+}
+
+export type DockButtonsFn = (context: DockContext) => Content
+export type StandardButtons = Record<StandardButtonKey, DockButtonsFn>
 
 export type StudioOptions<Ps extends Panels> = {
 	layout: Layout
 	panels: Ps
 	renderer: Renderer
+	buttons?: DockButtonsFn
 }
 
 export type PersistenceOptions = {
@@ -20,7 +38,7 @@ export type PersistenceOptions = {
 
 export type Panel = {
 	label: string
-	icon: () => Content
+	icon: (ctx: DockContext) => Content
 	limit?: number
 }
 

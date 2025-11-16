@@ -6,17 +6,13 @@ import {renderSurface} from "./surface.js"
 import {Dock} from "../../../../layout/types.js"
 import {LayoutMeta} from "./utils/layout-meta.js"
 import {sizingStyles} from "../parts/sizing-styles.js"
-import {icon_feather_x} from "../../icons/groups/feather/x.js"
 import {renderAdderSurface} from "./utils/render-adder-surface.js"
-import {icon_akar_panel_split_row} from "../../icons/groups/akar/panel-split-row.js"
-import {icon_akar_panel_split_column} from "../../icons/groups/akar/panel-split-column.js"
 
 export const renderDock =
 	(meta: LayoutMeta) =>
 	(dock: Dock) => {
 
 	const {studio, dragger} = meta
-	const {layout} = studio
 
 	const activeSurface = (dock.activeChildIndex !== null)
 		? dock.children[dock.activeChildIndex]!
@@ -24,6 +20,10 @@ export const renderDock =
 
 	const isFocal = dock.id === studio.focal.value?.dockId
 	const isPointerLocked = false
+	const buttons = studio.dockButtons({
+		studio,
+		dock
+	})
 
 	const focalize = () => {
 		studio.focal.value = {
@@ -35,6 +35,7 @@ export const renderDock =
 	return html`
 		<div
 			class=dock
+			data-taskbar-alignment="${dock.taskbarAlignment}"
 			style="${sizingStyles(dock.size)}"
 
 			?data-is-focal="${isFocal}"
@@ -54,17 +55,7 @@ export const renderDock =
 				</div>
 
 				<div class=actions>
-					<button @click=${() => layout.actions.splitDock(dock.id, false)}>
-						${icon_akar_panel_split_row}
-					</button>
-
-					<button @click=${() => layout.actions.splitDock(dock.id, true)}>
-						${icon_akar_panel_split_column}
-					</button>
-
-					<button class=x @click=${() => layout.actions.deleteDock(dock.id)}>
-						${icon_feather_x}
-					</button>
+					${buttons}
 				</div>
 			</div>
 

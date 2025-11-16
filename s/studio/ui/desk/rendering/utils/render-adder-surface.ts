@@ -4,7 +4,7 @@ import {LayoutMeta} from "./layout-meta.js"
 import {Dock} from "../../../../../layout/types.js"
 
 export function renderAdderSurface(
-		{studio: {layout, panels}}: LayoutMeta,
+		{studio: {layout, panels, ...stuff}}: LayoutMeta,
 		dock: Dock,
 	) {
 
@@ -37,7 +37,7 @@ export function renderAdderSurface(
 			<button
 				@click="${click(name, panel.limit)}"
 				?disabled="${atLimit(name, panel.limit, counts)}">
-				${panel.icon()}
+				${panel.icon({studio: {layout, panels, ...stuff}, dock})}
 				<span>${panel.label}</span>
 			</button>
 		`)}`

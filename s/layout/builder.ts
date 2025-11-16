@@ -15,6 +15,7 @@ export class Builder<K extends string = string> {
 		activeChildIndex: panels.length === 0
 			? null
 			: 0,
+		taskbarAlignment: "top",
 		children: panels.map(panel => ({
 			kind: "surface",
 			id: freshId(),
