@@ -3,7 +3,7 @@ import {Lens} from "@e280/strata"
 import {Explorer} from "./explorer.js"
 import {clamp} from "../../tools/numerical.js"
 import {freshId} from "../../tools/fresh-id.js"
-import {Id, Stock, Dock, Cell, Surface, Blueprint} from "../types.js"
+import {Id, Stock, Dock, Cell, Surface, Blueprint, TaskbarAlignment} from "../types.js"
 import {activate_last_child, ensure_active_index_is_in_safe_range, get_active_surface, last_child_is_active, maintain_which_surface_is_active, movement_is_forward, movement_is_within_same_dock, redistribute_child_sizes_locally, same_place} from "./action-utils.js"
 
 export class Actions {
@@ -56,6 +56,13 @@ export class Actions {
 		return this.mutate(explorer => {
 			const dock = explorer.docks.require(dockId)
 			dock.activeChildIndex = activeSurfaceIndex
+		})
+	}
+
+	async setDockTaskbarAlignment(dockId: Id, alignment: TaskbarAlignment) {
+		return this.mutate(explorer => {
+			const dock = explorer.docks.require(dockId)
+			dock.taskbarAlignment = alignment
 		})
 	}
 
@@ -135,6 +142,7 @@ export class Actions {
 					children: [],
 					activeChildIndex: null,
 					size: halfsize,
+					taskbarAlignment: dock.taskbarAlignment,
 				}
 
 				parentCell.children.splice(dockIndex + 1, 0, newDock)
@@ -153,6 +161,7 @@ export class Actions {
 						size: 0.5,
 						children: [],
 						activeChildIndex: null,
+						taskbarAlignment: dock.taskbarAlignment,
 					}],
 				}
 				parentCell.children.splice(dockIndex, 1, newCell)

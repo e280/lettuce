@@ -2,7 +2,7 @@
 import {effect} from "@e280/strata"
 import {suite, test, expect} from "@e280/science"
 import {Layout} from "./layout.js"
-import {Blueprint, Cell} from "./types.js"
+import {Blueprint, Cell, TaskbarAlignment} from "./types.js"
 import {BasicPanelName, basicStock} from "./testing/setup.js"
 import {redistribute_child_sizes_fairly, redistribute_child_sizes_locally} from "./parts/action-utils.js"
 
@@ -44,6 +44,24 @@ export default suite({
 		const {surface} = await layout.actions.addSurface(dock.id, "alpha" satisfies BasicPanelName)
 		expect(layout.explorer.surfaces.count).is(4)
 		expect(layout.explorer.surfaces.require(surface.id).panel).is("alpha")
+	}),
+
+	"dock taskbar alignment defaults to top": test(async() => {
+		const layout = new Layout({stock: basicStock()})
+		const [dock] = layout.explorer.docks.nodes
+		expect(dock.taskbarAlignment).is("top")
+	}),
+
+	"dock taskbar alignment covers every edge": test(async() => {
+		const alignments: TaskbarAlignment[] = ["top", "right", "bottom", "left"]
+		for (const alignment of alignments) {
+			const layout = new Layout({stock: basicStock()})
+			const [dock] = layout.explorer.docks.nodes
+			await layout.actions.setDockTaskbarAlignment(dock.id, alignment)
+			expect(layout.explorer.docks.require(dock.id).taskbarAlignment).is(alignment)
+			await layout.actions.splitDock(dock.id, false)
+			expect(layout.explorer.docks.nodes.every(node => node.taskbarAlignment === alignment)).is(true)
+		}
 	}),
 
 	"split the dock": test(async() => {
@@ -125,4 +143,3 @@ export default suite({
 		}
 	})(),
 })
-

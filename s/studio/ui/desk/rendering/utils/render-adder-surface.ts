@@ -4,9 +4,20 @@ import {LayoutMeta} from "./layout-meta.js"
 import {Dock} from "../../../../../layout/types.js"
 
 export function renderAdderSurface(
-		{studio: {layout, panels}}: LayoutMeta,
+		{studio: {layout, panels, ...stuff}}: LayoutMeta,
 		dock: Dock,
 	) {
+
+	const atLimit = (panel: string, limit = Infinity) => {
+		if (!Number.isFinite(limit))
+			return false
+
+		const panelCount = layout.explorer.surfaces.nodes
+			.filter(surface => surface.panel === panel)
+			.length
+
+		return (panelCount >= limit)
+	}
 
 	function click(name: string) {
 		return async() => {
@@ -15,12 +26,14 @@ export function renderAdderSurface(
 		}
 	}
 
-	return html`${Object.entries(panels)
-		.map(([name, panel]) => html`
-			<button @click="${click(name)}">
-				${panel.icon()}
-				<span>${panel.label}</span>
-			</button>
-		`)}`
+	return Object.entries(panels).map(([name, panel]) => html`
+		<button
+			@click="${click(name)}"
+			?disabled="${atLimit(name, panel.limit)}">
+
+			${panel.icon({studio: {layout, panels, ...stuff}, dock})}
+			<span>${panel.label}</span>
+		</button>
+	`)
 }
 

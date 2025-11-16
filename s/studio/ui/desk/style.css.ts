@@ -79,7 +79,6 @@ export default css`
 
 .dock {
 	display: flex;
-	flex-direction: column;
 	background: var(--taskbar);
 	position: relative;
 
@@ -130,7 +129,6 @@ export default css`
 		}
 
 		.actions {
-			margin-left: auto;
 
 			> button {
 				padding: 0.2em 0.3em;
@@ -150,7 +148,6 @@ export default css`
 		position: relative;
 		flex: 1 1 auto;
 		display: block;
-		padding: 0.5em;
 		background: var(--dock);
 	}
 
@@ -175,14 +172,20 @@ export default css`
 				color 200ms linear;
 			transform: scale(1.0);
 
-			&:hover {
+			&:hover:not(:disabled) {
 				opacity: 0.9;
 				transform: scale(1.1);
 				color: var(--highlight);
 			}
 
-			&:active {
+			&:active:not(:disabled) {
 				opacity: 1;
+			}
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.3;
+				transform: none;
 			}
 
 			> svg {
@@ -233,7 +236,6 @@ export default css`
 		padding-left: 0.3em;
 		padding-right: 0.1em;
 		background: var(--tab);
-		border-top: 0.1em solid transparent;
 
 		&[data-adder] {
 			padding-right: 0.9em;
@@ -249,7 +251,6 @@ export default css`
 		&[data-active] {
 			opacity: 1;
 			color: var(--highlight);
-			border-color: var(--highlight);
 			background: var(--dock);
 		}
 
@@ -283,5 +284,105 @@ export default css`
 	}
 }
 
+/* Alignment specific styles */
+
+.dock[data-taskbar-alignment="top"] {
+	flex-direction: column;
+
+	> .taskbar {
+		justify-content: space-between;
+
+		.actions {
+			margin-left: auto;
+		}
+
+		.tabs button {
+			border-top: 0.1em solid transparent;
+
+			&[data-active] {
+				border-color: var(--highlight);
+			}
+		}
+	}
+}
+
+.dock[data-taskbar-alignment="right"] {
+	> .surface {
+		direction: rtl;
+	}
+
+	> .taskbar {
+		order: 1;
+		flex-direction: column;
+		align-items: end;
+		height: 100%;
+		justify-content: space-between;
+
+		.tabs  {
+			order: 1;
+			.tab {
+				justify-content: end;
+			}
+		}
+
+		.tabs, .actions {
+			flex-direction: column;
+		}
+
+		.tabs button {
+			border-left: 0.1em solid transparent;
+
+			&[data-active] {
+				border-color: var(--highlight);
+			}
+		}
+	}
+}
+
+.dock[data-taskbar-alignment="left"] {
+	> .taskbar {
+		flex-direction: column;
+		align-items: start;
+		height: 100%;
+		justify-content: space-between;
+
+		.tabs  {
+			order: 1;
+		}
+
+		.tabs, .actions {
+			flex-direction: column;
+		}
+
+		.tabs button {
+			border-right: 0.1em solid transparent;
+
+			&[data-active] {
+				border-color: var(--highlight);
+			}
+		}
+	}
+}
+
+.dock[data-taskbar-alignment="bottom"] {
+	flex-direction: column;
+
+	> .taskbar {
+		order: 1;
+		justify-content: space-between;
+
+		.actions {
+			margin-left: auto;
+		}
+
+		.tabs button {
+			border-top: 0.1em solid transparent;
+
+			&[data-active] {
+				border-color: var(--highlight);
+			}
+		}
+	}
+}
 `
 
