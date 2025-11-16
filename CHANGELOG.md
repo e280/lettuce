@@ -8,7 +8,7 @@
 
 <br/><br/>
 
-## v0.1
+## v0.2
 
 ### v0.2.0
 - 🟥 studio now requires `renderer`, which can be obtained via `litSetup` or `litRenderer`
@@ -25,6 +25,12 @@
 - 🍏 added optional `panel.limit` so apps can cap how many copies of a panel can be opened at once
 - 🍏 docks now store a single `taskbarAlignment` (top/right/bottom/left) which drives taskbar orientation, via `[data-taskbar-alignment]`
 - 🍏 studio accepts a `buttons` option: `standardButtons(ctx)` is the default taskbar buttons, and `standardButtonsParts(ctx)` exposes the built-in pieces so taskbar controls can be reordered, extended, or replaced
+
+
+
+<br/><br/>
+
+## v0.1
 
 ### v0.1.2
 - 🍏 update deps
