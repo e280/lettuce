@@ -131,8 +131,14 @@
     - see [@e280/kv](https://github.com/e280/kv#readme) to learn how to control where the data is saved
 1. **setup a studio for displaying the layout in browser**
     ```ts
-    const studio = new lettuce.Studio({panels, layout, renderer})
+    const studio = new lettuce.Studio({
+      panels,
+      layout,
+      renderer,
+      // buttons - optional
+    })
     ```
+    - `buttons` uses `standardButtons(ctx)` by default. When provided, supply your own buttons to render anything you like (see [customize studio](#studio))
 1. **register the web components to the dom**
     ```ts
     studio.ui.registerComponents()
@@ -166,8 +172,9 @@
     - this is where splits are expressed.
     - a cell's children can be docks or more cells.
 - **`Dock`**
-    - a dock contains the ui with the little tab buttons, splitting buttons, x button, etc.
-    - a dock's children must be surfaces.
+	- a dock contains the ui with the little tab buttons, splitting buttons, x button, etc.
+	- a dock's children must be surfaces.
+	- each dock stores a `taskbarAlignment` (`"top" | "right" | "bottom" | "left"`) which dictates where its taskbar renders and how the tabs orient themselves.
 - **`Surface`**
     - a surface is the rendering target location of where a panel will be rendered.
     - it uses a `<slot>` to magically render your panel into the location of this surface.
@@ -199,6 +206,7 @@
 - `layout.actions.addSurface(dockId, panel)`
 - `layout.actions.activateSurface(surfaceId)`
 - `layout.actions.setDockActiveSurface(dockId, activeSurfaceIndex)`
+- `layout.actions.setDockTaskbarAlignment(dockId, alignment)`
 - `layout.actions.resize(id, size)`
 - `layout.actions.deleteSurface(id)`
 - `layout.actions.deleteDock(id)`
@@ -247,9 +255,27 @@
 
 ### 🥗 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
 ```ts
-const studio = new lettuce.Studio({panels, layout, renderer})
+const studio = new lettuce.Studio({
+	panels,
+	layout,
+	renderer,
+	buttons: context => {
+		const standard = lettuce.standardButtonsParts(context)
+		return html`
+			${standard.closeDock()}
+			${standard.splitHorizontal()}
+			${standard.splitVertical()}
+      // customize non standard taskbar controls as you wish
+			<button @click=${() => context.studio.layout.actions.reset()}>Reset</button>
+			// add your own action button
+			<button @click=${() => someAction()}>whatever</button>
+		`
+	},
+})
 ```
 - *read the source code for the real details*
+- `standardButtons(ctx)` is the default taskbar buttons (close + split buttons).
+-  Import `standardButtonsParts` instead when you need individual action buttons.
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
     ```ts
