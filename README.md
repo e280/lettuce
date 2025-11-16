@@ -256,26 +256,26 @@
 ### 🥗 studio [ui.ts](./s/studio/ui/ui.ts) — control how the ui is deployed
 ```ts
 const studio = new lettuce.Studio({
-	panels,
-	layout,
-	renderer,
-	buttons: context => {
-		const standard = lettuce.standardButtonsParts(context)
-		return html`
-			${standard.closeDock()}
-			${standard.splitHorizontal()}
-			${standard.splitVertical()}
+  panels,
+  layout,
+  renderer,
+  buttons: context => {
+    const standard = lettuce.standardButtonsParts(context)
+    return html`
+      ${standard.closeDock()}
+      ${standard.splitHorizontal()}
+      ${standard.splitVertical()}
       // customize non standard taskbar controls as you wish
-			<button @click=${() => context.studio.layout.actions.reset()}>Reset</button>
-			// add your own action button
-			<button @click=${() => someAction()}>whatever</button>
-		`
-	},
+      <button @click=${() => context.studio.layout.actions.reset()}>Reset</button>
+      // add your own action button
+      <button @click=${() => someAction()}>whatever</button>
+    `
+  },
 })
 ```
 - *read the source code for the real details*
 - `standardButtons(ctx)` is the default taskbar buttons (close + split buttons).
--  Import `standardButtonsParts` instead when you need individual action buttons.
+-  import `standardButtonsParts` instead when you need individual action buttons.
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
     ```ts
@@ -378,3 +378,4 @@ const studio = new lettuce.Studio({
 
 ## 🥬 i made this open sourcedly just for you
 pay your respects, gimmie a github star.  
+
