@@ -21,7 +21,7 @@ export type DockContext = {
 }
 
 export type DockButtonsFn = (context: DockContext) => Content
-export type StandardButtons = Record<StandardButtonKey, DockButtonsFn>
+export type StandardButtons = Record<StandardButtonKey, () => Content>
 
 export type StudioOptions<Ps extends Panels> = {
 	layout: Layout
