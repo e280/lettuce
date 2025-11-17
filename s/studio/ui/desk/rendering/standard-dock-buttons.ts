@@ -3,16 +3,16 @@ import {html} from "lit"
 import {Content} from "@e280/sly"
 
 import {TaskbarAlignment} from "../../../../layout/types.js"
-import {DockContext, DockButtonsFn} from "../../../types.js"
+import {DockContext, DockControlsFn} from "../../../types.js"
 import {icon_feather_x} from "../../icons/groups/feather/x.js"
 import {icon_feather_home} from "../../icons/groups/feather/home.js"
 import {icon_feather_plus} from "../../icons/groups/feather/plus.js"
 import {icon_akar_panel_split_row} from "../../icons/groups/akar/panel-split-row.js"
 import {icon_akar_panel_split_column} from "../../icons/groups/akar/panel-split-column.js"
 
-export type StandardButtonParts = ReturnType<typeof standardButtonsParts>
+export type StandardControlsParts = ReturnType<typeof standardControlsParts>
 
-export const standardButtonsParts = (ctx: DockContext) => {
+export const standardControlsParts = (ctx: DockContext) => {
 	const {layout} = ctx.studio
 	const dock = ctx.dock
 
@@ -59,8 +59,8 @@ export const standardButtonsParts = (ctx: DockContext) => {
 	}
 }
 
-export const standardButtons: DockButtonsFn = (ctx) => {
-	const standard = standardButtonsParts(ctx)
+export const standardControls: DockControlsFn = (ctx) => {
+	const standard = standardControlsParts(ctx)
 	const vertical = ctx.dock.taskbarAlignment === "right" || ctx.dock.taskbarAlignment === "left"
 	return vertical
 		? html`

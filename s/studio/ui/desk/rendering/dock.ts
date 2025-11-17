@@ -20,7 +20,7 @@ export const renderDock =
 
 	const isFocal = dock.id === studio.focal.value?.dockId
 	const isPointerLocked = false
-	const buttons = studio.dockButtons({
+	const buttons = studio.dockControls({
 		studio,
 		dock
 	})
