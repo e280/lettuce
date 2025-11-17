@@ -129,6 +129,19 @@ export default css`
 		}
 
 		.actions {
+			flex: 1;
+
+			> .spawn {
+				display: flex;
+				flex: 1;
+				padding: 0.2em;
+				padding-left: 0.3em;
+				padding-right: 0.1em;
+
+				.icon {
+					display: flex;
+				}
+			}
 
 			> button {
 				padding: 0.2em 0.3em;
@@ -292,10 +305,6 @@ export default css`
 	> .taskbar {
 		justify-content: space-between;
 
-		.actions {
-			margin-left: auto;
-		}
-
 		.tabs button {
 			border-top: 0.1em solid transparent;
 
@@ -370,10 +379,6 @@ export default css`
 	> .taskbar {
 		order: 1;
 		justify-content: space-between;
-
-		.actions {
-			margin-left: auto;
-		}
 
 		.tabs button {
 			border-top: 0.1em solid transparent;

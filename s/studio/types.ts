@@ -2,9 +2,9 @@
 import {Kv} from "@e280/kv"
 import {Content} from "@e280/sly"
 
-import type {Studio} from "./studio.js"
 import {Layout} from "../layout/layout.js"
 import {Id, Surface, Dock} from "../layout/types.js"
+import {LayoutMeta} from "./ui/desk/rendering/utils/layout-meta.js"
 
 export type Renderer = (desk: HTMLElement) => (surfaces: Surface[]) => void
 
@@ -16,8 +16,8 @@ export type StandardButtonKey =
 	| "resetLayout"
 
 export type DockContext = {
-	studio: Studio<any>
 	dock: Dock
+	meta: LayoutMeta
 }
 
 export type DockControlsFn = (context: DockContext) => Content

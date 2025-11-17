@@ -2,7 +2,7 @@
 import {signal} from "@e280/strata"
 import {Ui} from "./ui/ui.js"
 import {Layout} from "../layout/layout.js"
-import {standardControls} from "./ui/desk/rendering/standard-dock-buttons.js"
+import {standardControls} from "./ui/desk/rendering/standard-dock-controls.js"
 import {DockControlsFn, Focal, Panels, Renderer, StudioOptions} from "./types.js"
 
 export class Studio<Ps extends Panels = Panels> {

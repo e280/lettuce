@@ -4,9 +4,11 @@ import {LayoutMeta} from "./layout-meta.js"
 import {Dock} from "../../../../../layout/types.js"
 
 export function renderAdderSurface(
-		{studio: {layout, panels, ...stuff}}: LayoutMeta,
+		meta: LayoutMeta,
 		dock: Dock,
 	) {
+
+	const {studio: {layout, panels}} = meta
 
 	const atLimit = (panel: string, limit = Infinity) => {
 		if (!Number.isFinite(limit))
@@ -31,7 +33,7 @@ export function renderAdderSurface(
 			@click="${click(name)}"
 			?disabled="${atLimit(name, panel.limit)}">
 
-			${panel.icon({studio: {layout, panels, ...stuff}, dock})}
+			${panel.icon({meta, dock})}
 			<span>${panel.label}</span>
 		</button>
 	`)

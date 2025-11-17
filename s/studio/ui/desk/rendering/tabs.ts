@@ -1,6 +1,5 @@
 
 import {html} from "lit"
-import {AdderTab} from "./tabs/adder-tab.js"
 import {Dock} from "../../../../layout/types.js"
 import {LayoutMeta} from "./utils/layout-meta.js"
 import {OrdinaryTab} from "./tabs/ordinary-tab.js"
@@ -15,8 +14,6 @@ export const renderTabs = (
 			dock: dock,
 			surface: leaf,
 			surfaceIndex: leafIndex,
-		}))}
-
-	${AdderTab({meta, dock: dock})}
+	}))}
 `
 

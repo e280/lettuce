@@ -20,9 +20,9 @@ export const renderDock =
 
 	const isFocal = dock.id === studio.focal.value?.dockId
 	const isPointerLocked = false
-	const buttons = studio.dockControls({
-		studio,
-		dock
+	const controls = studio.dockControls({
+		dock,
+		meta
 	})
 
 	const focalize = () => {
@@ -55,7 +55,7 @@ export const renderDock =
 				</div>
 
 				<div class=actions>
-					${buttons}
+					${controls}
 				</div>
 			</div>
 
@@ -74,4 +74,3 @@ export const renderDock =
 		</div>
 	`
 }
-

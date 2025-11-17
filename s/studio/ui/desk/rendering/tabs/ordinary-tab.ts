@@ -59,7 +59,7 @@ export const OrdinaryTab = ({
 				@dragstart="${meta.dragger.tab.start(surface.id)}">
 
 				<span class=icon>
-					${icon({studio: meta.studio, dock})}
+					${icon({dock, meta})}
 				</span>
 
 				<span class=x ?data-available=${active}>
