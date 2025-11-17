@@ -135,10 +135,10 @@
       panels,
       layout,
       renderer,
-      // buttons - optional
+      // controls - optional
     })
     ```
-    - `buttons` uses `standardButtons(ctx)` by default. When provided, supply your own buttons to render anything you like (see [customize studio](#studio))
+    - `controls` uses `standardControls(ctx)` by default. Override it to render custom taskbar controls (see [customize studio](#studio)).
 1. **register the web components to the dom**
     ```ts
     studio.ui.registerComponents()
@@ -259,14 +259,15 @@ const studio = new lettuce.Studio({
   panels,
   layout,
   renderer,
-  buttons: context => {
-    const standard = lettuce.standardButtonsParts(context)
+  controls: context => {
+    const standard = lettuce.standardControlsParts(context)
     return html`
+      ${standard.spawnPanel()}
       ${standard.closeDock()}
       ${standard.splitHorizontal()}
       ${standard.splitVertical()}
       // customize non standard taskbar controls as you wish
-      <button @click=${() => context.studio.layout.actions.reset()}>Reset</button>
+      <button @click=${() => context.meta.studio.layout.actions.reset()}>Reset</button>
       // add your own action button
       <button @click=${() => someAction()}>whatever</button>
     `
@@ -274,8 +275,8 @@ const studio = new lettuce.Studio({
 })
 ```
 - *read the source code for the real details*
-- `standardButtons(ctx)` is the default taskbar buttons (close + split buttons).
--  import `standardButtonsParts` instead when you need individual action buttons.
+- `standardControls(ctx)` is the default taskbar controls (close, split, alignment, spawn panel, etc.).
+- import `standardControlsParts` instead when you need individual controls.
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
     ```ts
@@ -377,5 +378,4 @@ const studio = new lettuce.Studio({
 <br/><br/>
 
 ## 🥬 i made this open sourcedly just for you
-pay your respects, gimmie a github star.  
-
+pay your respects, gimmie a github star.
