@@ -60,6 +60,7 @@ lettuce-desk {
 	--dock: transparent;
 	--taskbar: transparent;
 	--tab: transparent;
+	--tab-active: var(--dock);
 	--gutter: #0d1f15;
 	--focal: transparent;
 	--pointerlock: yellow;

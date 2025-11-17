@@ -35,6 +35,7 @@ export const renderDock =
 	return html`
 		<div
 			class=dock
+			part=dock
 			data-taskbar-alignment="${dock.taskbarAlignment}"
 			style="${sizingStyles(dock.size)}"
 
@@ -49,7 +50,7 @@ export const renderDock =
 			@dragend="${dragger.dock.end()}"
 			@drop="${dragger.dock.drop()}">
 
-			<div class=taskbar>
+			<div class=taskbar part=taskbar>
 				<div class=tabs>
 					${renderTabs(meta, dock)}
 				</div>
@@ -61,12 +62,12 @@ export const renderDock =
 
 			${is.happy(dock.activeChildIndex)
 				? html`
-					<div class="surface panel">
+					<div class="surface panel" part=surface>
 						${renderSurface(meta)(dock.children[dock.activeChildIndex])}
 					</div>
 				`
 				: html`
-					<div class="surface adder">
+					<div class="surface adder" part=surface>
 						${renderAdderSurface(meta, dock)}
 					</div>
 				`

@@ -12,6 +12,7 @@ export const renderCell =
 
 	<div
 		class=cell
+		part=cell
 		?data-vertical=${cell.vertical}
 		style="${sizingStyles(cell.size)}">
 

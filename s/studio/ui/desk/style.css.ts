@@ -21,6 +21,7 @@ export default css`
 	--dock: #181818;
 	--taskbar: #181818;
 	--tab: transparent;
+	--tab-active: var(--dock);
 	--gutter: #000;
 	--focal: transparent;
 	--pointerlock: yellow;
@@ -28,7 +29,6 @@ export default css`
 
 .layout {
 	user-select: none;
-	overflow: hidden;
 
 	display: flex;
 	width: 100%;
@@ -63,7 +63,6 @@ export default css`
 		flex: 0 0 auto;
 		min-width: 0;
 		min-height: 0;
-		overflow: hidden;
 	}
 
 	&[data-vertical] > .gutter {
@@ -148,7 +147,6 @@ export default css`
 		position: relative;
 		flex: 1 1 auto;
 		display: block;
-		background: var(--dock);
 	}
 
 	> .panel {
@@ -251,7 +249,7 @@ export default css`
 		&[data-active] {
 			opacity: 1;
 			color: var(--highlight);
-			background: var(--dock);
+			background: var(--tab-active);
 		}
 
 		> .icon {

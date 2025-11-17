@@ -46,7 +46,7 @@ export const OrdinaryTab = ({
 	}
 
 	return html`
-		<div class=tab data-tab-for-surface="${surface.id}">
+		<div class=tab part=tab data-tab-for-surface="${surface.id}">
 			<div class=insert-indicator ?data-drag="${show_drag_indicator}"></div>
 
 			<button

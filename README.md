@@ -68,6 +68,7 @@
       --dock: #181818;
       --taskbar: #181818;
       --tab: transparent;
+      --tab-active: var(--dock);
       --gutter: #000;
       --focal: transparent;
       --pointerlock: yellow;

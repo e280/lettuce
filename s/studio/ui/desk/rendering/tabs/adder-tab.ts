@@ -19,7 +19,7 @@ export const AdderTab = ({meta, dock}: {
 	const show_drag_indicator = meta.dragger.isSurfaceIndicated(dock.id, dock.children.length)
 
 	return html`
-		<div class=tab>
+		<div class=tab part=adder-tab>
 			<div class=insert-indicator ?data-drag="${show_drag_indicator}"></div>
 
 			<button
