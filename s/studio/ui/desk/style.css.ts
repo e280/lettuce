@@ -131,17 +131,58 @@ export default css`
 		.actions {
 			flex: 1;
 
-			> .spawn {
+			.spawn-dropdown {
 				display: flex;
+				align-items: center;
 				flex: 1;
-				padding: 0.2em;
-				padding-left: 0.3em;
-				padding-right: 0.1em;
+
+				::part(label) {
+					padding: 0.5em;
+				}
 
 				.icon {
+					color: #8E8E9A;
 					display: flex;
 				}
 			}
+
+			.item {
+				display: flex;
+			}
+
+			sl-menu {
+    		background: #2424285e;
+    		backdrop-filter: blur(10px);
+			}
+
+			sl-menu-item .icon {
+				margin-right: 0.5em;
+			}
+
+			sl-dropdown::part(base) {
+				display: flex;
+				align-items: center;
+				background: transparent;
+				border: none;
+			}
+
+			sl-button {
+  			display: flex;
+			}
+
+			sl-button::part(base) {
+				display: flex;
+				align-items: center;
+				background: transparent;
+				border: none;
+			}
+
+			::part(label) {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
 
 			> button {
 				padding: 0.2em 0.3em;
@@ -247,15 +288,8 @@ export default css`
 		gap: 0.1em;
 		padding: 0.2em;
 		padding-left: 0.3em;
-		padding-right: 0.1em;
+		padding-right: 0.3em;
 		background: var(--tab);
-
-		&[data-adder] {
-			padding-right: 0.9em;
-			&:not(:hover):not([data-active]) {
-				opacity: 0.2;
-			}
-		}
 
 		opacity: 0.6;
 		&:hover { opacity: 1; }
@@ -327,8 +361,17 @@ export default css`
 		height: 100%;
 		justify-content: space-between;
 
+		.spawn-dropdown {
+			align-items: end;
+		}
+
 		.tabs  {
 			order: 1;
+
+			button .icon {
+				order: 1;
+			}
+
 			.tab {
 				justify-content: end;
 			}
@@ -354,6 +397,10 @@ export default css`
 		align-items: start;
 		height: 100%;
 		justify-content: space-between;
+
+		.spawn-dropdown {
+			align-items: end;
+		}
 
 		.tabs  {
 			order: 1;

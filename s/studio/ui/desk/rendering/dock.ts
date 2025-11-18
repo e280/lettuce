@@ -6,7 +6,6 @@ import {renderSurface} from "./surface.js"
 import {Dock} from "../../../../layout/types.js"
 import {LayoutMeta} from "./utils/layout-meta.js"
 import {sizingStyles} from "../parts/sizing-styles.js"
-import {renderAdderSurface} from "./utils/render-adder-surface.js"
 
 export const renderDock =
 	(meta: LayoutMeta) =>
@@ -63,14 +62,8 @@ export const renderDock =
 				? html`
 					<div class="surface panel">
 						${renderSurface(meta)(dock.children[dock.activeChildIndex])}
-					</div>
-				`
-				: html`
-					<div class="surface adder">
-						${renderAdderSurface(meta, dock)}
-					</div>
-				`
-			}
+					</div>`
+				: null}
 		</div>
 	`
 }
