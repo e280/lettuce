@@ -33,7 +33,6 @@
 		"lit": "^3.3.1"
 	},
 	"dependencies": {
-		"@awesome.me/webawesome": "^3.0.0",
 		"@e280/kv": "^0.1.0",
 		"@e280/sly": "^0.2.2",
 		"@e280/strata": "^0.2.4",
