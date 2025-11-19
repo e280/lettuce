@@ -23,6 +23,7 @@ export const renderDock =
 		dock,
 		meta
 	})
+
 	const dropIndex = dragger.dockDropIndex(dock.id)
 	const dropAtEnd = dropIndex === dock.children.length
 
@@ -36,6 +37,8 @@ export const renderDock =
 	return html`
 		<div
 			class=dock
+			part=dock
+			data-dock-id="${dock.id}"
 			data-taskbar-alignment="${dock.taskbarAlignment}"
 			style="${sizingStyles(dock.size)}"
 
@@ -43,14 +46,9 @@ export const renderDock =
 			?data-is-pointer-locked="${isPointerLocked}"
 			@pointerover="${focalize}"
 
-			?data-drag="${dragger.isDockIndicated(dock.id)}"
-			@dragenter="${dragger.dock.enter(dock.id)}"
-			@dragleave="${dragger.dock.leave()}"
-			@dragover="${dragger.dock.over(dock.id)}"
-			@dragend="${dragger.dock.end()}"
-			@drop="${dragger.dock.drop()}">
+			?data-drag="${dragger.isDockIndicated(dock.id)}">
 
-			<div class=taskbar>
+			<div class=taskbar part=taskbar>
 				<div
 					class=tabs
 					?data-drop-terminal="${dropAtEnd}">
@@ -64,9 +62,10 @@ export const renderDock =
 
 			${is.happy(dock.activeChildIndex)
 				? html`
-					<div class="surface panel">
+					<div class="surface panel" part=surface>
 						${renderSurface(meta)(dock.children[dock.activeChildIndex])}
-					</div>`
+					</div>
+				`
 				: null}
 		</div>
 	`

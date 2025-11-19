@@ -21,9 +21,11 @@ export default css`
 	--dock: #181818;
 	--taskbar: #181818;
 	--tab: transparent;
+	--tab-active: var(--dock);
 	--gutter: #000;
 	--focal: transparent;
 	--pointerlock: yellow;
+	--tab-gap: 60px;
 }
 
 .layout {
@@ -183,7 +185,6 @@ export default css`
 				justify-content: center;
 			}
 
-
 			> button {
 				padding: 0.2em 0.3em;
 
@@ -202,7 +203,6 @@ export default css`
 		position: relative;
 		flex: 1 1 auto;
 		display: block;
-		background: var(--dock);
 	}
 
 	> .panel {
@@ -258,13 +258,19 @@ export default css`
 }
 
 .tabs {
-	position: relative;
-
 	.tab {
 		display: flex;
 		flex-direction: row;
 		position: relative;
-		transition: margin-left 120ms ease;
+		transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
+	}
+
+	.tab[data-shift="positive"] {
+		transform: translateX(var(--tab-gap));
+	}
+
+	.tab[data-shift="negative"] {
+		transform: translateX(calc(var(--tab-gap) * -1));
 	}
 
 	.insert-indicator {
@@ -276,7 +282,6 @@ export default css`
 		background: var(--special);
 		border-radius: 1em;
 		pointer-events: none;
-		transition: opacity 120ms ease;
 
 		opacity: 0;
 		&[data-drag] { opacity: 1; }
@@ -302,7 +307,7 @@ export default css`
 		&[data-active] {
 			opacity: 1;
 			color: var(--highlight);
-			background: var(--dock);
+			background: var(--tab-active);
 		}
 
 		> .icon {
@@ -365,17 +370,8 @@ export default css`
 		height: 100%;
 		justify-content: space-between;
 
-		.spawn-dropdown {
-			align-items: end;
-		}
-
 		.tabs  {
 			order: 1;
-
-			button .icon {
-				order: 1;
-			}
-
 			.tab {
 				justify-content: end;
 			}
@@ -401,10 +397,6 @@ export default css`
 		align-items: start;
 		height: 100%;
 		justify-content: space-between;
-
-		.spawn-dropdown {
-			align-items: end;
-		}
 
 		.tabs  {
 			order: 1;
@@ -441,36 +433,16 @@ export default css`
 	}
 }
 
-/* Tab dragging effects (like in chrome) specific styles */
-
-.tabs {
-	--tab-drop-gap: 0.8em;
-
-	.tab[data-shifted] {
-		margin-left: var(--tab-drop-gap);
-	}
-
-	&::after {
-		content: "";
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: calc(var(--tab-drop-gap) / 2);
-		width: 2px;
-		background: var(--special);
-		border-radius: 1em;
-		opacity: 0;
-		pointer-events: none;
-		transition: opacity 120ms ease;
-	}
-
-	&[data-drop-terminal] {
-		padding-right: var(--tab-drop-gap);
-	}
-
-	&[data-drop-terminal]::after {
-		opacity: 1;
-	}
+.dock[data-taskbar-alignment="left"],
+.dock[data-taskbar-alignment="right"] {
+.tabs .tab[data-shift="positive"] {
+	transform: translateY(var(--tab-gap));
 }
-`
 
+.tabs .tab[data-shift="negative"] {
+	transform: translateY(calc(var(--tab-gap) * -1));
+}
+
+}
+
+`
