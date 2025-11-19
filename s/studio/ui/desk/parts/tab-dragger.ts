@@ -1,7 +1,7 @@
 
-import {signal, SignalFn} from "@e280/strata"
-import {isWithin} from "./drag-utils.js"
-import {Id} from "../../../../layout/types.js"
+import {signal} from "@e280/strata"
+
+import {Dock, Id} from "../../../../layout/types.js"
 import {Layout} from "../../../../layout/layout.js"
 import {Actions} from "../../../../layout/parts/actions.js"
 import {Explorer} from "../../../../layout/parts/explorer.js"
@@ -15,105 +15,89 @@ export type TabDragOperation = {
 }
 
 export class TabDragger {
-	#operation: SignalFn<TabDragOperation | undefined>
+	#operation = signal<TabDragOperation | undefined>(undefined)
 	#explorer: Explorer
 	#actions: Actions
 
 	constructor(layout: Layout) {
 		this.#explorer = layout.explorer
 		this.#actions = layout.actions
-		this.#operation = signal<TabDragOperation | undefined>(undefined)
 	}
 
-	isSurfaceIndicated(dockId: Id, surfaceIndex: number) {
-		const operation = this.#operation.value
-		return (
-			operation &&
-			operation.proposedDestination &&
-			operation.proposedDestination.dockId === dockId &&
-			operation.proposedDestination.surfaceIndex === surfaceIndex
-		)
+	isSurfaceDragging(id: Id) {
+    return this.#operation.value?.surfaceId === id
+	}
+
+	get destination() {
+  	return this.#operation.value?.proposedDestination
+	}
+
+	isSurfaceIndicated(dockId: Id, idx: number) {
+  	return this.destination?.dockId === dockId && this.destination?.surfaceIndex === idx
 	}
 
 	isDockIndicated(dockId: Id) {
-		const operation = this.#operation.value
-		return (
-			operation &&
-			operation.proposedDestination &&
-			operation.proposedDestination.dockId === dockId
-		)
+  	return this.destination?.dockId === dockId
+	}
+
+	dockDropIndex(dockId: Id) {
+  	return this.destination?.dockId === dockId ? this.destination.surfaceIndex : undefined
 	}
 
 	tab = {
-		start: (surfaceId: Id) =>  (_: DragEvent) => {
-			this.#operation.value = {
-				surfaceId: surfaceId,
-				proposedDestination: null,
-			}
-		},
+  	start: (surfaceId: Id) => (_: DragEvent) => this.#operation.value = {surfaceId, proposedDestination: null}
 	}
 
 	dock = {
-		enter: (dockId: Id) => (event: DragEvent) => {
-			const operation = this.#operation.value
-
-			if (!operation)
-				return
-
-			const dock = this.#explorer.docks.require(dockId)
-			const isWithinTab = isWithin(event.target, `[data-tab-for-surface]`)
-
-			this.#operation.value = isWithinTab
-				? (() => {
-					const surfaceId = isWithinTab.getAttribute("data-tab-for-surface")!
-					const surface = this.#explorer
-						.surfaces
-						.require(surfaceId)
-					return {
-						surfaceId: operation.surfaceId,
-						proposedDestination: {
-							dockId: dock.id,
-							surfaceIndex: dock.children.indexOf(surface),
-						},
-					}
-				})()
-				: {
-					surfaceId: operation.surfaceId,
-					proposedDestination: {
-						dockId: dock.id,
-						surfaceIndex: dock.children.length,
-					},
-				}
+		enter: (dockId: Id) => (e: DragEvent) => this.#updateDest(dockId, e),
+		over: (dockId: Id) => (e: DragEvent) => {
+  		e.preventDefault()
+  		this.#updateDest(dockId, e)
 		},
-
-		leave: () => (event: DragEvent) => {
-			const operation = this.#operation.value
-			if (operation && event.relatedTarget === null)
-				this.#operation.value = {
-					surfaceId: operation.surfaceId,
-					proposedDestination: null,
-				}
+		leave: () => (e: DragEvent) => {
+  		const op = this.#operation.value
+  		if (op && !e.relatedTarget)
+      	this.#operation.value = {...op, proposedDestination: null}
 		},
-
-		over: () => (event: DragEvent) => {
-			event.preventDefault()
-		},
-
-		end: () => (_: DragEvent) => {
-			this.#operation.value = undefined
-		},
-
-		drop: () => (_: DragEvent) => {
-			const operation = this.#operation.value
-			if (operation && operation.proposedDestination) {
-				this.#actions.moveSurface(
-					operation.surfaceId,
-					operation.proposedDestination.dockId,
-					operation.proposedDestination.surfaceIndex,
-				)
-			}
-			this.#operation.value = undefined
+		end: () => () => this.#operation.value = undefined,
+		drop: () => () => {
+  		const {surfaceId, proposedDestination: dest} = this.#operation.value || {}
+  		if (surfaceId && dest) {
+    		this.#actions.moveSurface(surfaceId, dest.dockId, dest.surfaceIndex)
+  		}
+  		this.#operation.value = undefined
 		},
 	}
-}
 
+	#updateDest(dockId: Id, e: DragEvent) {
+		const op = this.#operation.value
+		if (!op) return
+
+		const dock = this.#explorer.docks.require(dockId)
+		this.#operation.value = {
+  		...op,
+  		proposedDestination: {
+      	dockId: dock.id,
+      	surfaceIndex: this.#calcIndex(e, dock)
+  		}
+		}
+	}
+
+	#calcIndex(e: DragEvent, dock: Dock) {
+		const tabs = (e.currentTarget as Element)?.querySelector(".tabs")
+		if (!tabs || !dock.children.length)
+  		return dock.children.length
+
+		const isVert = ["left", "right"].includes(dock.taskbarAlignment)
+		const mouse = isVert ? e.clientY : e.clientX
+		const nodes = Array.from(tabs.children).filter(n => n.hasAttribute("data-tab-for-surface"))
+
+		const idx = nodes.findIndex(node => {
+  		const {top, left, width, height} = node.getBoundingClientRect()
+  		const midpoint = isVert ? top + (height / 2) : left + (width / 2)
+  		return mouse < midpoint
+		})
+
+		return idx === -1 ? nodes.length : idx
+	}
+}

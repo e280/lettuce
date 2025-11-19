@@ -23,6 +23,8 @@ export const renderDock =
 		dock,
 		meta
 	})
+	const dropIndex = dragger.dockDropIndex(dock.id)
+	const dropAtEnd = dropIndex === dock.children.length
 
 	const focalize = () => {
 		studio.focal.value = {
@@ -44,12 +46,14 @@ export const renderDock =
 			?data-drag="${dragger.isDockIndicated(dock.id)}"
 			@dragenter="${dragger.dock.enter(dock.id)}"
 			@dragleave="${dragger.dock.leave()}"
-			@dragover="${dragger.dock.over()}"
+			@dragover="${dragger.dock.over(dock.id)}"
 			@dragend="${dragger.dock.end()}"
 			@drop="${dragger.dock.drop()}">
 
 			<div class=taskbar>
-				<div class=tabs>
+				<div
+					class=tabs
+					?data-drop-terminal="${dropAtEnd}">
 					${renderTabs(meta, dock)}
 				</div>
 

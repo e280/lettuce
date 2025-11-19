@@ -258,10 +258,13 @@ export default css`
 }
 
 .tabs {
+	position: relative;
+
 	.tab {
 		display: flex;
 		flex-direction: row;
 		position: relative;
+		transition: margin-left 120ms ease;
 	}
 
 	.insert-indicator {
@@ -273,6 +276,7 @@ export default css`
 		background: var(--special);
 		border-radius: 1em;
 		pointer-events: none;
+		transition: opacity 120ms ease;
 
 		opacity: 0;
 		&[data-drag] { opacity: 1; }
@@ -434,6 +438,38 @@ export default css`
 				border-color: var(--highlight);
 			}
 		}
+	}
+}
+
+/* Tab dragging effects (like in chrome) specific styles */
+
+.tabs {
+	--tab-drop-gap: 0.8em;
+
+	.tab[data-shifted] {
+		margin-left: var(--tab-drop-gap);
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: calc(var(--tab-drop-gap) / 2);
+		width: 2px;
+		background: var(--special);
+		border-radius: 1em;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 120ms ease;
+	}
+
+	&[data-drop-terminal] {
+		padding-right: var(--tab-drop-gap);
+	}
+
+	&[data-drop-terminal]::after {
+		opacity: 1;
 	}
 }
 `

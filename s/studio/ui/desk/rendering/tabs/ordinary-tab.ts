@@ -23,6 +23,9 @@ export const OrdinaryTab = ({
 	const {icon, label} = meta.studio.panels[surface.panel]
 	const active = dock.activeChildIndex === surfaceIndex
 	const show_drag_indicator = meta.dragger.isSurfaceIndicated(dock.id, surfaceIndex)
+	const dropIndex = meta.dragger.dockDropIndex(dock.id)
+	const isShifted = dropIndex === surfaceIndex
+	const isDragged = meta.dragger.isSurfaceDragging(surface.id)
 
 	const close = () => meta
 		.studio
@@ -46,13 +49,17 @@ export const OrdinaryTab = ({
 	}
 
 	return html`
-		<div class=tab data-tab-for-surface="${surface.id}">
+		<div
+			class=tab
+			data-tab-for-surface="${surface.id}"
+			?data-shifted="${isShifted}">
 			<div class=insert-indicator ?data-drag="${show_drag_indicator}"></div>
 
 			<button
 				data-ordinary
 				title="${label}"
 				?data-active=${active}
+				?data-dragged="${isDragged}"
 				@click=${click}
 
 				draggable=true
