@@ -25,6 +25,7 @@
 - 🍏 added optional `panel.limit` so apps can cap how many copies of a panel can be opened at once
 - 🍏 docks now store a single `taskbarAlignment` (top/right/bottom/left) which drives taskbar orientation, via `[data-taskbar-alignment]`
 - 🍏 studio accepts a `controls` option: `standardControls(ctx)` is the default taskbar controls, and `standardControlsParts(ctx)` exposes the built-in pieces so taskbar controls can be reordered, extended, or replaced
+- 🍏 added `listPanelsChoices()` fn for generating panels entries (label, icon, disabled state, and open() handler).
 
 
 

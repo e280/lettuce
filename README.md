@@ -277,6 +277,7 @@ const studio = new lettuce.Studio({
 - *read the source code for the real details*
 - `standardControls(ctx)` is the default taskbar controls (close, split, alignment, spawn panel, etc.).
 - import `standardControlsParts` instead when you need individual controls.
+- `lettuce.listPanelsChoices(meta, dock)` returns available panels for a dock, including icon, disabled state, and an open() handler.
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
     ```ts
