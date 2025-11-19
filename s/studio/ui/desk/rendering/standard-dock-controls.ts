@@ -2,10 +2,10 @@
 import {html} from "lit"
 import {Content} from "@e280/sly"
 
+import {listPanelsChoices} from "./utils/list-panels.js"
 import {TaskbarAlignment} from "../../../../layout/types.js"
 import {DockContext, DockControlsFn} from "../../../types.js"
 import {icon_feather_x} from "../../icons/groups/feather/x.js"
-import {listAdderChoices} from "./utils/list-adder-choices.js"
 import {icon_feather_home} from "../../icons/groups/feather/home.js"
 import {icon_feather_plus} from "../../icons/groups/feather/plus.js"
 import {icon_akar_panel_split_row} from "../../icons/groups/akar/panel-split-row.js"
@@ -53,7 +53,7 @@ export const standardControlsParts = (ctx: DockContext) => {
 		},
 		spawnPanel: () => {
 			const active = dock.activeChildIndex === null
-			const choices = listAdderChoices(ctx.meta, dock)
+			const choices = listPanelsChoices(ctx.meta, dock)
 
 			return html`
 				<sl-dropdown class=spawn-dropdown placement=${vertical ? "right-start" : "top"}>

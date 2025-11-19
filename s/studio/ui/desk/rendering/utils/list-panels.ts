@@ -2,7 +2,7 @@
 import {LayoutMeta} from "./layout-meta.js"
 import {Dock} from "../../../../../layout/types.js"
 
-export function listAdderChoices(meta: LayoutMeta, dock: Dock) {
+export function listPanelsChoices(meta: LayoutMeta, dock: Dock) {
 	const {studio: {layout, panels}} = meta
 
 	const atLimit = (panel: string, limit = Infinity) => {
