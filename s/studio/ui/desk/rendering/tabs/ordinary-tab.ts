@@ -103,17 +103,27 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 
 	onEnd: async (e: PointerEvent) => {
 		const btn = e.currentTarget as HTMLElement
-		dragState.delete(btn)
+		const tabs = btn.closest('.tabs') as HTMLElement | null
 
+		dragState.delete(btn)
 		btn.releasePointerCapture(e.pointerId)
 
-		const reset = () => {
-			btn.style.transition = ''
-			btn.style.transform = ''
-		}
+		const animatables = tabs
+			? Array.from(tabs.querySelectorAll<HTMLElement>('.tab, button'))
+			: []
+
+		animatables.forEach(el => el.style.transition = 'none')
 
 		await meta.dragger.drop()
-			reset()
+
+		requestAnimationFrame(() => {
+			btn.style.transform = ''
+			btn.style.transition = ''
+
+			requestAnimationFrame(() => {
+				animatables.forEach(el => el.style.transition = '')
+			})
+		})
 	}
 })
 
