@@ -35,11 +35,6 @@ const getBounds = (axis: 'x' | 'y', c: DOMRect, t: DOMRect) =>
 		? {min: c.left - t.left, max: c.right - t.right}
 		: {min: c.top - t.top, max: c.bottom - t.bottom}
 
-const getDelta = (e: PointerEvent, s: {axis: 'x' | 'y', origin: {x: number, y: number}}) =>
-	s.axis === 'x'
-		? e.clientX - s.origin.x
-		: e.clientY - s.origin.y
-
 export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surface) => ({
 	onDown: (e: PointerEvent) => {
 		if (e.button !== 0) return
@@ -71,11 +66,11 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 		const s = dragState.get(btn)
 		if (!s) return
 
-		const dx = Math.abs(e.clientX - s.origin.x)
-		const dy = Math.abs(e.clientY - s.origin.y)
+		const dx = e.clientX - s.origin.x
+		const dy = e.clientY - s.origin.y
 
 		if (!s.lifted) {
-			if (dx < DRAG_THRESHOLD && dy < DRAG_THRESHOLD)
+			if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD)
 				return
 
 			s.lifted = true
@@ -92,17 +87,29 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 			meta.dragger.start(surface.id)
 		}
 
-		const delta = getDelta(e, s)
-		const offset = clamp(delta, s.bounds.min, s.bounds.max)
+		const tabs = btn.closest('.tabs') as HTMLElement | null
+		const clampBounds = tabs?.getBoundingClientRect()
+		const primaryInside = clampBounds
+			? (s.axis === 'x'
+				? e.clientX >= clampBounds.left && e.clientX <= clampBounds.right
+				: e.clientY >= clampBounds.top && e.clientY <= clampBounds.bottom)
+			: false
 
-		btn.style.transform =
-			s.axis === 'x'
-				? `translate(${offset}px,0)`
-				: `translate(0,${offset}px)`
+		const primaryOffsetRaw = s.axis === 'x' ? dx : dy
+		const crossOffsetRaw = s.axis === 'x' ? dy : dx
 
-		const target =
-			getDockTarget(e) ||
-			btn.closest('[data-dock-id]')
+		const primaryOffset = (clampBounds && primaryInside)
+			? clamp(primaryOffsetRaw, s.bounds.min, s.bounds.max)
+			: primaryOffsetRaw
+
+		const crossOffset = primaryInside ? 0 : crossOffsetRaw
+
+		const offsetX = s.axis === 'x' ? primaryOffset : crossOffset
+		const offsetY = s.axis === 'y' ? primaryOffset : crossOffset
+
+		btn.style.transform = `translate(${offsetX}px,${offsetY}px)`
+
+		const target = getDockTarget(e) || btn.closest('[data-dock-id]')
 
 		if (target)
 			meta.dragger.preview(target, {x: e.clientX, y: e.clientY})
