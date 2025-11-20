@@ -134,7 +134,7 @@ export default css`
 
 			.spawn-dropdown {
 				display: flex;
-				align-items: center;
+				align-items: end;
 				flex: 1;
 
 				::part(label) {
