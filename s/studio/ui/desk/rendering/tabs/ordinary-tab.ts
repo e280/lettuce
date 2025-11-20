@@ -80,6 +80,15 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 
 			s.lifted = true
 			btn.style.transition = 'none'
+			const tabs = btn.closest('.tabs') as HTMLElement
+			const tab = btn.closest('.tab')
+
+			if(tab && tabs) {
+				const rect = tab.getBoundingClientRect()
+				const size = s.axis === 'x' ? rect.width : rect.height
+				tabs.style.setProperty('--tab-shift-size', `${size}px`)
+			}
+
 			meta.dragger.start(surface.id)
 		}
 
@@ -119,6 +128,7 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 		requestAnimationFrame(() => {
 			btn.style.transform = ''
 			btn.style.transition = ''
+			tabs?.style.removeProperty('--tab-shift-size')
 
 			requestAnimationFrame(() => {
 				animatables.forEach(el => el.style.transition = '')

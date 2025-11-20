@@ -25,7 +25,6 @@ export default css`
 	--gutter: #000;
 	--focal: transparent;
 	--pointerlock: yellow;
-	--tab-gap: 60px;
 }
 
 .layout {
@@ -266,11 +265,11 @@ export default css`
 	}
 
 	.tab[data-shift="positive"] {
-		transform: translateX(var(--tab-gap));
+		transform: translateX(var(--tab-shift-size));
 	}
 
 	.tab[data-shift="negative"] {
-		transform: translateX(calc(var(--tab-gap) * -1));
+		transform: translateX(calc(var(--tab-shift-size) * -1));
 	}
 
 	.insert-indicator {
@@ -436,11 +435,11 @@ export default css`
 .dock[data-taskbar-alignment="left"],
 .dock[data-taskbar-alignment="right"] {
 .tabs .tab[data-shift="positive"] {
-	transform: translateY(var(--tab-gap));
+	transform: translateY(var(--tab-shift-size));
 }
 
 .tabs .tab[data-shift="negative"] {
-	transform: translateY(calc(var(--tab-gap) * -1));
+	transform: translateY(calc(var(--tab-shift-size) * -1));
 }
 
 }
