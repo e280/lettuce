@@ -371,6 +371,7 @@ export default css`
 
 		.tabs  {
 			order: 1;
+			direction: rtl;
 			.tab {
 				justify-content: end;
 			}
