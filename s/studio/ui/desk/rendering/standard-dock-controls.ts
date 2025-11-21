@@ -94,6 +94,7 @@ export const standardControls: DockControlsFn = (ctx) => {
 	const vertical = ctx.dock.taskbarAlignment === "right" || ctx.dock.taskbarAlignment === "left"
 	return vertical
 		? html`
+			${standard.spawnPanel()}
 			<sl-icon-button name="grip-vertical" label="grip"></sl-icon-button>
 			<sl-dropdown placement="right-end">
 				<sl-button slot="trigger" caret></sl-button>
@@ -107,7 +108,6 @@ export const standardControls: DockControlsFn = (ctx) => {
 					${standard.taskbarAlignment.bottom()}
 				<sl-menu>
 			</sl-dropdown>
-			${standard.spawnPanel()}
 		`
 		: html`
 			${standard.spawnPanel()}
