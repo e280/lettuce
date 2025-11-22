@@ -139,7 +139,7 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 			const rect = btn.getBoundingClientRect()
 			const size = s.axis === 'x' ? rect.width : rect.height
 
-			meta.dragger.start(surface.id, size)
+			meta.tabDragger.start(surface.id, size)
 		}
 
 		const clampBounds = getClampBounds(btn)
@@ -167,9 +167,9 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 
 		const target = getDockTarget(e, btn) as HTMLElement
 		if (target) {
-			meta.dragger.preview(target, {x: e.clientX, y: e.clientY}, e)
+			meta.tabDragger.preview(target, {x: e.clientX, y: e.clientY}, e)
 		} else {
-			meta.dragger.clearPreview()
+			meta.tabDragger.clearPreview()
 		}
 	},
 
@@ -186,7 +186,7 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 
 		animatables.forEach(el => el.style.transition = 'none')
 
-		await meta.dragger.drop()
+		await meta.tabDragger.drop()
 
 		requestAnimationFrame(() => {
 			btn.style.transform = ''
@@ -212,7 +212,7 @@ export const OrdinaryTab = ({
 }) => {
 	const {icon, label} = meta.studio.panels[surface.panel]
 	const active = dock.activeChildIndex === surfaceIndex
-	const isDragged = meta.dragger.isSurfaceDragging(surface.id)
+	const isDragged = meta.tabDragger.isSurfaceDragging(surface.id)
 	const handlers = createDragHandlers(meta, dock, surface)
 
 	const close = () => meta.studio.layout.actions.deleteSurface(surface.id)
@@ -235,15 +235,15 @@ export const OrdinaryTab = ({
 
     }
 
-	const draggedSize = meta.dragger.tabSize
-	const shouldShift = draggedSize && meta.dragger.isDockIndicated(dock.id)
+	const draggedSize = meta.tabDragger.tabSize
+	const shouldShift = draggedSize && meta.tabDragger.isDockIndicated(dock.id)
 
 	return html`
 		<div
 			class=tab
 			style="${shouldShift ? `--tab-shift-size: ${draggedSize}px` : nothing}"
 			data-tab-for-surface=${surface.id}
-			data-shift=${meta.dragger.calculateShift(dock.id, surfaceIndex, surface.id) ?? nothing}
+			data-shift=${meta.tabDragger.calculateShift(dock.id, surfaceIndex, surface.id) ?? nothing}
 		>
 			<button
 				data-ordinary

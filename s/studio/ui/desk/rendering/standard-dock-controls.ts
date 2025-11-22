@@ -90,6 +90,11 @@ export const standardControlsParts = (ctx: DockContext) => {
 }
 
 export const standardControls: DockControlsFn = (ctx) => {
+	const startGripDrag = (event: PointerEvent) => {
+		event.stopPropagation()
+		ctx.meta.taskbarDragger.start(ctx.dock.id);
+		(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId)
+	}
 	const standard = standardControlsParts(ctx)
 	const vertical = ctx.dock.taskbarAlignment === "right" || ctx.dock.taskbarAlignment === "left"
 	return vertical
@@ -107,7 +112,11 @@ export const standardControls: DockControlsFn = (ctx) => {
 					${standard.taskbarAlignment.bottom()}
 				<sl-menu>
 			</sl-dropdown>
-			<sl-icon-button name="grip-vertical" label="grip"></sl-icon-button>
+			<sl-icon-button
+				name="grip-vertical"
+				label="grip"
+				@pointerdown=${startGripDrag}
+			></sl-icon-button>
 		`
 		: html`
 			${standard.spawnPanel()}
@@ -123,7 +132,11 @@ export const standardControls: DockControlsFn = (ctx) => {
 					${standard.splitVertical()}
 				<sl-menu>
 			</sl-dropdown>
-			<sl-icon-button name="grip-vertical" label="grip"></sl-icon-button>
+			<sl-icon-button
+				name="grip-vertical"
+				label="grip"
+				@pointerdown=${startGripDrag}
+			></sl-icon-button>
 		`
 }
 

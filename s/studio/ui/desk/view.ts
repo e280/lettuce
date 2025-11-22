@@ -7,6 +7,7 @@ import themeCss from "../theme.css.js"
 import {Studio} from "../../studio.js"
 import {Resizer} from "./resize/resizer.js"
 import {TabDragger} from "./parts/tab-dragger.js"
+import {TaskbarDragger} from "./parts/taskbar-dragger.js"
 import {makeLayoutRenderer} from "./rendering/utils/make-layout-renderer.js"
 
 export const Desk = (
@@ -22,7 +23,8 @@ export const Desk = (
 	const renderLayout = use.once(() => makeLayoutRenderer({
 		studio,
 		resizer,
-		dragger: new TabDragger(layout),
+		tabDragger: new TabDragger(layout),
+		taskbarDragger: new TaskbarDragger(layout),
 	}))
 
 	// render light-dom

@@ -450,6 +450,14 @@ export default css`
 	}
 
 }
+
+.dock[data-dock-drag] .taskbar {
+	scale: 1.02;
+	box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+	cursor: grabbing;
+	border-radius: 6px;
+	transition: scale 0.12s ease, box-shadow 0.12s ease;
+}
 }
 
 `

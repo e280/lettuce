@@ -12,7 +12,8 @@ export const renderDock =
 	(meta: LayoutMeta) =>
 	(dock: Dock) => {
 
-	const {studio, dragger} = meta
+	const {studio, tabDragger, ...rest} = meta
+	const taskbarDragger = rest.taskbarDragger
 
 	const activeSurface = (dock.activeChildIndex !== null)
 		? dock.children[dock.activeChildIndex]!
@@ -25,7 +26,7 @@ export const renderDock =
 		meta
 	})
 
-	const dropIndex = dragger.dockDropIndex(dock.id)
+	const dropIndex = tabDragger.dockDropIndex(dock.id)
 	const dropAtEnd = dropIndex === dock.children.length
 
 	const focalize = () => {
@@ -35,19 +36,47 @@ export const renderDock =
 		}
 	}
 
-	const isForeignDockIndicated = meta.dragger.isDockIndicated(dock.id) && dragger.sourceDockId !== dock.id
+	const isForeignDockIndicated = tabDragger.isDockIndicated(dock.id) && tabDragger.sourceDockId !== dock.id
+	const previewAlignment = taskbarDragger.previewAlignment(dock)
+
+	const onDockPointerMove = (event: PointerEvent) => {
+		if (!taskbarDragger.isDraggingDock(dock.id)) return
+		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+		taskbarDragger.updatePreviewFromPointer(
+			{left: rect.left, top: rect.top, width: rect.width, height: rect.height},
+			{x: event.clientX, y: event.clientY},
+		)
+	}
+
+	const onDockPointerUp = async(event: PointerEvent) => {
+		if (!taskbarDragger.isDraggingDock(dock.id)) return
+		await taskbarDragger.drop();
+		(event.currentTarget as HTMLElement).releasePointerCapture?.(event.pointerId)
+	}
+
+	const onDockPointerCancel = (event: PointerEvent) => {
+		if (!taskbarDragger.isDraggingDock(dock.id)) return
+		taskbarDragger.cancel();
+		(event.currentTarget as HTMLElement).releasePointerCapture?.(event.pointerId)
+	}
+
+	const isDraggingDock = taskbarDragger.isDraggingDock(dock.id)
 
 	return html`
 		<div
 			class=dock
 			part=dock
 			data-dock-id="${dock.id}"
-			data-taskbar-alignment="${dock.taskbarAlignment}"
+			data-taskbar-alignment="${previewAlignment}"
 			style="${sizingStyles(dock.size)}"
 
 			?data-is-focal="${isFocal}"
 			?data-is-pointer-locked="${isPointerLocked}"
 			@pointerover="${focalize}"
+			@pointermove=${onDockPointerMove}
+			@pointerup=${onDockPointerUp}
+			@pointercancel=${onDockPointerCancel}
+			?data-dock-drag=${isDraggingDock}
 
 			?data-drag="${isForeignDockIndicated}">
 
@@ -59,7 +88,7 @@ export const renderDock =
 				</div>
 
 				<div
-					style=${isForeignDockIndicated ? `--tab-shift-size: ${meta.dragger.tabSize}px;` : nothing}
+					style=${isForeignDockIndicated ? `--tab-shift-size: ${tabDragger.tabSize}px;` : nothing}
 					class="actions"
 				>
 					${controls}
