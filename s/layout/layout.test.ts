@@ -99,7 +99,7 @@ export default suite({
 	"splitting spawns fallback panel when configured": test(async() => {
 		const layout = new Layout({
 			stock: basicStock(),
-			fallbackPanel: "alpha" satisfies BasicPanelName,
+			defaultPanel: "alpha" satisfies BasicPanelName,
 		})
 		const [dock] = layout.explorer.docks.nodes
 		expect(layout.explorer.surfaces.count).is(3)

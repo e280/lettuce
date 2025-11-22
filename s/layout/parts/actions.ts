@@ -10,7 +10,7 @@ export class Actions {
 	constructor(
 		private lens: Lens<Blueprint>,
 		private stock: Stock,
-		private fallbackPanel?: string
+		private defaultPanel?: string
 	) {}
 
 	/** peform a custom arbitrary mutation */
@@ -179,8 +179,8 @@ export class Actions {
 			}
 		})
 
-		if (this.fallbackPanel && newDockId) {
-			const {index} = await this.addSurface(newDockId, this.fallbackPanel)
+		if (this.defaultPanel && newDockId) {
+			const {index} = await this.addSurface(newDockId, this.defaultPanel)
 			await this.setDockActiveSurface(newDockId, index)
 		}
 	}

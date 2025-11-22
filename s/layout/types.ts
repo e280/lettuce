@@ -3,7 +3,7 @@ export type Id = string
 
 export type LayoutOptions = {
 	stock: Stock
-	fallbackPanel?: string
+	defaultPanel?: string
 }
 
 export type Blueprint = {
@@ -66,4 +66,3 @@ export type Stock = {
 	default: () => Cell
 	empty: () => Cell
 }
-
