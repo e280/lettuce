@@ -15,9 +15,39 @@ const dragState = new WeakMap<HTMLElement, {
 	lifted: boolean
 }>()
 
-const getDockTarget = (e: PointerEvent) => {
-	const hit = document.elementFromPoint(e.clientX, e.clientY)
-	return hit?.closest('[data-dock-id]') as HTMLElement | null
+const getDockTarget = (e: PointerEvent, ignored: HTMLElement) => {
+	const x = e.clientX
+	const y = e.clientY
+
+	const stack = document.elementsFromPoint(x, y)
+	let node = stack.find(el => el !== ignored && !ignored.contains(el)) as HTMLElement | undefined
+	if (!node) return null
+
+	const visited = new Set<HTMLElement>()
+
+	while (node) {
+		if (visited.has(node)) break
+		visited.add(node)
+
+		const dock = node.closest?.('[data-dock-id]') as HTMLElement | null
+		if (dock) return dock
+
+		const root = node.shadowRoot
+		if (!root) break
+
+		const deeper = root.elementFromPoint(x, y) as HTMLElement | null
+		if (!deeper || deeper === node || deeper === ignored) break
+
+		node = deeper
+	}
+
+	const root = node?.getRootNode()
+	if (root instanceof ShadowRoot) {
+		const hostDock = (root.host as HTMLElement).closest('[data-dock-id]')
+		if (hostDock) return hostDock
+	}
+
+	return null
 }
 
 const getAxis = (dock: Dock) =>
@@ -30,10 +60,35 @@ const getOrigin = (e: PointerEvent) => ({
 	y: e.clientY
 })
 
-const getBounds = (axis: 'x' | 'y', c: DOMRect, t: DOMRect) =>
+const getBounds = (axis: 'x' | 'y', container: DOMRect, tab: DOMRect) =>
 	axis === 'x'
-		? {min: c.left - t.left, max: c.right - t.right}
-		: {min: c.top - t.top, max: c.bottom - t.bottom}
+		? {min: container.left - tab.left, max: container.right - tab.right}
+		: {min: container.top - tab.top, max: container.bottom - tab.bottom}
+
+const getClampBounds = (btn: HTMLElement) => {
+	const tabs = btn.closest('.tabs') as HTMLElement | null
+	return tabs ? tabs.getBoundingClientRect() : null
+}
+
+const isInside = (e: PointerEvent, rect: DOMRect) =>
+	e.clientX >= rect.left &&
+	e.clientX <= rect.right &&
+	e.clientY >= rect.top &&
+	e.clientY <= rect.bottom
+
+const escapeDistance = (e: PointerEvent, r: DOMRect) => {
+	const dx =
+		e.clientX < r.left ? r.left - e.clientX :
+		e.clientX > r.right ? e.clientX - r.right :
+		0
+
+	const dy =
+		e.clientY < r.top ? r.top - e.clientY :
+		e.clientY > r.bottom ? e.clientY - r.bottom :
+		0
+
+	return {dx, dy}
+}
 
 export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surface) => ({
 	onDown: (e: PointerEvent) => {
@@ -75,46 +130,44 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 
 			s.lifted = true
 			btn.style.transition = 'none'
-			const tabs = btn.closest('.tabs') as HTMLElement
-			const tab = btn.closest('.tab')
+			btn.style.zIndex = '9999'
+			btn.style.pointerEvents = 'none'
 
-			if(tab && tabs) {
-				const rect = tab.getBoundingClientRect()
-				const size = s.axis === 'x' ? rect.width : rect.height
-				tabs.style.setProperty('--tab-shift-size', `${size}px`)
-			}
+			const rect = btn.getBoundingClientRect()
+			const size = s.axis === 'x' ? rect.width : rect.height
 
-			meta.dragger.start(surface.id)
+			meta.dragger.start(surface.id, size)
 		}
 
-		const tabs = btn.closest('.tabs') as HTMLElement | null
-		const clampBounds = tabs?.getBoundingClientRect()
-		const primaryInside = clampBounds
-			? (s.axis === 'x'
-				? e.clientX >= clampBounds.left && e.clientX <= clampBounds.right
-				: e.clientY >= clampBounds.top && e.clientY <= clampBounds.bottom)
-			: false
+		const clampBounds = getClampBounds(btn)
+		let primaryInside = false
 
-		const primaryOffsetRaw = s.axis === 'x' ? dx : dy
-		const crossOffsetRaw = s.axis === 'x' ? dy : dx
+		if (clampBounds) {
+			const inside = isInside(e, clampBounds)
+			const {dx: dxOut, dy: dyOut} = escapeDistance(e, clampBounds)
+			const ESCAPE_MARGIN = 0
 
-		const primaryOffset = (clampBounds && primaryInside)
-			? clamp(primaryOffsetRaw, s.bounds.min, s.bounds.max)
-			: primaryOffsetRaw
+			primaryInside = inside || (dxOut < ESCAPE_MARGIN && dyOut < ESCAPE_MARGIN)
+		}
 
-		const crossOffset = primaryInside ? 0 : crossOffsetRaw
+		const primaryOffset = s.axis === 'x' ? dx : dy
+		const oxLocked = s.axis === 'x' ? clamp(primaryOffset, s.bounds.min, s.bounds.max) : 0
+		const oyLocked = s.axis === 'y' ? clamp(primaryOffset, s.bounds.min, s.bounds.max) : 0
 
-		const offsetX = s.axis === 'x' ? primaryOffset : crossOffset
-		const offsetY = s.axis === 'y' ? primaryOffset : crossOffset
+		if (clampBounds && primaryInside) {
+			btn.style.position = 'static'
+			btn.style.transform = `translate(${oxLocked}px, ${oyLocked}px)`
+		} else {
+			btn.style.position = 'fixed'
+			btn.style.transform = `translate(${dx}px, ${dy}px)`
+		}
 
-		btn.style.transform = `translate(${offsetX}px,${offsetY}px)`
-
-		const target = getDockTarget(e) || btn.closest('[data-dock-id]')
-
-		if (target)
-			meta.dragger.preview(target, {x: e.clientX, y: e.clientY})
-		else
+		const target = getDockTarget(e, btn) as HTMLElement
+		if (target) {
+			meta.dragger.preview(target, {x: e.clientX, y: e.clientY}, e)
+		} else {
 			meta.dragger.clearPreview()
+		}
 	},
 
 	onEnd: async (e: PointerEvent) => {
@@ -135,7 +188,9 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 		requestAnimationFrame(() => {
 			btn.style.transform = ''
 			btn.style.transition = ''
-			tabs?.style.removeProperty('--tab-shift-size')
+			btn.style.position = ''
+			btn.style.zIndex = ''
+			btn.style.pointerEvents = ''
 
 			requestAnimationFrame(() => {
 				animatables.forEach(el => el.style.transition = '')
@@ -147,63 +202,56 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 export const OrdinaryTab = ({
 	meta, dock, surface, surfaceIndex
 }: {
-  meta: LayoutMeta
-  dock: Dock
-  surface: Surface
-  surfaceIndex: number
+	meta: LayoutMeta
+	dock: Dock
+	surface: Surface
+	surfaceIndex: number
 }) => {
 	const {icon, label} = meta.studio.panels[surface.panel]
 	const active = dock.activeChildIndex === surfaceIndex
 	const isDragged = meta.dragger.isSurfaceDragging(surface.id)
 	const handlers = createDragHandlers(meta, dock, surface)
 
-	const insideXButton = (event: MouseEvent) => {
-		const target = event.target as Element
-		const tab = event.currentTarget as HTMLElement
-		const x = tab.querySelector(".x") as HTMLElement
-		return event.target === x || x.contains(target)
+	const insideX = (e: MouseEvent) => {
+		const tab = e.currentTarget as HTMLElement
+		const x = tab.querySelector('.x') as HTMLElement
+		return e.target === x || x.contains(e.target as Node)
 	}
 
-	const close = () => meta
-		.studio
-		.layout
-		.actions
-		.deleteSurface(surface.id)
+	const close = () => meta.studio.layout.actions.deleteSurface(surface.id)
+	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
 
-	const activate = () => meta
-		.studio
-		.layout
-		.actions
-		.setDockActiveSurface(dock.id, surfaceIndex)
-
-	const click = (event: MouseEvent) => {
-		if (!active) {
-			activate()
-			return
-		}
-		if (insideXButton(event))
-			close()
+	const click = (e: MouseEvent) => {
+		if (!active) return activate()
+		if (insideX(e)) close()
 	}
+
+	const draggedSize = meta.dragger.tabSize
+	const shouldShift = draggedSize && meta.dragger.isDockIndicated(dock.id)
 
 	return html`
-		<div class=tab
-  		data-tab-for-surface=${surface.id}
-  		data-shift=${meta.dragger.calculateShift(dock.id, surfaceIndex, surface.id) ?? nothing}
-  	>
-  		<button
-  			data-ordinary
-      	title=${label}
-      	?data-active=${active}
-      	?data-drag-source=${isDragged}
-      	@click=${click}
-      	@pointerdown=${handlers.onDown}
-      	@pointermove=${handlers.onMove}
-      	@pointerup=${handlers.onEnd}
-      	@pointercancel=${handlers.onEnd}
-      >
-      	<span class=icon>${icon({dock, meta})}</span>
-      	<span class=x ?data-available=${active}>${active ? icon_feather_x : nothing}</span>
-  		</button>
+		<div
+			class=tab
+			style="${shouldShift ? `--tab-shift-size: ${draggedSize}px` : nothing}"
+			data-tab-for-surface=${surface.id}
+			data-shift=${meta.dragger.calculateShift(dock.id, surfaceIndex, surface.id) ?? nothing}
+		>
+			<button
+				data-ordinary
+				title=${label}
+				?data-active=${active}
+				?data-drag-source=${isDragged}
+				@click=${click}
+				@pointerdown=${handlers.onDown}
+				@pointermove=${handlers.onMove}
+				@pointerup=${handlers.onEnd}
+				@pointercancel=${handlers.onEnd}
+			>
+				<span class=icon>${icon({dock, meta})}</span>
+				<span class=x ?data-available=${active}>
+					${active ? icon_feather_x : nothing}
+				</span>
+			</button>
 		</div>
-  `
+	`
 }

@@ -134,7 +134,7 @@ export default css`
 
 			.spawn-dropdown {
 				display: flex;
-				align-items: end;
+				align-items: start;
 				flex: 1;
 
 				::part(label) {
@@ -264,14 +264,6 @@ export default css`
 		transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
 	}
 
-	.tab[data-shift="positive"] {
-		transform: translateX(var(--tab-shift-size));
-	}
-
-	.tab[data-shift="negative"] {
-		transform: translateX(calc(var(--tab-shift-size) * -1));
-	}
-
 	.insert-indicator {
 		position: absolute;
 		top: 0;
@@ -370,7 +362,6 @@ export default css`
 		justify-content: space-between;
 
 		.tabs  {
-			order: 1;
 			direction: rtl;
 			.tab {
 				justify-content: end;
@@ -397,10 +388,6 @@ export default css`
 		align-items: start;
 		height: 100%;
 		justify-content: space-between;
-
-		.tabs  {
-			order: 1;
-		}
 
 		.tabs, .actions {
 			flex-direction: column;
@@ -433,16 +420,36 @@ export default css`
 	}
 }
 
+.dock[data-taskbar-alignment="top"],
+.dock[data-taskbar-alignment="bottom"] {
+	.tabs .tab[data-shift="positive"] {
+		transform: translateX(var(--tab-shift-size));
+	}
+	.tabs .tab[data-shift="negative"] {
+		transform: translateX(calc(var(--tab-shift-size) * -1));
+	}
+	.actions {
+		> :first-child {
+			transform: translateX(calc(var(--tab-shift-size)));
+		}
+	}
+}
+
 .dock[data-taskbar-alignment="left"],
 .dock[data-taskbar-alignment="right"] {
-.tabs .tab[data-shift="positive"] {
-	transform: translateY(var(--tab-shift-size));
-}
+	.tabs .tab[data-shift="positive"] {
+		transform: translateY(var(--tab-shift-size));
+	}
+	.tabs .tab[data-shift="negative"] {
+		transform: translateY(calc(var(--tab-shift-size) * -1));
+	}
+	.actions {
+		> :first-child {
+			transform: translateY(calc(var(--tab-shift-size)));
+		}
+	}
 
-.tabs .tab[data-shift="negative"] {
-	transform: translateY(calc(var(--tab-shift-size) * -1));
 }
-
 }
 
 `

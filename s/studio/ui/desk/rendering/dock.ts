@@ -1,6 +1,7 @@
 
-import {html} from "lit"
+import {html, nothing} from "lit"
 import {is} from "@e280/stz"
+
 import {renderTabs} from "./tabs.js"
 import {renderSurface} from "./surface.js"
 import {Dock} from "../../../../layout/types.js"
@@ -34,6 +35,8 @@ export const renderDock =
 		}
 	}
 
+	const isForeignDockIndicated = meta.dragger.isDockIndicated(dock.id) && dragger.sourceDockId !== dock.id
+
 	return html`
 		<div
 			class=dock
@@ -46,7 +49,7 @@ export const renderDock =
 			?data-is-pointer-locked="${isPointerLocked}"
 			@pointerover="${focalize}"
 
-			?data-drag="${dragger.isDockIndicated(dock.id)}">
+			?data-drag="${isForeignDockIndicated}">
 
 			<div class=taskbar part=taskbar>
 				<div
@@ -55,7 +58,10 @@ export const renderDock =
 					${renderTabs(meta, dock)}
 				</div>
 
-				<div class=actions>
+				<div
+					style=${isForeignDockIndicated ? `--tab-shift-size: ${meta.dragger.tabSize}px;` : nothing}
+					class="actions"
+				>
 					${controls}
 				</div>
 			</div>

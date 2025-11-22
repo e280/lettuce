@@ -6,6 +6,7 @@ import {Actions} from "../../../../layout/parts/actions.js"
 import {Explorer} from "../../../../layout/parts/explorer.js"
 
 export type TabDragOperation = {
+	tabSize: number
 	surfaceId: Id
 	sourceDockId: Id
 	sourceIndex: number
@@ -26,6 +27,15 @@ export class TabDragger {
 		this.#explorer = layout.explorer
 		this.#actions = layout.actions
 		this.#operation = signal<TabDragOperation | undefined>(undefined)
+	}
+
+	set tabSize(v: number) {
+		if(this.#operation.value)
+			this.#operation.value.tabSize = v
+	}
+
+	get tabSize(): number | undefined {
+		return this.#operation.value?.tabSize
 	}
 
 	isSurfaceDragging(surfaceId: Id) {
@@ -50,7 +60,7 @@ export class TabDragger {
 			: undefined
 	}
 
-	start(surfaceId: Id) {
+	start(surfaceId: Id, tabSize: number) {
 		const report = this.#explorer.surfaces.requireReport(surfaceId)
 		const parentDock = this.#explorer.surfaces.parent(surfaceId)
 
@@ -59,17 +69,57 @@ export class TabDragger {
 			sourceDockId: parentDock.id,
 			sourceIndex: report.index,
 			proposedDestination: null,
+			tabSize: tabSize
 		}
 	}
 
-	preview(dockElement: HTMLElement, pointer: PointerPoint) {
+ 	isHoveringTabs(e: PointerEvent, dockEl: HTMLElement, ignored: HTMLElement) {
+		const tabs = dockEl.querySelector('.tabs') as HTMLElement | null
+		if (!tabs) return false
+
+		const x = e.clientX
+		const y = e.clientY
+
+		let node: Element | null = document.elementFromPoint(x, y)
+		const visited = new Set<Element>()
+
+		while (node) {
+			if (visited.has(node)) break
+			visited.add(node)
+
+			if (node !== ignored && !ignored.contains(node)) {
+				if (node === tabs || tabs.contains(node))
+					return true
+			}
+
+			const root = (node as HTMLElement).shadowRoot
+			if (!root) break
+
+			const deeper = root.elementFromPoint(x, y)
+			if (!deeper || deeper === node) break
+
+			node = deeper
+		}
+
+		return false
+	}
+
+	preview(dockElement: HTMLElement, pointer: PointerPoint, e: PointerEvent) {
 		const operation = this.#operation.value
 		if (!operation)
 			return
 
 		const dockId = dockElement.getAttribute("data-dock-id")
-		if (!dockId)
+
+		const hoveringTabs = this.isHoveringTabs(e, dockElement, e.currentTarget as HTMLElement)
+
+		if (!dockId || !hoveringTabs) {
+			this.#operation.value = {
+				...operation,
+				proposedDestination: null,
+			}
 			return
+		}
 
 		const dock = this.#explorer.docks.require(dockId)
 		const surfaceIndex = this.#calculateInsertIndex(dockElement, pointer, dock)
@@ -111,6 +161,10 @@ export class TabDragger {
 		return false
 	}
 
+	get sourceDockId() {
+    return this.#operation.value?.sourceDockId
+  }
+
 	calculateShift(dockId: Id, surfaceIndex: number, surfaceId: Id) {
 		const dropIndex = this.dockDropIndex(dockId)
 		const sourceIndex = this.sourceIndexForDock(dockId)
@@ -119,18 +173,21 @@ export class TabDragger {
 		if (isDragged || dropIndex == null)
 			return
 
-		if (sourceIndex == null)
+		if (sourceIndex == null) {
 			return surfaceIndex >= dropIndex ? 'positive' : undefined
+		}
 
-		if (dropIndex > sourceIndex)
+		if (dropIndex > sourceIndex) {
 			return (surfaceIndex > sourceIndex && surfaceIndex < dropIndex)
-    		? 'negative'
-    		: undefined
+	   		? 'negative'
+	   		: undefined
+		}
 
 		if (dropIndex < sourceIndex)
 			return (surfaceIndex >= dropIndex && surfaceIndex < sourceIndex)
-    		? 'positive'
-    		: undefined
+	   		? 'positive'
+	   		: undefined
+
 
 		return
 	}
