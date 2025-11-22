@@ -93,6 +93,9 @@ const escapeDistance = (e: PointerEvent, r: DOMRect) => {
 export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surface) => ({
 	onDown: (e: PointerEvent) => {
 		if (e.button !== 0) return
+		const target = e.target as HTMLElement
+        if (target.closest('.x'))
+        	return
 
 		const btn = e.currentTarget as HTMLElement
 		if (dragState.has(btn)) return
@@ -212,19 +215,25 @@ export const OrdinaryTab = ({
 	const isDragged = meta.dragger.isSurfaceDragging(surface.id)
 	const handlers = createDragHandlers(meta, dock, surface)
 
-	const insideX = (e: MouseEvent) => {
-		const tab = e.currentTarget as HTMLElement
-		const x = tab.querySelector('.x') as HTMLElement
-		return e.target === x || x.contains(e.target as Node)
-	}
-
 	const close = () => meta.studio.layout.actions.deleteSurface(surface.id)
 	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
 
 	const click = (e: MouseEvent) => {
-		if (!active) return activate()
-		if (insideX(e)) close()
-	}
+        const target = e.target as HTMLElement
+        const clickedX = target.closest('.x')
+
+        if (!active) {
+            activate()
+            return
+        }
+
+        if (clickedX) {
+            e.stopPropagation()
+            close()
+            return
+        }
+
+    }
 
 	const draggedSize = meta.dragger.tabSize
 	const shouldShift = draggedSize && meta.dragger.isDockIndicated(dock.id)
