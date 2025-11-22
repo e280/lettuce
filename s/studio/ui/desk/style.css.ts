@@ -422,6 +422,9 @@ export default css`
 
 .dock[data-taskbar-alignment="top"],
 .dock[data-taskbar-alignment="bottom"] {
+	&[data-drag] .tabs {
+		padding-right: calc(var(--tab-shift-size) + 0.2em);
+	}
 	.tabs .tab[data-shift="positive"] {
 		transform: translateX(var(--tab-shift-size));
 	}
@@ -437,6 +440,9 @@ export default css`
 
 .dock[data-taskbar-alignment="left"],
 .dock[data-taskbar-alignment="right"] {
+	&[data-drag] .tabs {
+		padding-bottom: calc(var(--tab-shift-size) + 0.2em);
+	}
 	.tabs .tab[data-shift="positive"] {
 		transform: translateY(var(--tab-shift-size));
 	}
