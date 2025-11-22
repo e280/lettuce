@@ -108,10 +108,12 @@
         default: () => b.horizontal(1, b.dock(1, "alpha", "bravo", "charlie")),
         empty: () => b.blank(),
       })),
+      fallbackPanel: "alpha", // optional default panel for new splits
     })
     ```
     - panels are referenced by their string keys.
     - optional `limit` restricts how many copies of a panel can exist at the same time (default unlimited). once saturated, the adder buttons disable.
+    - optional `fallbackPanel` opens a default panel on new split docks (pick one that can open another instance).
     - `Layout` is a facility for reading and manipulating.
     - `Builder.fn` helps you build a tree of layout nodes with less verbosity (note the spooky-typing double-invocation).
     - `stock.empty` defines the fallback state for when a user closes everything.

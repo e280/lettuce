@@ -10,6 +10,7 @@ export class Layout {
 	static readonly version = 4
 
 	stock: Stock
+	fallbackPanel?: string
 	explorer: Explorer
 	actions: Actions
 	on: Sub<[Blueprint]>
@@ -18,6 +19,7 @@ export class Layout {
 
 	constructor(options: LayoutOptions) {
 		this.stock = options.stock
+		this.fallbackPanel = options.fallbackPanel
 		const root = options.stock.default()
 
 		this.#prism = new Prism({version: Layout.version, root})
@@ -25,7 +27,7 @@ export class Layout {
 		this.on = this.#prism.on
 
 		this.explorer = new Explorer(() => this.#lens.state.root as Cell)
-		this.actions = new Actions(this.#lens, options.stock)
+		this.actions = new Actions(this.#lens, options.stock, options.fallbackPanel)
 	}
 
 	getBlueprint() {

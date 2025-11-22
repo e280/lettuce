@@ -3,6 +3,7 @@ export type Id = string
 
 export type LayoutOptions = {
 	stock: Stock
+	fallbackPanel?: string
 }
 
 export type Blueprint = {

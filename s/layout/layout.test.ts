@@ -96,6 +96,21 @@ export default suite({
 		expect(dockB.size).is(0.5)
 	}),
 
+	"splitting spawns fallback panel when configured": test(async() => {
+		const layout = new Layout({
+			stock: basicStock(),
+			fallbackPanel: "alpha" satisfies BasicPanelName,
+		})
+		const [dock] = layout.explorer.docks.nodes
+		expect(layout.explorer.surfaces.count).is(3)
+		await layout.actions.splitDock(dock.id, false)
+		const newDock = layout.explorer.docks.nodes.find(d => d.id !== dock.id)!
+		expect(layout.explorer.surfaces.count).is(4)
+		expect(newDock.children.length).is(1)
+		expect(newDock.children.at(0)!.panel).is("alpha")
+		expect(newDock.activeChildIndex).is(0)
+	}),
+
 	...(() => {
 		let id = 0
 		const makeCell = (size: number): Cell => ({

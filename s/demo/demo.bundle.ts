@@ -37,6 +37,7 @@ const layout = new Layout({
 		default: () => b.horizontal(1, b.dock(1, "about", "gnu", "brotein")),
 		empty: () => b.blank(),
 	})),
+	fallbackPanel: "about",
 })
 
 const persistence = new Persistence({

@@ -10,6 +10,7 @@ export class Actions {
 	constructor(
 		private lens: Lens<Blueprint>,
 		private stock: Stock,
+		private fallbackPanel?: string
 	) {}
 
 	/** peform a custom arbitrary mutation */
@@ -127,7 +128,9 @@ export class Actions {
 	}
 
 	async splitDock(dockId: Id, vertical: boolean) {
-		return this.mutate(explorer => {
+		let newDockId: Id | null = null
+
+		await this.mutate(explorer => {
 			const {node: dock, index: dockIndex} = explorer.docks.requireReport(dockId)
 			const parentCell = explorer.docks.parent(dockId)
 			const copecetic = vertical === parentCell.vertical
@@ -138,35 +141,48 @@ export class Actions {
 
 				const newDock: Dock = {
 					id: freshId(),
-					kind: "dock",
+					kind: 'dock',
 					children: [],
 					activeChildIndex: null,
 					size: halfsize,
-					taskbarAlignment: dock.taskbarAlignment,
+					taskbarAlignment: dock.taskbarAlignment
 				}
 
+				newDockId = newDock.id
 				parentCell.children.splice(dockIndex + 1, 0, newDock)
 			}
+
 			else {
 				const previousSize = dock.size
 				dock.size = 0.5
+
+				const newDock: Dock = {
+					id: freshId(),
+					kind: 'dock',
+					size: 0.5,
+					children: [],
+					activeChildIndex: null,
+					taskbarAlignment: dock.taskbarAlignment
+				}
+
+				newDockId = newDock.id
+
 				const newCell: Cell = {
 					id: freshId(),
-					kind: "cell",
+					kind: 'cell',
 					size: previousSize,
 					vertical,
-					children: [dock, {
-						id: freshId(),
-						kind: "dock",
-						size: 0.5,
-						children: [],
-						activeChildIndex: null,
-						taskbarAlignment: dock.taskbarAlignment,
-					}],
+					children: [dock, newDock]
 				}
+
 				parentCell.children.splice(dockIndex, 1, newCell)
 			}
 		})
+
+		if (this.fallbackPanel && newDockId) {
+			const {index} = await this.addSurface(newDockId, this.fallbackPanel)
+			await this.setDockActiveSurface(newDockId, index)
+		}
 	}
 
 	async moveSurface(
