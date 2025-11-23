@@ -124,13 +124,19 @@ export default css`
 		}
 
 		> .tabs {
-			flex: 0 0 auto;
+			flex: 1;
 			display: flex;
 			flex-direction: row;
 		}
 
 		.actions {
 			flex: 1;
+			justify-content: end;
+
+			.standard-button svg {
+				width: 24px;
+				height: 24px;
+			}
 
 			.spawn-dropdown {
 				display: flex;
@@ -257,6 +263,8 @@ export default css`
 }
 
 .tabs {
+	justify-content: start;
+
 	.tab {
 		display: flex;
 		flex-direction: row;
@@ -350,9 +358,6 @@ export default css`
 }
 
 .dock[data-taskbar-alignment="right"] {
-	> .surface {
-		direction: rtl;
-	}
 
 	> .taskbar {
 		order: 1;
@@ -457,12 +462,20 @@ export default css`
 
 }
 
+.dock .taskbar {
+	margin: 0;
+	transition: scale 0.2s ease, box-shadow 0.2s ease;
+}
+
 .dock[data-dock-drag] .taskbar {
-	scale: 1.02;
-	box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+	scale: 0.99;
+	box-shadow:
+	0 0 8px rgba(0,0,0,0.15),
+	0 0 40px rgba(0,0,0,0.20);
 	cursor: grabbing;
 	border-radius: 6px;
-	transition: scale 0.12s ease, box-shadow 0.12s ease;
+	margin: 5px;
+	transition: scale 0.2s ease, box-shadow 0.2s ease;
 }
 }
 
