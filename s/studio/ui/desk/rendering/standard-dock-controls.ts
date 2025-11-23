@@ -7,7 +7,6 @@ import {TaskbarAlignment} from "../../../../layout/types.js"
 import {DockContext, DockControlsFn} from "../../../types.js"
 import {icon_feather_x} from "../../icons/groups/feather/x.js"
 import {icon_feather_home} from "../../icons/groups/feather/home.js"
-import {icon_feather_plus} from "../../icons/groups/feather/plus.js"
 import {icon_akar_panel_split_row} from "../../icons/groups/akar/panel-split-row.js"
 import {icon_akar_panel_split_column} from "../../icons/groups/akar/panel-split-column.js"
 
@@ -17,14 +16,16 @@ export const standardControlsParts = (ctx: DockContext) => {
 	const {studio} = ctx.meta
 	const {layout} = studio
 	const dock = ctx.dock
-	const vertical = ctx.dock.taskbarAlignment === "right" || ctx.dock.taskbarAlignment === "left"
 
 	const split = (vertical: boolean) => () => html`
-		<sl-menu-item @click=${() => layout.actions.splitDock(dock.id, vertical)}>
-			<sl-button title=${vertical ? "split vertically" : "split horizontally"}>
-				${vertical ? icon_akar_panel_split_column : icon_akar_panel_split_row}
-			</sl-button>
-		</sl-menu-item>
+		<sl-button
+			size=small
+			class="standard-button"
+			@click=${() => layout.actions.splitDock(dock.id, vertical)}
+			title=${vertical ? "split vertically" : "split horizontally"}
+		>
+			${vertical ? icon_akar_panel_split_column : icon_akar_panel_split_row}
+		</sl-button>
 	`
 
 	const align = (alignment: TaskbarAlignment, icon: () => Content) => html`
@@ -37,11 +38,14 @@ export const standardControlsParts = (ctx: DockContext) => {
 
 	return {
 		closeDock: () => html`
-			<sl-menu-item @click=${() => layout.actions.deleteDock(dock.id)}>
-				<sl-button class=x title="close dock" >
-					${icon_feather_x}
-				</sl-button>
-			</sl-menu-item>
+			<sl-button
+				size=small
+				class=x
+				title="close dock"
+				@click=${() => layout.actions.deleteDock(dock.id)}
+			>
+				${icon_feather_x}
+			</sl-button>
 		`,
 		splitHorizontal: split(false),
 		splitVertical: split(true),
@@ -52,33 +56,21 @@ export const standardControlsParts = (ctx: DockContext) => {
 			left: () => align("left", () => "⬅️"),
 		},
 		spawnPanel: () => {
-			const active = dock.activeChildIndex === null
 			const choices = listPanelsChoices(ctx.meta, dock)
 
 			return html`
-				<sl-dropdown class=spawn-dropdown placement=${vertical ? "right-start" : "top"}>
-					<sl-button
-						slot=trigger
-						data-adder
-						title="add panel"
-						?data-active="${active}"
-					>
-						<span class=icon>
-							${icon_feather_plus}
+				${choices.map(choice => html`
+					<sl-menu-item
+						style="padding-bottom: 0.5em;"
+						value=${choice.name}
+						?disabled=${choice.disabled}
+						@click=${choice.open}>
+						<span style="display: flex; padding-right: 0.5em;" slot=prefix class="icon">${choice.icon}</span>
+						<span style="width: 100%;">
+							${choice.label}
 						</span>
-					</sl-button>
-					<sl-menu>
-						${choices.map(choice => html`
-							<sl-menu-item
-								value=${choice.name}
-								?disabled=${choice.disabled}
-								@click=${choice.open}>
-								<span slot=prefix class="icon">${choice.icon}</span>
-								${choice.label}
-							</sl-menu-item>
-						`)}
-					</sl-menu>
-				</sl-dropdown>
+					</sl-menu-item>
+				`)}
 			`
 		},
 		resetLayout: () => html`
@@ -99,17 +91,15 @@ export const standardControls: DockControlsFn = (ctx) => {
 	const vertical = ctx.dock.taskbarAlignment === "right" || ctx.dock.taskbarAlignment === "left"
 	return vertical
 		? html`
-			${standard.spawnPanel()}
 			<sl-dropdown placement="right-end">
 				<sl-button slot="trigger" caret></sl-button>
 				<sl-menu>
-					${standard.closeDock()}
-					${standard.splitHorizontal()}
-					${standard.splitVertical()}
-					${standard.taskbarAlignment.top()}
-					${standard.taskbarAlignment.left()}
-					${standard.taskbarAlignment.right()}
-					${standard.taskbarAlignment.bottom()}
+					<div style="display: flex; padding: 0.5em 0;">
+						${standard.closeDock()}
+						${standard.splitHorizontal()}
+						${standard.splitVertical()}
+					</div>
+					${standard.spawnPanel()}
 				<sl-menu>
 			</sl-dropdown>
 			<sl-icon-button
@@ -119,17 +109,15 @@ export const standardControls: DockControlsFn = (ctx) => {
 			></sl-icon-button>
 		`
 		: html`
-			${standard.spawnPanel()}
 			<sl-dropdown placement="top">
 				<sl-button slot="trigger" caret></sl-button>
 				<sl-menu>
-					${standard.closeDock()}
-					${standard.taskbarAlignment.left()}
-					${standard.taskbarAlignment.top()}
-					${standard.taskbarAlignment.bottom()}
-					${standard.taskbarAlignment.right()}
-					${standard.splitHorizontal()}
-					${standard.splitVertical()}
+					<div style="display: flex; padding: 0.5em 0;">
+						${standard.closeDock()}
+						${standard.splitHorizontal()}
+						${standard.splitVertical()}
+					</div>
+					${standard.spawnPanel()}
 				<sl-menu>
 			</sl-dropdown>
 			<sl-icon-button
