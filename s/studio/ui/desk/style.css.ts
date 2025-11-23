@@ -365,6 +365,7 @@ export default css`
 		align-items: end;
 		height: 100%;
 		justify-content: space-between;
+		right: 0;
 
 		.tabs  {
 			direction: rtl;
@@ -414,6 +415,7 @@ export default css`
 	> .taskbar {
 		order: 1;
 		justify-content: space-between;
+		bottom: 0;
 
 		.tabs button {
 			border-top: 0.1em solid transparent;
@@ -427,6 +429,9 @@ export default css`
 
 .dock[data-taskbar-alignment="top"],
 .dock[data-taskbar-alignment="bottom"] {
+	&[data-dock-drag] .taskbar {
+		width: 99%;
+	}
 	&[data-drag] .tabs {
 		padding-right: calc(var(--tab-shift-size) + 0.2em);
 	}
@@ -445,6 +450,9 @@ export default css`
 
 .dock[data-taskbar-alignment="left"],
 .dock[data-taskbar-alignment="right"] {
+	&[data-dock-drag] .taskbar {
+		height: 99%;
+	}
 	&[data-drag] .tabs {
 		padding-bottom: calc(var(--tab-shift-size) + 0.2em);
 	}
@@ -464,18 +472,19 @@ export default css`
 
 .dock .taskbar {
 	margin: 0;
-	transition: scale 0.2s ease, box-shadow 0.2s ease;
+	transition:
+		margin 0.2s ease;
+		box-shadow 0.2s ease,
 }
 
 .dock[data-dock-drag] .taskbar {
-	scale: 0.99;
+	position: absolute;
 	box-shadow:
 	0 0 8px rgba(0,0,0,0.15),
 	0 0 40px rgba(0,0,0,0.20);
 	cursor: grabbing;
 	border-radius: 6px;
 	margin: 5px;
-	transition: scale 0.2s ease, box-shadow 0.2s ease;
 }
 }
 
