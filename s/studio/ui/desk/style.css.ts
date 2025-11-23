@@ -471,6 +471,7 @@ export default css`
 }
 
 .dock .taskbar {
+	backdrop-filter: blur(5px);
 	margin: 0;
 	transition:
 		margin 0.2s ease;
@@ -479,12 +480,13 @@ export default css`
 
 .dock[data-dock-drag] .taskbar {
 	position: absolute;
+	z-index: 100;
 	box-shadow:
 	0 0 8px rgba(0,0,0,0.15),
 	0 0 40px rgba(0,0,0,0.20);
 	cursor: grabbing;
 	border-radius: 6px;
-	margin: 5px;
+	margin: 0.1em;
 }
 }
 
