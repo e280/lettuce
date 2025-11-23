@@ -51,13 +51,11 @@ export const renderDock =
 	const onDockPointerUp = async(event: PointerEvent) => {
 		if (!taskbarDragger.isDraggingDock(dock.id)) return
 		await taskbarDragger.drop();
-		(event.currentTarget as HTMLElement).releasePointerCapture?.(event.pointerId)
 	}
 
 	const onDockPointerCancel = (event: PointerEvent) => {
 		if (!taskbarDragger.isDraggingDock(dock.id)) return
 		taskbarDragger.cancel();
-		(event.currentTarget as HTMLElement).releasePointerCapture?.(event.pointerId)
 	}
 
 	const isDraggingDock = taskbarDragger.isDraggingDock(dock.id)

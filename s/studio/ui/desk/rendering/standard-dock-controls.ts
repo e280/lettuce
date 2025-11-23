@@ -85,7 +85,6 @@ export const standardControls: DockControlsFn = (ctx) => {
 	const startGripDrag = (event: PointerEvent) => {
 		event.stopPropagation()
 		ctx.meta.taskbarDragger.start(ctx.dock.id);
-		(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId)
 	}
 	const standard = standardControlsParts(ctx)
 	const vertical = ctx.dock.taskbarAlignment === "right" || ctx.dock.taskbarAlignment === "left"

@@ -178,7 +178,6 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 		const tabs = btn.closest('.tabs') as HTMLElement | null
 
 		dragState.delete(btn)
-		btn.releasePointerCapture(e.pointerId)
 
 		const animatables = tabs
 			? Array.from(tabs.querySelectorAll<HTMLElement>('.tab, button'))
