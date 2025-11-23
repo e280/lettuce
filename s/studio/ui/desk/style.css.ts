@@ -471,7 +471,6 @@ export default css`
 }
 
 .dock .taskbar {
-	backdrop-filter: blur(5px);
 	margin: 0;
 	transition:
 		margin 0.2s ease;
@@ -479,6 +478,7 @@ export default css`
 }
 
 .dock[data-dock-drag] .taskbar {
+	backdrop-filter: blur(5px);
 	position: absolute;
 	z-index: 100;
 	box-shadow:
