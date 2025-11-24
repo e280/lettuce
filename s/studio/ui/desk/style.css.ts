@@ -27,6 +27,10 @@ export default css`
 	--pointerlock: yellow;
 }
 
+:not(:defined) {
+	display: none;
+}
+
 .layout {
 	user-select: none;
 	overflow: hidden;
