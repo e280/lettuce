@@ -8,14 +8,6 @@ import {containerRect, deepHitTest, getAxisBounds, getDockAxis, getOrigin, isPoi
 
 const DRAG_THRESHOLD = 3
 
-const dragState = new WeakMap<HTMLElement, {
-	id: number
-	axis: 'x' | 'y'
-	origin: {x: number, y: number}
-	bounds: {min: number, max: number}
-	lifted: boolean
-}>()
-
 const getDockTarget = (e: PointerEvent, ignored: HTMLElement) => {
 	return deepHitTest({
 		x: e.clientX,
@@ -33,7 +25,6 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
         	return
 
 		const btn = e.currentTarget as HTMLElement
-		if (dragState.has(btn)) return
 
 		const dockEl = btn.closest('[data-dock-id]')
 		const tabs = dockEl?.querySelector('.tabs') as HTMLElement | null
@@ -43,20 +34,22 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 		const c = tabs.getBoundingClientRect()
 		const t = btn.getBoundingClientRect()
 
-		dragState.set(btn, {
-			id: e.pointerId,
+		btn.setPointerCapture(e.pointerId)
+		const rect = btn.getBoundingClientRect()
+		const tabSize = axis === 'x' ? rect.width : rect.height
+
+		meta.tabDragger.start(surface.id, {
 			axis,
 			lifted: false,
 			origin: getOrigin(e),
-			bounds: getAxisBounds(axis, c, t)
+			bounds: getAxisBounds(axis, c, t),
+			tabSize
 		})
-
-		btn.setPointerCapture(e.pointerId)
 	},
 
 	onMove: (e: PointerEvent) => {
 		const btn = e.currentTarget as HTMLElement
-		const s = dragState.get(btn)
+		const s = meta.tabDragger.dragState
 		if (!s) return
 
 		const dx = e.clientX - s.origin.x
@@ -70,11 +63,6 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 			btn.style.transition = 'none'
 			btn.style.zIndex = '9999'
 			btn.style.pointerEvents = 'none'
-
-			const rect = btn.getBoundingClientRect()
-			const size = s.axis === 'x' ? rect.width : rect.height
-
-			meta.tabDragger.start(surface.id, size)
 		}
 
 		const tabsRect = (btn: HTMLElement) =>
@@ -113,29 +101,15 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 
 	onEnd: async (e: PointerEvent) => {
 		const btn = e.currentTarget as HTMLElement
-		const tabs = btn.closest('.tabs') as HTMLElement | null
 
-		dragState.delete(btn)
-
-		const animatables = tabs
-			? Array.from(tabs.querySelectorAll<HTMLElement>('.tab, button'))
-			: []
-
-		animatables.forEach(el => el.style.transition = 'none')
-
+		meta.tabDragger.dragState = null
+		btn.releasePointerCapture(e.pointerId)
 		await meta.tabDragger.drop()
 
-		requestAnimationFrame(() => {
-			btn.style.transform = ''
-			btn.style.transition = ''
-			btn.style.position = ''
-			btn.style.zIndex = ''
-			btn.style.pointerEvents = ''
-
-			requestAnimationFrame(() => {
-				animatables.forEach(el => el.style.transition = '')
-			})
-		})
+		btn.style.transform = ''
+		btn.style.position = ''
+		btn.style.zIndex = ''
+		btn.style.pointerEvents = ''
 	}
 })
 
@@ -156,23 +130,23 @@ export const OrdinaryTab = ({
 	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
 
 	const click = (e: MouseEvent) => {
-  			const target = e.target as HTMLElement
-        const clickedX = target.closest('.x')
+  	const target = e.target as HTMLElement
+    const clickedX = target.closest('.x')
 
-        if (!active) {
-            activate()
-            return
-        }
-
-        if (clickedX) {
-            e.stopPropagation()
-            close()
-            return
-        }
-
+    if (!active) {
+      activate()
+      return
     }
 
-	const draggedSize = meta.tabDragger.tabSize
+    if (clickedX) {
+      e.stopPropagation()
+      close()
+      return
+    }
+
+  }
+
+	const draggedSize = meta.tabDragger.dragState?.tabSize
 	const shouldShift = draggedSize && meta.tabDragger.isDockIndicated(dock.id)
 
 	return html`

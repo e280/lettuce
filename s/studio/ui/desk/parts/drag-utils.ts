@@ -19,7 +19,7 @@ export const deepHitTest = ({x, y, ignored, predicate}: {
 	y: number
 	ignored: HTMLElement
 	predicate: (node: HTMLElement) => any
-}) => {
+}): HTMLElement | null => {
 	let node: HTMLElement | null =
 		document.elementFromPoint(x, y) as HTMLElement | null
 

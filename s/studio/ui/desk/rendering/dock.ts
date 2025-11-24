@@ -80,7 +80,7 @@ export const renderDock =
 
 			<div class=taskbar part=taskbar>
 				<div
-					style=${isForeignDockIndicated ? `--tab-shift-size: ${tabDragger.tabSize}px;` : nothing}
+					style=${isForeignDockIndicated ? `--tab-shift-size: ${tabDragger.dragState?.tabSize}px;` : nothing}
 					class=tabs
 					?data-drop-terminal="${dropAtEnd}">
 					${renderTabs(meta, dock)}

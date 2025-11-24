@@ -1,12 +1,20 @@
 import {signal, SignalFn} from "@e280/strata"
 
+import {deepHitTest} from "./drag-utils.js"
 import {Dock, Id} from "../../../../layout/types.js"
 import {Layout} from "../../../../layout/layout.js"
 import {Actions} from "../../../../layout/parts/actions.js"
 import {Explorer} from "../../../../layout/parts/explorer.js"
 
-export type TabDragOperation = {
+export interface TabDragState {
+	axis: 'x' | 'y'
+	origin: {x: number, y: number}
+	bounds: {min: number, max: number}
+	lifted: boolean
 	tabSize: number
+}
+
+export type TabDragOperation = {
 	surfaceId: Id
 	sourceDockId: Id
 	sourceIndex: number
@@ -14,6 +22,7 @@ export type TabDragOperation = {
 		dockId: Id
 		surfaceIndex: number
 	}
+	dragState: null | TabDragState
 }
 
 type PointerPoint = {x: number; y: number}
@@ -29,13 +38,13 @@ export class TabDragger {
 		this.#operation = signal<TabDragOperation | undefined>(undefined)
 	}
 
-	set tabSize(v: number) {
-		if(this.#operation.value)
-			this.#operation.value.tabSize = v
+	get dragState(): TabDragState | null | undefined {
+		return this.#operation.value?.dragState
 	}
 
-	get tabSize(): number | undefined {
-		return this.#operation.value?.tabSize
+	set dragState(v: TabDragState | null) {
+		if(this.#operation.value)
+			this.#operation.value.dragState = v
 	}
 
 	isSurfaceDragging(surfaceId: Id) {
@@ -60,7 +69,7 @@ export class TabDragger {
 			: undefined
 	}
 
-	start(surfaceId: Id, tabSize: number) {
+	start(surfaceId: Id, dragState: TabDragState) {
 		const report = this.#explorer.surfaces.requireReport(surfaceId)
 		const parentDock = this.#explorer.surfaces.parent(surfaceId)
 
@@ -69,7 +78,7 @@ export class TabDragger {
 			sourceDockId: parentDock.id,
 			sourceIndex: report.index,
 			proposedDestination: null,
-			tabSize: tabSize
+			dragState
 		}
 	}
 
@@ -77,31 +86,15 @@ export class TabDragger {
 		const tabs = dockEl.querySelector('.tabs') as HTMLElement | null
 		if (!tabs) return false
 
-		const x = e.clientX
-		const y = e.clientY
+		const res = deepHitTest({
+			x: e.clientX,
+			y: e.clientY,
+			ignored,
+			predicate: node =>
+				node === tabs || tabs.contains(node)
+		})
 
-		let node: Element | null = document.elementFromPoint(x, y)
-		const visited = new Set<Element>()
-
-		while (node) {
-			if (visited.has(node)) break
-			visited.add(node)
-
-			if (node !== ignored && !ignored.contains(node)) {
-				if (node === tabs || tabs.contains(node))
-					return true
-			}
-
-			const root = (node as HTMLElement).shadowRoot
-			if (!root) break
-
-			const deeper = root.elementFromPoint(x, y)
-			if (!deeper || deeper === node) break
-
-			node = deeper
-		}
-
-		return false
+		return Boolean(res)
 	}
 
 	preview(dockElement: HTMLElement, pointer: PointerPoint, e: PointerEvent) {
