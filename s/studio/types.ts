@@ -33,6 +33,7 @@ export type PersistenceOptions = {
 	layout: Layout
 	kv: Kv
 	key: string
+	broadcastChannel: BroadcastChannel
 }
 
 export type Panel = {

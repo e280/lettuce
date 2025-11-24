@@ -124,11 +124,12 @@
       layout,
       key: "lettuceLayoutBlueprint",
       kv: lettuce.Persistence.localStorageKv(),
+      broadcastChannel: new BroadcastChannel("lettuceBroadcast"),
     })
 
     await persistence.load()
     persistence.setupAutoSave()
-    persistence.setupLoadOnStorageEvent()
+    persistence.setupLoadOnBroadcast()
     ```
     - see [@e280/kv](https://github.com/e280/kv#readme) to learn how to control where the data is saved
 1. **setup a studio for displaying the layout in browser**

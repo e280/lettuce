@@ -11,6 +11,7 @@
 ## v0.2
 
 ### v0.2.0
+- 🟥 persistence now requires `broadcastChannel` option
 - 🟥 studio now requires `renderer`, which can be obtained via `litSetup` or `litRenderer`
 - 🟥 rename `studio.ui.views.Desk` to `studio.ui.views.LettuceDesk` for consistency
 - 🟥 blueprint `size` properties are now expressed in 0-1 fractions, and null isn't valid anymore (all panels must have a specified size)
