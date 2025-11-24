@@ -131,7 +131,7 @@ export const OrdinaryTab = ({
 	}
 
 	const close = () => meta.studio.layout.actions.deleteSurface(surface.id)
-	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
+	const activate = () => meta.studio.layout.actions.activateSurface(surface.id)
 
 	const click = (e: MouseEvent) => {
 		const target = e.target as HTMLElement
