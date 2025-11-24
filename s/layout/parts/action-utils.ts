@@ -50,10 +50,10 @@ export function maintain_which_surface_is_active(dock: Dock, fn: () => void) {
 
 export function remember_which_surface_is_active(dock: Dock) {
 	const originalIndex = dock.activeChildIndex
-	const activeSurfaceId = get_active_surface(dock)?.id
+	const activeSurfaceId = get_active_surface(dock)?.id ?? null
 
 	return () => {
-		if (activeSurfaceId === null)
+		if (!activeSurfaceId)
 			dock.activeChildIndex = null
 		else {
 			const newIndex = dock.children
