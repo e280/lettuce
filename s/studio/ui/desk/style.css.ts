@@ -373,7 +373,6 @@ export default css`
 }
 
 .dock[data-taskbar-alignment="right"] {
-
 	> .taskbar {
 		order: 1;
 		flex-direction: column;
@@ -381,6 +380,7 @@ export default css`
 		height: 100%;
 		justify-content: space-between;
 		right: 0;
+		margin-left: auto;
 
 		.tabs  {
 			direction: rtl;
@@ -431,6 +431,7 @@ export default css`
 		order: 1;
 		justify-content: space-between;
 		bottom: 0;
+		margin-top: auto;
 
 		.tabs button {
 			border-top: 0.1em solid transparent;
