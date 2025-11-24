@@ -118,7 +118,8 @@ export const OrdinaryTab = ({
 				meta.tabDragger.preview(target, {
 					x: e.clientX, y: e.clientY
 				}, e)
-			} else {
+			}
+			else {
 				meta.tabDragger.clearPreview()
 			}
 		},

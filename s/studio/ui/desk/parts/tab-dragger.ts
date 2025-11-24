@@ -108,26 +108,25 @@ export class TabDragger {
 			return
 
 		const dockId = dockElement.getAttribute("data-dock-id")
-
 		const hoveringTabs = this.isHoveringTabs(e, dockElement, e.currentTarget as HTMLElement)
 
-		if (!dockId || !hoveringTabs) {
+		if (dockId) {
+			const dock = this.#explorer.docks.require(dockId)
+			this.#operation.value = {
+				...operation,
+				proposedDestination: {
+					dockId: dock.id,
+					surfaceIndex: hoveringTabs
+						? this.#calculateInsertIndex(dockElement, pointer, dock)
+						: dock.children.length,
+				},
+			}
+		}
+		else {
 			this.#operation.value = {
 				...operation,
 				proposedDestination: null,
 			}
-			return
-		}
-
-		const dock = this.#explorer.docks.require(dockId)
-		const surfaceIndex = this.#calculateInsertIndex(dockElement, pointer, dock)
-
-		this.#operation.value = {
-			...operation,
-			proposedDestination: {
-				dockId: dock.id,
-				surfaceIndex,
-			},
 		}
 	}
 
