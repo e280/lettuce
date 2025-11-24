@@ -34,8 +34,8 @@ export const OrdinaryTab = ({
 				return
 
 			const target = e.target as HTMLElement
-      if (target.closest('.x'))
-        return
+			if (target.closest('.x'))
+				return
 
 			const btn = e.currentTarget as HTMLElement
 			const dockEl = btn.closest('[data-dock-id]')
