@@ -17,102 +17,6 @@ const getDockTarget = (e: PointerEvent, ignored: HTMLElement) => {
 	})
 }
 
-export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surface) => ({
-	onDown: (e: PointerEvent) => {
-		if (e.button !== 0) return
-		const target = e.target as HTMLElement
-        if (target.closest('.x'))
-        	return
-
-		const btn = e.currentTarget as HTMLElement
-
-		const dockEl = btn.closest('[data-dock-id]')
-		const tabs = dockEl?.querySelector('.tabs') as HTMLElement | null
-		if (!tabs) return
-
-		const axis = getDockAxis(dock)
-		const c = tabs.getBoundingClientRect()
-		const t = btn.getBoundingClientRect()
-
-		btn.setPointerCapture(e.pointerId)
-		const rect = btn.getBoundingClientRect()
-		const tabSize = axis === 'x' ? rect.width : rect.height
-
-		meta.tabDragger.start(surface.id, {
-			axis,
-			lifted: false,
-			origin: getOrigin(e),
-			bounds: getAxisBounds(axis, c, t),
-			tabSize
-		})
-	},
-
-	onMove: (e: PointerEvent) => {
-		const btn = e.currentTarget as HTMLElement
-		const s = meta.tabDragger.dragState
-		if (!s) return
-
-		const dx = e.clientX - s.origin.x
-		const dy = e.clientY - s.origin.y
-
-		if (!s.lifted) {
-			if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD)
-				return
-
-			s.lifted = true
-			btn.style.transition = 'none'
-			btn.style.zIndex = '9999'
-			btn.style.pointerEvents = 'none'
-		}
-
-		const tabsRect = (btn: HTMLElement) =>
-			containerRect(btn.closest('.tabs'))
-
-		const clampBounds = tabsRect(btn)
-		let primaryInside = false
-
-		if (clampBounds) {
-			const inside = isPointerInside(e, clampBounds)
-			const {dx: dxOut, dy: dyOut} = outOfBoundsDistance(e, clampBounds)
-			const ESCAPE_MARGIN = 0
-
-			primaryInside = inside || (dxOut < ESCAPE_MARGIN && dyOut < ESCAPE_MARGIN)
-		}
-
-		const primaryOffset = s.axis === 'x' ? dx : dy
-		const oxLocked = s.axis === 'x' ? clamp(primaryOffset, s.bounds.min, s.bounds.max) : 0
-		const oyLocked = s.axis === 'y' ? clamp(primaryOffset, s.bounds.min, s.bounds.max) : 0
-
-		if (clampBounds && primaryInside) {
-			btn.style.position = 'static'
-			btn.style.transform = `translate(${oxLocked}px, ${oyLocked}px)`
-		} else {
-			btn.style.position = 'fixed'
-			btn.style.transform = `translate(${dx}px, ${dy}px)`
-		}
-
-		const target = getDockTarget(e, btn) as HTMLElement
-		if (target) {
-			meta.tabDragger.preview(target, {x: e.clientX, y: e.clientY}, e)
-		} else {
-			meta.tabDragger.clearPreview()
-		}
-	},
-
-	onEnd: async (e: PointerEvent) => {
-		const btn = e.currentTarget as HTMLElement
-
-		meta.tabDragger.dragState = null
-		btn.releasePointerCapture(e.pointerId)
-		await meta.tabDragger.drop()
-
-		btn.style.transform = ''
-		btn.style.position = ''
-		btn.style.zIndex = ''
-		btn.style.pointerEvents = ''
-	}
-})
-
 export const OrdinaryTab = ({
 	meta, dock, surface, surfaceIndex
 }: {
@@ -123,8 +27,108 @@ export const OrdinaryTab = ({
 }) => {
 	const {icon, label} = meta.studio.panels[surface.panel]
 	const active = dock.activeChildIndex === surfaceIndex
-	const isDragged = meta.tabDragger.isSurfaceDragging(surface.id)
-	const handlers = createDragHandlers(meta, dock, surface)
+
+	const handlers = {
+		onDown: (e: PointerEvent) => {
+			if (e.button !== 0)
+				return
+
+			const target = e.target as HTMLElement
+      if (target.closest('.x'))
+        return
+
+			const btn = e.currentTarget as HTMLElement
+			const dockEl = btn.closest('[data-dock-id]')
+			const tabs = dockEl?.querySelector('.tabs')
+
+			if (!tabs)
+				return
+
+			const axis = getDockAxis(dock)
+			const c = tabs.getBoundingClientRect()
+			const t = btn.getBoundingClientRect()
+
+			btn.setPointerCapture(e.pointerId)
+			const rect = btn.getBoundingClientRect()
+			const tabSize = axis === 'x' ? rect.width : rect.height
+
+			meta.tabDragger.start(surface.id, {
+				axis,
+				lifted: false,
+				origin: getOrigin(e),
+				bounds: getAxisBounds(axis, c, t),
+				tabSize,
+				clamped: true,
+				position: {
+					x: 0,
+					y: 0
+				}
+			})
+		},
+
+		onMove: (e: PointerEvent) => {
+			const btn = e.currentTarget as HTMLElement
+			const drag = meta.tabDragger.dragState
+			if (!drag) return
+
+			const dx = e.clientX - drag.origin.x
+			const dy = e.clientY - drag.origin.y
+
+			if (!drag.lifted) {
+				if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD)
+					return
+
+				drag.lifted = true
+			}
+
+			const getTabsRect = (btn: HTMLElement) =>
+				containerRect(btn.closest('.tabs'))
+
+			const tabsRect = getTabsRect(btn)
+			let primaryInside = false
+
+			if (tabsRect) {
+				const inside = isPointerInside(e, tabsRect)
+				const {dx: dxOut, dy: dyOut} = outOfBoundsDistance(e, tabsRect)
+				const ESCAPE_MARGIN = 0
+
+				primaryInside = inside || (dxOut < ESCAPE_MARGIN && dyOut < ESCAPE_MARGIN)
+			}
+
+			const primaryOffset = drag.axis === 'x' ? dx : dy
+			const oxLocked = drag.axis === 'x' ? clamp(primaryOffset, drag.bounds.min, drag.bounds.max) : 0
+			const oyLocked = drag.axis === 'y' ? clamp(primaryOffset, drag.bounds.min, drag.bounds.max) : 0
+
+			if (primaryInside) {
+				meta.tabDragger.dragState = {
+					...drag,
+					clamped: true,
+					position: {x: oxLocked, y: oyLocked}
+				}
+			} else {
+				meta.tabDragger.dragState = {
+					...drag,
+					clamped: false,
+					position: {x: dx, y: dy}
+				}
+			}
+
+			const target = getDockTarget(e, btn)
+			if (target) {
+				meta.tabDragger.preview(target, {
+					x: e.clientX, y: e.clientY
+				}, e)
+			} else {
+				meta.tabDragger.clearPreview()
+			}
+		},
+
+		onEnd: async (e: PointerEvent) => {
+			const button = e.currentTarget as HTMLElement
+			button.releasePointerCapture(e.pointerId)
+			await meta.tabDragger.drop()
+		}
+	}
 
 	const close = () => meta.studio.layout.actions.deleteSurface(surface.id)
 	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
@@ -146,18 +150,23 @@ export const OrdinaryTab = ({
 
   }
 
-	const draggedSize = meta.tabDragger.dragState?.tabSize
-	const shouldShift = draggedSize && meta.tabDragger.isDockIndicated(dock.id)
+	const dragState = meta.tabDragger.dragState
+	const position = dragState?.position
+	const isDragged = meta.tabDragger.isSurfaceDragging(surface.id)
+	const isClamped = meta.tabDragger.dragState?.clamped && isDragged
+	const shouldShift = dragState?.tabSize && meta.tabDragger.isDockIndicated(dock.id)
 
 	return html`
 		<div
 			class=tab
-			style="${shouldShift ? `--tab-shift-size: ${draggedSize}px` : nothing}"
+			style="${shouldShift ? `--tab-shift-size: ${dragState.tabSize}px;` : nothing}"
 			data-tab-for-surface=${surface.id}
 			data-shift=${meta.tabDragger.calculateShift(dock.id, surfaceIndex, surface.id) ?? nothing}
 		>
 			<button
+				style="${isDragged ? `transform: translate(${position?.x}px, ${position?.y}px)` : nothing}"
 				data-ordinary
+				?data-clamped=${isClamped}
 				title=${label}
 				?data-active=${active}
 				?data-drag-source=${isDragged}

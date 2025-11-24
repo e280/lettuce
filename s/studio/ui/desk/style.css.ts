@@ -270,6 +270,17 @@ export default css`
 		flex-direction: row;
 		position: relative;
 		transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
+
+		button[data-drag-source] {
+			position: fixed;
+			transition: none;
+			z-index: 9999;
+			pointer-events: none;
+
+			&[data-clamped] {
+				position: static;
+			}
+		}
 	}
 
 	.insert-indicator {

@@ -10,6 +10,11 @@ export interface TabDragState {
 	axis: 'x' | 'y'
 	origin: {x: number, y: number}
 	bounds: {min: number, max: number}
+	clamped: boolean,
+	position: {
+		x: number
+		y: number
+	}
 	lifted: boolean
 	tabSize: number
 }
@@ -139,19 +144,16 @@ export class TabDragger {
 
 	async drop() {
 		const operation = this.#operation.value
+		this.#operation.value = undefined
+
 		if (operation?.proposedDestination) {
 			const {dockId, surfaceIndex} = operation.proposedDestination
 			await this.#actions.moveSurface(
 				operation.surfaceId,
 				dockId,
-				surfaceIndex,
+				surfaceIndex
 			)
-			this.#operation.value = undefined
-			return true
 		}
-
-		this.#operation.value = undefined
-		return false
 	}
 
 	get sourceDockId() {
