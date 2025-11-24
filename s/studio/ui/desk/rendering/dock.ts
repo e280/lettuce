@@ -40,22 +40,23 @@ export const renderDock =
 	const previewAlignment = taskbarDragger.previewAlignment(dock)
 
 	const onDockPointerMove = (event: PointerEvent) => {
-		if (!taskbarDragger.isDraggingDock(dock.id)) return
-		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
-		taskbarDragger.updatePreviewFromPointer(
-			{left: rect.left, top: rect.top, width: rect.width, height: rect.height},
-			{x: event.clientX, y: event.clientY},
-		)
+		if (taskbarDragger.isDraggingDock(dock.id)) {
+			const {left, top, width, height} = (event.currentTarget as HTMLElement).getBoundingClientRect()
+			taskbarDragger.updatePreview(
+				{left, top, width, height},
+				{x: event.clientX, y: event.clientY},
+			)
+		}
 	}
 
-	const onDockPointerUp = async(event: PointerEvent) => {
-		if (!taskbarDragger.isDraggingDock(dock.id)) return
-		await taskbarDragger.drop();
+	const onDockPointerUp = async() => {
+		if (taskbarDragger.isDraggingDock(dock.id))
+			await taskbarDragger.drop()
 	}
 
-	const onDockPointerCancel = (event: PointerEvent) => {
-		if (!taskbarDragger.isDraggingDock(dock.id)) return
-		taskbarDragger.cancel();
+	const onDockPointerCancel = () => {
+		if (taskbarDragger.isDraggingDock(dock.id))
+			taskbarDragger.cancel()
 	}
 
 	const isDraggingDock = taskbarDragger.isDraggingDock(dock.id)

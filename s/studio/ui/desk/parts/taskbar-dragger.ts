@@ -42,10 +42,12 @@ export class TaskbarDragger {
 		}
 	}
 
-	updatePreview(alignment: TaskbarAlignment | null) {
+	updatePreview(panel: PanelBox, pointer: PointerPoint) {
 		const operation = this.#operation.value
 		if (!operation)
 			return
+
+		const alignment = this.snapAlignment(panel, pointer)
 
 		if (operation.grippingAlignment === alignment)
 			return
@@ -111,9 +113,5 @@ export class TaskbarDragger {
 			return "right"
 
 		return null
-	}
-
-	updatePreviewFromPointer(panel: PanelBox, pointer: PointerPoint) {
-		this.updatePreview(this.snapAlignment(panel, pointer))
 	}
 }
