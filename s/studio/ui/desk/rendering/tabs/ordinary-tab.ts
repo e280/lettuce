@@ -4,6 +4,7 @@ import {clamp} from '../../../../../tools/numerical.js'
 import {LayoutMeta} from '../utils/layout-meta.js'
 import {Dock, Surface} from '../../../../../layout/types.js'
 import {icon_feather_x} from '../../../icons/groups/feather/x.js'
+import {containerRect, deepHitTest, getAxisBounds, getDockAxis, getOrigin, isPointerInside, outOfBoundsDistance} from '../../parts/drag-utils.js'
 
 const DRAG_THRESHOLD = 3
 
@@ -16,78 +17,12 @@ const dragState = new WeakMap<HTMLElement, {
 }>()
 
 const getDockTarget = (e: PointerEvent, ignored: HTMLElement) => {
-	const x = e.clientX
-	const y = e.clientY
-
-	const stack = document.elementsFromPoint(x, y)
-	let node = stack.find(el => el !== ignored && !ignored.contains(el)) as HTMLElement | undefined
-	if (!node) return null
-
-	const visited = new Set<HTMLElement>()
-
-	while (node) {
-		if (visited.has(node)) break
-		visited.add(node)
-
-		const dock = node.closest?.('[data-dock-id]') as HTMLElement | null
-		if (dock) return dock
-
-		const root = node.shadowRoot
-		if (!root) break
-
-		const deeper = root.elementFromPoint(x, y) as HTMLElement | null
-		if (!deeper || deeper === node || deeper === ignored) break
-
-		node = deeper
-	}
-
-	const root = node?.getRootNode()
-	if (root instanceof ShadowRoot) {
-		const hostDock = (root.host as HTMLElement).closest('[data-dock-id]')
-		if (hostDock) return hostDock
-	}
-
-	return null
-}
-
-const getAxis = (dock: Dock) =>
-	(dock.taskbarAlignment === 'left' || dock.taskbarAlignment === 'right')
-		? 'y'
-		: 'x'
-
-const getOrigin = (e: PointerEvent) => ({
-	x: e.clientX,
-	y: e.clientY
-})
-
-const getBounds = (axis: 'x' | 'y', container: DOMRect, tab: DOMRect) =>
-	axis === 'x'
-		? {min: container.left - tab.left, max: container.right - tab.right}
-		: {min: container.top - tab.top, max: container.bottom - tab.bottom}
-
-const getClampBounds = (btn: HTMLElement) => {
-	const tabs = btn.closest('.tabs') as HTMLElement | null
-	return tabs ? tabs.getBoundingClientRect() : null
-}
-
-const isInside = (e: PointerEvent, rect: DOMRect) =>
-	e.clientX >= rect.left &&
-	e.clientX <= rect.right &&
-	e.clientY >= rect.top &&
-	e.clientY <= rect.bottom
-
-const escapeDistance = (e: PointerEvent, r: DOMRect) => {
-	const dx =
-		e.clientX < r.left ? r.left - e.clientX :
-		e.clientX > r.right ? e.clientX - r.right :
-		0
-
-	const dy =
-		e.clientY < r.top ? r.top - e.clientY :
-		e.clientY > r.bottom ? e.clientY - r.bottom :
-		0
-
-	return {dx, dy}
+	return deepHitTest({
+		x: e.clientX,
+		y: e.clientY,
+		ignored,
+		predicate: node => node.closest('[data-dock-id]')
+	})
 }
 
 export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surface) => ({
@@ -104,7 +39,7 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 		const tabs = dockEl?.querySelector('.tabs') as HTMLElement | null
 		if (!tabs) return
 
-		const axis = getAxis(dock)
+		const axis = getDockAxis(dock)
 		const c = tabs.getBoundingClientRect()
 		const t = btn.getBoundingClientRect()
 
@@ -113,7 +48,7 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 			axis,
 			lifted: false,
 			origin: getOrigin(e),
-			bounds: getBounds(axis, c, t)
+			bounds: getAxisBounds(axis, c, t)
 		})
 
 		btn.setPointerCapture(e.pointerId)
@@ -142,12 +77,15 @@ export const createDragHandlers = (meta: LayoutMeta, dock: Dock, surface: Surfac
 			meta.tabDragger.start(surface.id, size)
 		}
 
-		const clampBounds = getClampBounds(btn)
+		const tabsRect = (btn: HTMLElement) =>
+			containerRect(btn.closest('.tabs'))
+
+		const clampBounds = tabsRect(btn)
 		let primaryInside = false
 
 		if (clampBounds) {
-			const inside = isInside(e, clampBounds)
-			const {dx: dxOut, dy: dyOut} = escapeDistance(e, clampBounds)
+			const inside = isPointerInside(e, clampBounds)
+			const {dx: dxOut, dy: dyOut} = outOfBoundsDistance(e, clampBounds)
 			const ESCAPE_MARGIN = 0
 
 			primaryInside = inside || (dxOut < ESCAPE_MARGIN && dyOut < ESCAPE_MARGIN)
@@ -218,7 +156,7 @@ export const OrdinaryTab = ({
 	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
 
 	const click = (e: MouseEvent) => {
-        const target = e.target as HTMLElement
+  			const target = e.target as HTMLElement
         const clickedX = target.closest('.x')
 
         if (!active) {
