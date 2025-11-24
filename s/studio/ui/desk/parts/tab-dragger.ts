@@ -157,8 +157,8 @@ export class TabDragger {
 	}
 
 	get sourceDockId() {
-    return this.#operation.value?.sourceDockId
-  }
+		return this.#operation.value?.sourceDockId
+	}
 
 	calculateShift(dockId: Id, surfaceIndex: number, surfaceId: Id) {
 		const dropIndex = this.dockDropIndex(dockId)
