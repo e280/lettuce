@@ -87,7 +87,7 @@ export class TabDragger {
 		}
 	}
 
- 	isHoveringTabs(e: PointerEvent, dockEl: HTMLElement, ignored: HTMLElement) {
+	isHoveringTabs(e: PointerEvent, dockEl: HTMLElement, ignored: HTMLElement) {
 		const tabs = dockEl.querySelector('.tabs') as HTMLElement | null
 		if (!tabs) return false
 
@@ -96,7 +96,7 @@ export class TabDragger {
 			y: e.clientY,
 			ignored,
 			predicate: node =>
-				node === tabs || tabs.contains(node)
+				node === tabs || tabs.contains(node),
 		})
 
 		return Boolean(res)
