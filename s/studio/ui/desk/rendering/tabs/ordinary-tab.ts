@@ -134,21 +134,21 @@ export const OrdinaryTab = ({
 	const activate = () => meta.studio.layout.actions.setDockActiveSurface(dock.id, surfaceIndex)
 
 	const click = (e: MouseEvent) => {
-  	const target = e.target as HTMLElement
-    const clickedX = target.closest('.x')
+		const target = e.target as HTMLElement
+		const clickedX = target.closest('.x')
 
-    if (!active) {
-      activate()
-      return
-    }
+		if (!active) {
+			activate()
+			return
+		}
 
-    if (clickedX) {
-      e.stopPropagation()
-      close()
-      return
-    }
+		if (clickedX) {
+			e.stopPropagation()
+			close()
+			return
+		}
 
-  }
+	}
 
 	const dragState = meta.tabDragger.dragState
 	const position = dragState?.position
