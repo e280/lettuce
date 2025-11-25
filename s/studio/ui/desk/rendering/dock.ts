@@ -50,6 +50,7 @@ export const renderDock =
 	}
 
 	const onDockPointerUp = async() => {
+		await meta.tabDragger.drop()
 		if (taskbarDragger.isDraggingDock(dock.id))
 			await taskbarDragger.drop()
 	}

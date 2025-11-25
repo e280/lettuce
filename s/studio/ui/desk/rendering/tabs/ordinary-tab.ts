@@ -1,21 +1,9 @@
 import {html, nothing} from 'lit'
 
-import {clamp} from '../../../../../tools/numerical.js'
 import {LayoutMeta} from '../utils/layout-meta.js'
 import {Dock, Surface} from '../../../../../layout/types.js'
 import {icon_feather_x} from '../../../icons/groups/feather/x.js'
-import {containerRect, deepHitTest, getAxisBounds, getDockAxis, getOrigin, isPointerInside, outOfBoundsDistance} from '../../parts/drag-utils.js'
-
-const DRAG_THRESHOLD = 3
-
-const getDockTarget = (e: PointerEvent, ignored: HTMLElement) => {
-	return deepHitTest({
-		x: e.clientX,
-		y: e.clientY,
-		ignored,
-		predicate: node => node.closest('[data-dock-id]')
-	})
-}
+import {getAxisBounds, getDockAxis, getOrigin} from '../../parts/drag-utils.js'
 
 export const OrdinaryTab = ({
 	meta, dock, surface, surfaceIndex
@@ -33,6 +21,7 @@ export const OrdinaryTab = ({
 			if (e.button !== 0)
 				return
 
+			click(e)
 			const target = e.target as HTMLElement
 			if (target.closest('.x'))
 				return
@@ -48,7 +37,6 @@ export const OrdinaryTab = ({
 			const c = tabs.getBoundingClientRect()
 			const t = btn.getBoundingClientRect()
 
-			btn.setPointerCapture(e.pointerId)
 			const rect = btn.getBoundingClientRect()
 			const tabSize = axis === 'x' ? rect.width : rect.height
 
@@ -65,68 +53,7 @@ export const OrdinaryTab = ({
 				}
 			})
 		},
-
-		onMove: (e: PointerEvent) => {
-			const btn = e.currentTarget as HTMLElement
-			const drag = meta.tabDragger.dragState
-			if (!drag) return
-
-			const dx = e.clientX - drag.origin.x
-			const dy = e.clientY - drag.origin.y
-
-			if (!drag.lifted) {
-				if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD)
-					return
-
-				drag.lifted = true
-			}
-
-			const getTabsRect = (btn: HTMLElement) =>
-				containerRect(btn.closest('.tabs'))
-
-			const tabsRect = getTabsRect(btn)
-			let primaryInside = false
-
-			if (tabsRect) {
-				const inside = isPointerInside(e, tabsRect)
-				const {dx: dxOut, dy: dyOut} = outOfBoundsDistance(e, tabsRect)
-				const ESCAPE_MARGIN = 0
-
-				primaryInside = inside || (dxOut < ESCAPE_MARGIN && dyOut < ESCAPE_MARGIN)
-			}
-
-			const primaryOffset = drag.axis === 'x' ? dx : dy
-			const oxLocked = drag.axis === 'x' ? clamp(primaryOffset, drag.bounds.min, drag.bounds.max) : 0
-			const oyLocked = drag.axis === 'y' ? clamp(primaryOffset, drag.bounds.min, drag.bounds.max) : 0
-
-			if (primaryInside) {
-				meta.tabDragger.dragState = {
-					...drag,
-					clamped: true,
-					position: {x: oxLocked, y: oyLocked}
-				}
-			} else {
-				meta.tabDragger.dragState = {
-					...drag,
-					clamped: false,
-					position: {x: dx, y: dy}
-				}
-			}
-
-			const target = getDockTarget(e, btn)
-			if (target) {
-				meta.tabDragger.preview(target, {
-					x: e.clientX, y: e.clientY
-				}, e)
-			}
-			else {
-				meta.tabDragger.clearPreview()
-			}
-		},
-
-		onEnd: async (e: PointerEvent) => {
-			const button = e.currentTarget as HTMLElement
-			button.releasePointerCapture(e.pointerId)
+		onEnd: async () => {
 			await meta.tabDragger.drop()
 		}
 	}
@@ -171,9 +98,7 @@ export const OrdinaryTab = ({
 				title=${label}
 				?data-active=${active}
 				?data-drag-source=${isDragged}
-				@click=${click}
 				@pointerdown=${handlers.onDown}
-				@pointermove=${handlers.onMove}
 				@pointerup=${handlers.onEnd}
 				@pointercancel=${handlers.onEnd}
 			>

@@ -1,6 +1,5 @@
 import {signal, SignalFn} from "@e280/strata"
 
-import {deepHitTest} from "./drag-utils.js"
 import {Dock, Id} from "../../../../layout/types.js"
 import {Layout} from "../../../../layout/layout.js"
 import {Actions} from "../../../../layout/parts/actions.js"
@@ -87,28 +86,13 @@ export class TabDragger {
 		}
 	}
 
-	isHoveringTabs(e: PointerEvent, dockEl: HTMLElement, ignored: HTMLElement) {
-		const tabs = dockEl.querySelector('.tabs') as HTMLElement | null
-		if (!tabs) return false
-
-		const res = deepHitTest({
-			x: e.clientX,
-			y: e.clientY,
-			ignored,
-			predicate: node =>
-				node === tabs || tabs.contains(node),
-		})
-
-		return Boolean(res)
-	}
-
-	preview(dockElement: HTMLElement, pointer: PointerPoint, e: PointerEvent) {
+	preview(dockElement: HTMLElement, pointer: PointerPoint) {
 		const operation = this.#operation.value
 		if (!operation)
 			return
 
 		const dockId = dockElement.getAttribute("data-dock-id")
-		const hoveringTabs = this.isHoveringTabs(e, dockElement, e.currentTarget as HTMLElement)
+		const hoveringTabs = dockElement.querySelector(".tabs")
 
 		if (dockId) {
 			const dock = this.#explorer.docks.require(dockId)

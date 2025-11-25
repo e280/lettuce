@@ -1,4 +1,4 @@
-import { Dock } from "../../../../layout/types.js"
+import {Dock} from "../../../../layout/types.js"
 
 export function isWithin(target: EventTarget | null, selector: string): HTMLElement | undefined {
 	let node = target as HTMLElement | null
@@ -12,42 +12,6 @@ export function isWithin(target: EventTarget | null, selector: string): HTMLElem
 
 	return undefined
 }
-
-// for getting elements in shadow dom
-export const deepHitTest = ({x, y, ignored, predicate}: {
-	x: number
-	y: number
-	ignored: HTMLElement
-	predicate: (node: HTMLElement) => any
-}): HTMLElement | null => {
-	let node: HTMLElement | null =
-		document.elementFromPoint(x, y) as HTMLElement | null
-
-	if (!node) return null
-
-	const visited = new Set<HTMLElement>()
-
-	while (node) {
-		if (visited.has(node)) break
-		visited.add(node)
-
-		if (node !== ignored && !ignored.contains(node)) {
-			const result = predicate(node)
-			if (result) return result
-		}
-
-		const root = node.shadowRoot
-		if (!root) break
-
-		const deeper = root.elementFromPoint(x, y) as HTMLElement | null
-		if (!deeper || deeper === node) break
-
-		node = deeper
-	}
-
-	return null
-}
-
 
 export const getOrigin = (e: PointerEvent) => ({
 	x: e.clientX,
