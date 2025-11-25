@@ -1,5 +1,5 @@
-
-export * from "./ui/desk/rendering/standard-dock-buttons.js"
+export * from "./ui/desk/rendering/utils/list-panels.js"
+export * from "./ui/desk/rendering/standard-dock-controls.js"
 export * from "./ui/desk/view.js"
 export * from "./ui/ui.js"
 export * from "./setup/lit-setup.js"

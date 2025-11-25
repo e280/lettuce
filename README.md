@@ -109,10 +109,12 @@
         default: () => b.horizontal(1, b.dock(1, "alpha", "bravo", "charlie")),
         empty: () => b.blank(),
       })),
+      defaultPanel: "alpha", // optional default panel for new splits
     })
     ```
     - panels are referenced by their string keys.
     - optional `limit` restricts how many copies of a panel can exist at the same time (default unlimited). once saturated, the adder buttons disable.
+    - optional `defaultPanel` opens a default panel on new split docks (pick one that can open another instance).
     - `Layout` is a facility for reading and manipulating.
     - `Builder.fn` helps you build a tree of layout nodes with less verbosity (note the spooky-typing double-invocation).
     - `stock.empty` defines the fallback state for when a user closes everything.
@@ -123,11 +125,12 @@
       layout,
       key: "lettuceLayoutBlueprint",
       kv: lettuce.Persistence.localStorageKv(),
+      broadcastChannel: new BroadcastChannel("lettuceBroadcast"),
     })
 
     await persistence.load()
     persistence.setupAutoSave()
-    persistence.setupLoadOnStorageEvent()
+    persistence.setupLoadOnBroadcast()
     ```
     - see [@e280/kv](https://github.com/e280/kv#readme) to learn how to control where the data is saved
 1. **setup a studio for displaying the layout in browser**
@@ -136,10 +139,10 @@
       panels,
       layout,
       renderer,
-      // buttons - optional
+      // controls - optional
     })
     ```
-    - `buttons` uses `standardButtons(ctx)` by default. When provided, supply your own buttons to render anything you like (see [customize studio](#studio))
+    - `controls` uses `standardControls(ctx)` by default. Override it to render custom taskbar controls (see [customize studio](#studio)).
 1. **register the web components to the dom**
     ```ts
     studio.ui.registerComponents()
@@ -260,14 +263,15 @@ const studio = new lettuce.Studio({
   panels,
   layout,
   renderer,
-  buttons: context => {
-    const standard = lettuce.standardButtonsParts(context)
+  controls: context => {
+    const standard = lettuce.standardControlsParts(context)
     return html`
+      ${standard.spawnPanel()}
       ${standard.closeDock()}
       ${standard.splitHorizontal()}
       ${standard.splitVertical()}
       // customize non standard taskbar controls as you wish
-      <button @click=${() => context.studio.layout.actions.reset()}>Reset</button>
+      <button @click=${() => context.meta.studio.layout.actions.reset()}>Reset</button>
       // add your own action button
       <button @click=${() => someAction()}>whatever</button>
     `
@@ -275,8 +279,9 @@ const studio = new lettuce.Studio({
 })
 ```
 - *read the source code for the real details*
-- `standardButtons(ctx)` is the default taskbar buttons (close + split buttons).
--  import `standardButtonsParts` instead when you need individual action buttons.
+- `standardControls(ctx)` is the default taskbar controls (close, split, alignment, spawn panel, etc.).
+- import `standardControlsParts` instead when you need individual controls.
+- `lettuce.listPanelsChoices(meta, dock)` returns available panels for a dock, including icon, disabled state, and an open() handler.
 - `studio.ui.registerComponents()` — shortcut to register the components with their default names
 - `studio.ui.views` — access to ui in the form of sly views
     ```ts
@@ -378,5 +383,4 @@ const studio = new lettuce.Studio({
 <br/><br/>
 
 ## 🥬 i made this open sourcedly just for you
-pay your respects, gimmie a github star.  
-
+pay your respects, gimmie a github star.

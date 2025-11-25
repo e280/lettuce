@@ -11,6 +11,7 @@
 ## v0.2
 
 ### v0.2.0
+- 🟥 persistence now requires `broadcastChannel` option
 - 🟥 studio now requires `renderer`, which can be obtained via `litSetup` or `litRenderer`
 - 🟥 rename `studio.ui.views.Desk` to `studio.ui.views.LettuceDesk` for consistency
 - 🟥 blueprint `size` properties are now expressed in 0-1 fractions, and null isn't valid anymore (all panels must have a specified size)
@@ -24,7 +25,9 @@
 - 🍏 added `--gutter-size: 0.7em;` css variable
 - 🍏 added optional `panel.limit` so apps can cap how many copies of a panel can be opened at once
 - 🍏 docks now store a single `taskbarAlignment` (top/right/bottom/left) which drives taskbar orientation, via `[data-taskbar-alignment]`
-- 🍏 studio accepts a `buttons` option: `standardButtons(ctx)` is the default taskbar buttons, and `standardButtonsParts(ctx)` exposes the built-in pieces so taskbar controls can be reordered, extended, or replaced
+- 🍏 studio accepts a `controls` option: `standardControls(ctx)` is the default taskbar controls, and `standardControlsParts(ctx)` exposes the built-in pieces so taskbar controls can be reordered, extended, or replaced
+- 🍏 added `listPanelsChoices()` fn for generating panels entries (label, icon, disabled state, and open() handler).
+- 🍏 added optional `defaultPanel` opens a default panel on dock split.
 
 
 

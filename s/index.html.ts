@@ -12,6 +12,12 @@ export default ssg.page(import.meta.url, async orb => ({
 	favicon,
 
 	head: html`
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/dark.css"
+			onload="document.documentElement.classList.add('sl-theme-dark');"
+		/>
+		<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace.js" ></script>
 		<meta data-version="${orb.packageVersion()}"/>
 	`,
 

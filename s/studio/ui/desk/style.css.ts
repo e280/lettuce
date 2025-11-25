@@ -27,6 +27,10 @@ export default css`
 	--pointerlock: yellow;
 }
 
+:not(:defined) {
+	display: none;
+}
+
 .layout {
 	user-select: none;
 
@@ -122,12 +126,71 @@ export default css`
 		}
 
 		> .tabs {
-			flex: 0 0 auto;
+			flex: 1;
 			display: flex;
 			flex-direction: row;
 		}
 
 		.actions {
+			flex: 1;
+			justify-content: end;
+
+			.standard-button svg {
+				width: 24px;
+				height: 24px;
+			}
+
+			.spawn-dropdown {
+				display: flex;
+				align-items: start;
+				flex: 1;
+
+				::part(label) {
+					padding: 0.5em;
+				}
+
+				.icon {
+					color: #8E8E9A;
+					display: flex;
+				}
+			}
+
+			.item {
+				display: flex;
+			}
+
+			sl-menu {
+    		background: #2424285e;
+    		backdrop-filter: blur(10px);
+			}
+
+			sl-menu-item .icon {
+				margin-right: 0.5em;
+			}
+
+			sl-dropdown::part(base) {
+				display: flex;
+				align-items: center;
+				background: transparent;
+				border: none;
+			}
+
+			sl-button {
+  			display: flex;
+			}
+
+			sl-button::part(base) {
+				display: flex;
+				align-items: center;
+				background: transparent;
+				border: none;
+			}
+
+			::part(label) {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
 
 			> button {
 				padding: 0.2em 0.3em;
@@ -202,10 +265,24 @@ export default css`
 }
 
 .tabs {
+	justify-content: start;
+
 	.tab {
 		display: flex;
 		flex-direction: row;
 		position: relative;
+		transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
+
+		button[data-drag-source] {
+			position: fixed;
+			transition: none;
+			z-index: 9999;
+			pointer-events: none;
+
+			&[data-clamped] {
+				position: static;
+			}
+		}
 	}
 
 	.insert-indicator {
@@ -232,15 +309,8 @@ export default css`
 		gap: 0.1em;
 		padding: 0.2em;
 		padding-left: 0.3em;
-		padding-right: 0.1em;
+		padding-right: 0.3em;
 		background: var(--tab);
-
-		&[data-adder] {
-			padding-right: 0.9em;
-			&:not(:hover):not([data-active]) {
-				opacity: 0.2;
-			}
-		}
 
 		opacity: 0.6;
 		&:hover { opacity: 1; }
@@ -290,10 +360,6 @@ export default css`
 	> .taskbar {
 		justify-content: space-between;
 
-		.actions {
-			margin-left: auto;
-		}
-
 		.tabs button {
 			border-top: 0.1em solid transparent;
 
@@ -305,19 +371,17 @@ export default css`
 }
 
 .dock[data-taskbar-alignment="right"] {
-	> .surface {
-		direction: rtl;
-	}
-
 	> .taskbar {
 		order: 1;
 		flex-direction: column;
 		align-items: end;
 		height: 100%;
 		justify-content: space-between;
+		right: 0;
+		margin-left: auto;
 
 		.tabs  {
-			order: 1;
+			direction: rtl;
 			.tab {
 				justify-content: end;
 			}
@@ -344,10 +408,6 @@ export default css`
 		height: 100%;
 		justify-content: space-between;
 
-		.tabs  {
-			order: 1;
-		}
-
 		.tabs, .actions {
 			flex-direction: column;
 		}
@@ -368,10 +428,8 @@ export default css`
 	> .taskbar {
 		order: 1;
 		justify-content: space-between;
-
-		.actions {
-			margin-left: auto;
-		}
+		bottom: 0;
+		margin-top: auto;
 
 		.tabs button {
 			border-top: 0.1em solid transparent;
@@ -382,5 +440,68 @@ export default css`
 		}
 	}
 }
-`
 
+.dock[data-taskbar-alignment="top"],
+.dock[data-taskbar-alignment="bottom"] {
+	&[data-dock-drag] .taskbar {
+		width: 99%;
+	}
+	&[data-drag] .tabs {
+		padding-right: calc(var(--tab-shift-size) + 0.2em);
+	}
+	.tabs .tab[data-shift="positive"] {
+		transform: translateX(var(--tab-shift-size));
+	}
+	.tabs .tab[data-shift="negative"] {
+		transform: translateX(calc(var(--tab-shift-size) * -1));
+	}
+	.actions {
+		> :first-child {
+			transform: translateX(calc(var(--tab-shift-size)));
+		}
+	}
+}
+
+.dock[data-taskbar-alignment="left"],
+.dock[data-taskbar-alignment="right"] {
+	&[data-dock-drag] .taskbar {
+		height: 99%;
+	}
+	&[data-drag] .tabs {
+		padding-bottom: calc(var(--tab-shift-size) + 0.2em);
+	}
+	.tabs .tab[data-shift="positive"] {
+		transform: translateY(var(--tab-shift-size));
+	}
+	.tabs .tab[data-shift="negative"] {
+		transform: translateY(calc(var(--tab-shift-size) * -1));
+	}
+	.actions {
+		> :first-child {
+			transform: translateY(calc(var(--tab-shift-size)));
+		}
+	}
+
+}
+
+.dock .taskbar {
+	margin: 0;
+	transition:
+		margin 0.2s ease;
+		box-shadow 0.2s ease,
+}
+
+.dock[data-dock-drag] .taskbar {
+	backdrop-filter: blur(5px);
+	position: absolute;
+	z-index: 100;
+	box-shadow:
+	0 0 8px rgba(0,0,0,0.15),
+	0 0 40px rgba(0,0,0,0.20);
+	cursor: grabbing;
+	border-radius: 6px;
+	margin: 0.1em;
+}
+}
+
+`

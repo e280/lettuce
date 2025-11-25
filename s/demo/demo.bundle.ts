@@ -37,17 +37,19 @@ const layout = new Layout({
 		default: () => b.horizontal(1, b.dock(1, "about", "gnu", "brotein")),
 		empty: () => b.blank(),
 	})),
+	defaultPanel: "about",
 })
 
 const persistence = new Persistence({
 	layout,
 	key: "lettuceLayoutBlueprint",
 	kv: Persistence.localStorageKv(),
+	broadcastChannel: new BroadcastChannel("lettuceBroadcast"),
 })
 
 await persistence.load()
 persistence.setupAutoSave()
-persistence.setupLoadOnStorageEvent()
+persistence.setupLoadOnBroadcast()
 
 const studio = new Studio({panels, layout, renderer})
 
