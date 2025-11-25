@@ -74,6 +74,15 @@
       --pointerlock: yellow;
     }
     ```
+1. **install shoelace into your html `<head>` (sorry)**
+    ```html
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/dark.css"
+      onload="document.documentElement.classList.add('sl-theme-dark');"
+    />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace.js" ></script>
+    ```
 
 ### 🥗 lettuce typescript
 1. **imports**
